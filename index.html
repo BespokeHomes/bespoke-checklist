@@ -1,2132 +1,223 @@
-bash
-
-cat /mnt/user-data/outputs/BespokeHomes_Checklist_FINAL.html
-
-Output
-
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Bespoke Homes — Project Checklist</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-
 <style>
-
 *{box-sizing:border-box;margin:0;padding:0}
-
 body{font-family:'DM Sans',sans-serif;background:#F6F2EB;color:#1A1A18;font-size:13px}
-
 :root{
-
   --blk:#0E0E0C;--chr:#1A1A18;--drk:#2C2C28;--mid:#4A4A44;--mut:#888880;
-
   --brd:#D8D2C4;--brl:#EAE4D8;--crm:#F6F2EB;--wrm:#FAFAF7;--wht:#FFFFFF;
-
   --gld:#B8872A;--glp:#F2E8D4;--gll:#C99A3C;
-
   --grn:#3D6B4A;--grb:#EAF2ED;--grt:#2D5238;
-
   --red:#8B2E2E;--rdb:#F5EAEA;--rdt:#6B2020;
-
   --amb:#A06820;--abb:#FBF0E0;--blu:#2A507A;--blb:#EAF0F8;
-
 }
-
 .nav{background:var(--blk);display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:52px;position:sticky;top:0;z-index:200;gap:8px}
-
 .nav-left{display:flex;align-items:center;gap:9px;flex-shrink:0}
-
 .logo-stars svg{width:38px;height:19px}
-
 .logo-text{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;letter-spacing:0.2em;color:#FAFAF7;text-transform:uppercase;white-space:nowrap}
-
 .logo-text em{font-style:normal;color:var(--gld)}
-
 .logo-sub{font-size:7px;letter-spacing:0.18em;text-transform:uppercase;color:var(--mut)}
-
 .nav-center{display:flex;align-items:center;gap:7px;flex:1;justify-content:center;min-width:0}
-
 .proj-sel{background:rgba(255,255,255,0.08);border:1px solid rgba(184,135,42,0.4);color:#FAFAF7;padding:5px 22px 5px 8px;font-family:'DM Sans',sans-serif;font-size:11px;border-radius:2px;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%23B8872A' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;max-width:190px;min-width:120px}
-
 .btn-np{background:var(--gld);color:var(--blk);border:none;padding:5px 11px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;border-radius:2px;white-space:nowrap}
-
 .btn-np:hover{background:var(--gll)}
-
 .nav-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
-
 .av{width:27px;height:27px;border-radius:50%;background:var(--gld);color:var(--blk);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
-
 .nav-name{color:rgba(250,250,247,0.75);font-size:10.5px;white-space:nowrap}
-
 .btn-admin{background:rgba(184,135,42,0.18);border:1px solid var(--gld);color:var(--gld);font-size:10px;padding:4px 9px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;white-space:nowrap}
-
 .btn-admin:hover{background:rgba(184,135,42,0.3)}
-
 .btn-signout{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.4);color:#FAFAF7;font-size:10px;padding:4px 9px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}
-
 .btn-signout:hover{background:rgba(255,255,255,0.2)}
-
 .gold-rule{height:2px;background:linear-gradient(90deg,var(--gld) 0%,rgba(184,135,42,0.1) 100%)}
-
 .info-bar{background:var(--wrm);border-bottom:1px solid var(--brl);padding:6px 16px;font-size:10.5px;color:var(--mid);display:none;gap:10px;align-items:center;flex-wrap:wrap}
-
 .info-bar.on{display:flex}
-
 .info-lbl{font-size:7.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)}
-
 .info-link{font-size:10px;color:var(--blu);text-decoration:none;padding:1px 6px;border:1px solid var(--blu);border-radius:2px;background:var(--blb)}
-
 .info-link:hover{background:rgba(42,80,122,0.15)}
-
 .prog-bar{background:var(--chr);padding:7px 16px;display:none;align-items:center;gap:12px;border-bottom:1px solid #222}
-
 .prog-bar.on{display:flex}
-
 .prog-lbl{font-size:7.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);white-space:nowrap}
-
 .prog-track{flex:1;height:3px;background:#3A3A36;border-radius:2px}
-
 .prog-fill{height:100%;background:linear-gradient(90deg,var(--gld),var(--gll));border-radius:2px;transition:width 0.4s}
-
 .prog-pct{color:var(--gld);font-size:11px;font-weight:500;white-space:nowrap}
-
 .prog-ct{color:var(--mut);font-size:9.5px;white-space:nowrap}
-
 .btn-export{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.25);color:#FAFAF7;font-size:9px;padding:3px 8px;font-family:'DM Sans',sans-serif;cursor:pointer;border-radius:2px;white-space:nowrap;letter-spacing:0.05em}
-
 .btn-export:hover{background:rgba(255,255,255,0.16)}
-
 .btn-sold{background:rgba(184,135,42,0.12);border:1px solid rgba(184,135,42,0.4);color:var(--gld);font-size:9px;font-weight:500;padding:3px 8px;font-family:'DM Sans',sans-serif;cursor:pointer;border-radius:2px;white-space:nowrap}
-
 .btn-del{background:none;color:#7A4040;border:1px solid rgba(122,64,64,0.2);padding:2px 6px;font-family:'DM Sans',sans-serif;font-size:8px;cursor:pointer;border-radius:2px;white-space:nowrap}
-
 .layout{display:flex;height:calc(100vh - 52px);overflow:hidden}
-
 .sidebar{width:195px;min-width:195px;background:var(--wrm);border-right:1px solid var(--brd);overflow-y:auto;padding:14px 0 30px;flex-shrink:0}
-
 .sb-lbl{font-size:7.5px;letter-spacing:0.18em;text-transform:uppercase;color:var(--mut);padding:0 13px 9px}
-
 .tb{display:flex;align-items:center;justify-content:space-between;width:100%;padding:7px 13px;background:none;border:none;border-left:3px solid transparent;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:400;color:var(--mid);text-align:left;transition:all 0.12s;gap:4px}
-
 .tb:hover{background:var(--glp);color:var(--chr)}
-
 .tb.on{border-left-color:var(--gld);background:var(--glp);color:var(--blk);font-weight:500}
-
 .pill{font-size:8px;background:var(--brl);color:var(--mut);padding:1px 5px;border-radius:10px;white-space:nowrap;flex-shrink:0}
-
 .tb.on .pill{background:var(--gld);color:var(--blk)}
-
 .pill.done{background:var(--grb);color:var(--grt)}
-
 .sb-div{height:1px;background:var(--brd);margin:9px 13px}
-
 .sold-bdg{display:inline-block;font-size:7.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;background:var(--gld);color:var(--blk);padding:1px 4px;border-radius:2px;margin-left:4px;vertical-align:middle}
-
 .main{flex:1;overflow-y:auto;padding:20px 24px}
-
 .ph{margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--brd);display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
-
 .pt{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--blk);letter-spacing:0.03em;line-height:1}
-
 .pm{font-size:10px;color:var(--mut);margin-top:2px}
-
 .ps{display:flex;gap:14px;flex-shrink:0}
-
 .sn{display:block;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--gld);line-height:1}
-
 .sl{font-size:7.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mut)}
-
 .shdr{display:flex;align-items:center;justify-content:space-between;margin:18px 0 0;padding-bottom:5px;border-bottom:1.5px solid var(--blk)}
-
 .stitle{font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:400;letter-spacing:0.08em;color:var(--blk);text-transform:uppercase}
-
 .sprog{font-size:9px;color:var(--gld);font-weight:500}
-
-/* Task rows */
-
 .tr{display:flex;align-items:flex-start;gap:9px;padding:8px 3px;border-bottom:1px solid var(--brl);border-radius:3px;transition:background 0.1s}
-
 .tr:hover{background:rgba(242,232,212,0.2)}
-
 .tr.readonly{opacity:0.6}
-
 .tr.done .tt,.tr.checked .tt{color:var(--mut);text-decoration:line-through;text-decoration-color:var(--brd)}
-
 .tr.appr .tt{color:var(--mut);text-decoration:line-through;text-decoration-color:var(--grn)}
-
 .tb2{flex:1;min-width:0}
-
 .tt{font-size:12px;color:var(--drk);line-height:1.45}
-
 .th{font-size:9.5px;color:var(--mut);margin-top:2px;line-height:1.4;font-style:italic}
-
-/* Stamp */
-
 .stamp{display:flex;align-items:center;gap:4px;margin-top:4px;flex-wrap:wrap}
-
 .stav{width:16px;height:16px;border-radius:50%;background:var(--glp);color:var(--amb);display:inline-flex;align-items:center;justify-content:center;font-size:7.5px;font-weight:700;border:1px solid rgba(184,135,42,0.3);flex-shrink:0}
-
 .stnm{font-size:9.5px;font-weight:500;color:var(--mid)}
-
 .stdt{font-size:9.5px;color:var(--mut)}
-
 .stpill{font-size:8px;padding:1px 5px;border-radius:10px}
-
 .stpill.complete,.stpill.reviewed,.stpill.approved,.stpill.passed,.stpill.completed{background:var(--grb);color:var(--grt)}
-
 .stpill.in-progress{background:var(--abb);color:var(--amb)}
-
 .stpill.corrections{background:var(--rdb);color:var(--rdt)}
-
-/* Controls */
-
 .tc{display:flex;align-items:center;gap:5px;flex-shrink:0;padding-top:1px}
-
 .ss{font-family:'DM Sans',sans-serif;font-size:9.5px;font-weight:500;border-radius:2px;padding:3px 16px 3px 6px;cursor:pointer;border:1px solid var(--brd);background:var(--wht);color:var(--mut);letter-spacing:0.03em;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4'%3E%3Cpath d='M0 0l3.5 4L7 0' stroke='%23888880' stroke-width='1.1' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 5px center;min-width:100px;transition:all 0.15s}
-
 .ss.not-started{color:var(--mut)}
-
 .ss.in-progress{color:var(--amb);border-color:var(--amb);background-color:var(--abb)}
-
 .ss.complete,.ss.completed{color:var(--grt);border-color:var(--grn);background-color:var(--grb)}
-
 .ss.n-a{color:var(--mut);border-color:var(--brd);background-color:var(--brl)}
-
 .ss.passed{color:var(--grt);border-color:var(--grn);background-color:var(--grb)}
-
 .ss.corrections{color:var(--rdt);border-color:var(--red);background-color:var(--rdb)}
-
 .gc-lbl{font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mut);border:1px solid var(--brl);padding:2px 6px;border-radius:2px;white-space:nowrap;flex-shrink:0}
-
 .chk{width:15px;height:15px;border:1.5px solid var(--brd);border-radius:2px;background:var(--wht);cursor:pointer;flex-shrink:0;margin-top:2px;appearance:none;-webkit-appearance:none;transition:all 0.15s;position:relative;display:block}
-
 .chk:checked{background:var(--chr);border-color:var(--chr)}
-
 .chk:checked::after{content:'';position:absolute;left:2px;top:0;width:5px;height:9px;border-right:2px solid white;border-bottom:2px solid white;transform:rotate(40deg)}
-
 .nb{background:none;border:1px solid var(--brl);color:var(--mut);font-size:9px;padding:3px 6px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;white-space:nowrap}
-
 .nb:hover{border-color:var(--gld);color:var(--gld)}
-
 .nb.on{border-color:var(--blu);color:var(--blu);background:var(--blb)}
-
 .na{display:none;margin-top:6px;padding-top:6px;border-top:1px dashed var(--brl)}
-
 .na.open{display:block}
-
 .nta{width:100%;font-family:'DM Sans',sans-serif;font-size:10.5px;border:1px solid var(--brd);background:var(--wrm);color:var(--drk);padding:6px 8px;border-radius:3px;resize:vertical;min-height:42px;line-height:1.6}
-
 .nta:focus{outline:none;border-color:var(--gld)}
-
-/* Date field */
-
 .date-inp{font-family:'DM Sans',sans-serif;font-size:9.5px;border:1px solid var(--brd);background:var(--wht);color:var(--drk);padding:3px 6px;border-radius:2px;cursor:pointer;width:108px}
-
 .date-inp:focus{outline:none;border-color:var(--gld)}
-
-/* Plans & Permits columns */
-
 .pp-row{display:flex;align-items:flex-start;gap:8px;padding:8px 3px;border-bottom:1px solid var(--brl)}
-
 .pp-task{flex:2;font-size:11.5px;color:var(--drk);line-height:1.4}
-
 .pp-meta{font-size:9.5px;color:var(--mut);margin-top:2px}
-
 .pp-who{flex:0 0 90px;font-size:10px;color:var(--mid);font-weight:500}
-
 .pp-ctrl{display:flex;align-items:flex-start;gap:5px;flex-shrink:0}
-
-/* Modal */
-
 .mbg{display:none;position:fixed;inset:0;background:rgba(10,10,8,0.72);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-
 .mbg.open{display:flex}
-
 .mc{background:var(--wrm);border:1px solid var(--brd);border-top:3px solid var(--gld);border-radius:3px;padding:26px;width:440px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,0.2);max-height:90vh;overflow-y:auto}
-
 .mt{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--blk);letter-spacing:0.05em;margin-bottom:3px}
-
 .ms{font-size:10.5px;color:var(--mut);margin-bottom:16px}
-
 .fg{margin-bottom:10px}
-
 .fl{display:block;font-size:7.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut);margin-bottom:3px}
-
 .fi{width:100%;font-family:'DM Sans',sans-serif;font-size:12px;border:1px solid var(--brd);background:var(--wht);color:var(--chr);padding:7px 9px;border-radius:2px}
-
 .fi:focus{outline:none;border-color:var(--gld)}
-
 .ma{display:flex;gap:6px;margin-top:16px}
-
 .bp{flex:1;background:var(--blk);color:var(--crm);border:none;padding:9px;font-family:'DM Sans',sans-serif;font-size:10.5px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:2px}
-
 .bp:hover{background:var(--drk)}
-
 .bc{background:none;color:var(--mut);border:1px solid var(--brd);padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:10.5px;cursor:pointer;border-radius:2px}
-
-/* Login */
-
 .lp{min-height:100vh;background:var(--blk);display:flex;align-items:center;justify-content:center;flex-direction:column}
-
 .lh{text-align:center;margin-bottom:26px}
-
 .ll{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:7px}
-
 .ll svg{width:48px;height:24px}
-
 .lb{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;letter-spacing:0.24em;color:#FAFAF7;text-transform:uppercase}
-
 .lb em{font-style:normal;color:var(--gld)}
-
 .lt{font-size:8px;letter-spacing:0.18em;text-transform:uppercase;color:var(--mut)}
-
 .lc{background:#1A1A18;border:1px solid #2A2A26;border-top:2px solid var(--gld);border-radius:3px;padding:26px;width:320px}
-
 .ltitle{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:#FAFAF7;letter-spacing:0.06em;margin-bottom:3px}
-
 .lsub{font-size:10.5px;color:var(--mut);margin-bottom:16px}
-
 .li{width:100%;font-family:'DM Sans',sans-serif;font-size:12px;border:1px solid #3A3A36;background:#0E0E0C;color:#FAFAF7;padding:8px 9px;border-radius:2px;margin-bottom:8px}
-
 .li:focus{outline:none;border-color:var(--gld)}
-
 .li::placeholder{color:#4A4A44}
-
 .le{font-size:10.5px;color:#C47A7A;min-height:13px;margin-bottom:5px}
-
 .btn-login{width:100%;background:var(--gld);color:var(--blk);border:none;padding:10px;font-family:'DM Sans',sans-serif;font-size:10.5px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:2px}
-
 .btn-login:hover{background:var(--gll)}
-
-/* Admin */
-
 .aw{padding:20px 24px;max-width:600px}
-
 .at{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--blk);margin-bottom:3px}
-
 .asub{font-size:10.5px;color:var(--mut);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--brd)}
-
 .sh2{font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:400;letter-spacing:0.08em;color:var(--blk);text-transform:uppercase;padding-bottom:5px;border-bottom:1.5px solid var(--blk);margin:18px 0 9px}
-
 .uc{background:var(--wht);border:1px solid var(--brd);border-radius:3px;padding:10px 13px;margin-bottom:6px;display:flex;align-items:center;gap:9px}
-
 .uav{width:30px;height:30px;border-radius:50%;background:var(--glp);color:var(--amb);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;border:1px solid rgba(184,135,42,0.25);flex-shrink:0}
-
 .ui{flex:1}
-
 .un{font-size:12px;font-weight:500;color:var(--drk)}
-
 .um{font-size:9px;color:var(--mut)}
-
 .urb{font-size:7.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gld);font-weight:500}
-
 .brs{background:none;border:1px solid var(--brd);color:var(--mid);font-size:9px;padding:3px 8px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif}
-
 .brs:hover{border-color:var(--gld);color:var(--gld)}
-
 .ar{display:flex;align-items:flex-start;gap:7px;padding:6px 0;border-bottom:1px solid var(--brl)}
-
 .aav{width:20px;height:20px;border-radius:50%;background:var(--glp);color:var(--amb);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;flex-shrink:0;border:1px solid rgba(184,135,42,0.2)}
-
 .at2{flex:1;font-size:10.5px;color:var(--drk);line-height:1.4}
-
 .ad{font-size:9px;color:var(--mut);white-space:nowrap}
-
 .empty{text-align:center;padding:60px 30px;color:var(--mut)}
-
 .ed{font-size:20px;opacity:0.18;margin-bottom:12px;letter-spacing:8px}
-
 .et{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--drk);margin-bottom:4px}
-
 .eb{font-size:11.5px;line-height:1.7}
-
 .toast{position:fixed;bottom:20px;right:20px;background:var(--chr);color:#FAFAF7;padding:9px 16px;border-radius:3px;font-size:11px;z-index:999;border-left:3px solid var(--gld);display:none}
-
 .toast.on{display:block}
-
 ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--brd);border-radius:2px}
-
 </style>
-
 </head>
-
 <body>
-
 <div id="app"></div>
-
 <div class="toast" id="toast"></div>
-
 <script>
-
-// ── CONFIG ────────────────────────────────────────────────────────────────────
-
 const SUPABASE_URL = 'https://nyasyzchugvqumzjxopu.supabase.co';
-
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55YXN5emNodWd2cXVtemp4b3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MDkyODcsImV4cCI6MjA5Mjk4NTI4N30.Pc9_jceweINaxDtdrMZVSD1D1bkra7-bOmVr7bRKl0s';
-
-
-
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const S2=`<svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg"><path d="M50,2 C50,2 46,46 0,50 C46,54 50,98 50,98 C50,98 54,54 100,50 C54,46 50,2 50,2 Z" fill="#B8872A"/><path d="M150,2 C150,2 146,46 100,50 C146,54 150,98 150,98 C150,98 154,54 200,50 C154,46 150,2 150,2 Z" fill="#B8872A"/></svg>`;
-
-
-
-const USERS=[
-
-  {id:'MP',name:'Matthew Pichardo',initials:'MP',password:'BespokeMatthew',role:'admin'},
-
-  {id:'CW',name:'Cody Wetzel',initials:'CW',password:'BespokeCody',role:'user'},
-
-  {id:'KH',name:'Kyle Hata',initials:'KH',password:'BespokeKyle',role:'user'},
-
-  {id:'RJ',name:'Ryan Jancula',initials:'RJ',password:'BespokeRyan',role:'user'},
-
-  {id:'BA',name:'Bespoke Admin',initials:'BA',password:'Bespoke@Info',role:'admin'},
-
-];
-
-
-
-const DATA = {
-
-  "Initial Walkthrough":[
-
-    {s:"UTILITIES",t:"Water meter location",h:"Existing meter placement and accessibility",mode:"checkbox"},
-
-    {s:"UTILITIES",t:"Water main size",h:"Verify main size and potential upgrade needs",mode:"checkbox"},
-
-    {s:"UTILITIES",t:"Gas meter location",h:"Existing gas meter location",mode:"checkbox"},
-
-    {s:"UTILITIES",t:"Gas main size",h:"Verify capacity for proposed project",mode:"checkbox"},
-
-    {s:"UTILITIES",t:"Power poles",h:"Pole locations impacting driveway, frontage, or utilities",mode:"checkbox"},
-
-    {s:"UTILITIES",t:"Overhead wires",h:"Electrical/telephone wires crossing lot or build envelope",mode:"checkbox"},
-
-    {s:"UTILITIES",t:"Hydrant location",h:"Hydrant in front of or near property",mode:"checkbox"},
-
-    {s:"SITE CONDITIONS",t:"Slope / hillside",h:"Flat lot or hillside? Estimate usable yard/build area",mode:"checkbox"},
-
-    {s:"SITE CONDITIONS",t:"Drainage conditions",h:"Signs of poor drainage, runoff, low points",mode:"checkbox"},
-
-    {s:"SITE CONDITIONS",t:"Ejector pump requirements",h:"Any below-grade areas requiring pump systems",mode:"checkbox"},
-
-    {s:"SITE CONDITIONS",t:"Mature trees / vegetation",h:"Protected trees? Large root systems? Removal concerns",mode:"checkbox"},
-
-    {s:"SITE CONDITIONS",t:"Lot dimensions",h:"Frontage, depth, irregular shape, easements",mode:"checkbox"},
-
-    {s:"SITE CONDITIONS",t:"Lot usability",h:"Overall buildable footprint and constraints",mode:"checkbox"},
-
-    {s:"SITE CONDITIONS",t:"Driveway approach",h:"Existing curb cut, slope, access issues",mode:"checkbox"},
-
-    {s:"SITE CONDITIONS",t:"Sidewalk condition",h:"Damage, uplift, replacement requirements",mode:"checkbox"},
-
-    {s:"SITE CONDITIONS",t:"Existing retaining walls",h:"Condition, height, replacement concerns",mode:"checkbox"},
-
-    {s:"NEIGHBOR IMPACTS",t:"Neighbor privacy concerns",h:"Apartments, hillside homes, offices overlooking backyard",mode:"checkbox"},
-
-    {s:"NEIGHBOR IMPACTS",t:"Surrounding area context",h:"Industrial nearby? Apartments? Commercial influence?",mode:"checkbox"},
-
-    {s:"NEIGHBOR IMPACTS",t:"Neighborhood quality",h:"Street appeal, development activity, resale perception",mode:"checkbox"},
-
-    {s:"EXISTING STRUCTURES",t:"Existing structure condition",h:"Overall condition of house/buildings",mode:"checkbox"},
-
-    {s:"EXISTING STRUCTURES",t:"Foundation type",h:"Raised foundation or slab",mode:"checkbox"},
-
-    {s:"EXISTING STRUCTURES",t:"Major systems",h:"Roof, HVAC, plumbing, electrical updates",mode:"checkbox"},
-
-    {s:"EXISTING STRUCTURES",t:"Existing detached garage",h:"ADU conversion potential",mode:"checkbox"},
-
-    {s:"EXISTING STRUCTURES",t:"Existing usable improvements",h:"Anything worth keeping/incorporating",mode:"checkbox"},
-
-    {s:"EXISTING STRUCTURES",t:"Permitted spaces",h:"Verify existing permitted additions/spaces",mode:"checkbox"},
-
-    {s:"EXISTING STRUCTURES",t:"Nonconforming spaces",h:"Unpermitted additions or zoning concerns",mode:"checkbox"},
-
-    {s:"PLANNING / ZONING",t:"Zoning review",h:"Review ZIMAS: setbacks, FAR, height, overlays",mode:"checkbox"},
-
-    {s:"PLANNING / ZONING",t:"Development potential",h:"New build, remodel, ADU, SB9, lot split potential",mode:"checkbox"},
-
-    {s:"PLANNING / ZONING",t:"Easements / restrictions",h:"Utility easements, access easements, encroachments",mode:"checkbox"},
-
-    {s:"DEMO / SITE WORK",t:"Demo scope",h:"Estimate structure/demo requirements",mode:"checkbox"},
-
-    {s:"DEMO / SITE WORK",t:"Site clearing",h:"Tree removal, debris, grading scope",mode:"checkbox"},
-
-    {s:"DEMO / SITE WORK",t:"Landscaping impacts",h:"Existing hardscape/landscape removal",mode:"checkbox"},
-
-    {s:"DEMO / SITE WORK",t:"Retaining wall scope",h:"New retaining walls likely required?",mode:"checkbox"},
-
-    {s:"DOCUMENTATION",t:"Site photos",h:"Full property, street, neighbors, utilities, slopes",mode:"checkbox"},
-
-    {s:"DOCUMENTATION",t:"BOE photos",h:"Take driveway/apron/sidewalk photos for BOE",mode:"checkbox"},
-
-    {s:"DOCUMENTATION",t:"Urban Forestry photos",h:"Required parkway/tree documentation",mode:"checkbox"},
-
-    {s:"DOCUMENTATION",t:"Measurements",h:"Lot dimensions, setbacks, elevation changes",mode:"checkbox"},
-
-    {s:"DOCUMENTATION",t:"Drone photos (if needed)",h:"Helpful for slope/privacy/context review",mode:"checkbox"}
-
-  ],
-
-  "Acquisition":[
-
-    {t:"Inform DPC of Accepted Offer",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Opening Escrow Email",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Send escrow Buyer contact info",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Request Title Binder from Escrow",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Order inspections ASAP and confirm access with the LA (Sewer, soils, survey)",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Send FX docs to lender",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Intro Escrow and the Lender",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Send email to insurance provider",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Coordinate wire for EMD",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"TC / JG Ops to add contingencies & COE to cal.",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Work w/DPC on plans, budget, and timeline",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Prep G Drive folder for project",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Review Escrow Instructions and disclosures",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Request developer fee discount w/escrow",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Investor Outreach",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Confirm appraisal date and time",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Conduct inspections",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Complete AVID",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Prepare the RR if necessary.",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Notify escrow and lender of any Credits",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Send CR-All.",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Create LLC",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Set up bank acct. for project",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"F/u w/lender on docs",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"VP",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Confirm title binder w/escrow",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Confirm location of keys, clickers, FOBs, etc.",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Utility set up",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Schedule notary for closing docs",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Sign closing docs",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Send final funds to escrow",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Closing Day!",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Add docs to G-Drive",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Send controller closing statement",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Add project to Bespoke Homes Project Info sheet",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Set up cal. invite for a month before insurance policy expiration",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Send handoff email to DPC",h:"",mode:"checkbox",hasDate:true},
-
-    {t:"Add Loan to FCI",h:"",mode:"checkbox",hasDate:true}
-
-  ],
-
-  "Plans & Permits":[
-
-    {t:"Obtain Survey",company:"Horizon",who:"Matthew",h:"Slope Band Analysis required if in Hillside",mode:"permits"},
-
-    {t:"Verify Items on Plans Checklist",company:"Cody/Matthew",who:"",h:"",mode:"permits"},
-
-    {t:"Pull all records (Permits, CofOs, Plot Plans)",company:"LADBS",who:"Matthew",h:"",mode:"permits"},
-
-    {t:"Submit DWP encroachment application (building within 10’ of easement)",company:"DWP",who:"Matthew/Cody",h:"Basic floorplan and elevations/survey - submit asap - no permit needed and link after - Only if it's a new building note: connect link to dwp",mode:"permits"},
-
-    {t:"Submit to Bureau of Street Services (Urban Forestry Division) to remove any trees in parkway",company:"BSS",who:"Matthew/Cody/Krystin",h:"Krystin to submit - we provide photos",mode:"permits"},
-
-    {t:"Submit DPI/Posting (if applicable)",company:"LADBS",who:"Matthew",h:"Posting required if building is over 45 years old. Need site plan with existing building",mode:"permits"},
-
-    {t:"Submit GPI/Posting (if applicable) or get GPI waiver after submittal",company:"LADBS/Grading",who:"Krystin",h:"Need architectural plan. Posting required for Hillside lots. Posting not required for Fire Rebuild",mode:"permits"},
-
-    {t:"Obtain Soils Report (if applicable)",company:"LK Geotechnical",who:"Matthew",h:"Need architectural plan",mode:"permits"},
-
-    {t:"Submit Soils Report (if applicable)",company:"Grading",who:"Krystin",h:"",mode:"permits"},
-
-    {t:"Send 30 Day Notice of Intent to Excavate (if applicable)",company:"Admin",who:"Matthew",h:"Required if any excavation surcharge on neighboring property",mode:"permits"},
-
-    {t:"Obtain Slope Band Analysis approval from planning (if applicable)",company:"DCP",who:"Krystin",h:"With any hillside property",mode:"permits"},
-
-    {t:"Obtain Fire Sprinkler Plans",company:"GC",who:"Matthew",h:"",mode:"permits"},
-
-    {t:"Obtain Truss Calcs",company:"Goldenwood",who:"Matthew",h:"Need architectural and sturctural plans",mode:"permits"},
-
-    {t:"Submit plans to plan check",company:"LADBS",who:"Krystin",h:"",mode:"permits"},
-
-    {t:"Submit plans to Coastal once permit number is generated (if applicable)",company:"Coastal",who:"Krystin",h:"",mode:"permits"},
-
-    {t:"Submit truss calcs if ready or submit truss calcs during final plan check",company:"LADBS",who:"Krystin",h:"",mode:"permits"},
-
-    {t:"Submit fire sprinkler plans to Fire Department",company:"LAFD",who:"Krystin",h:"",mode:"permits"},
-
-    {t:"Pickup plan check corrections",company:"LADBS",who:"Krystin",h:"Check online to see if approved and let Krystin know - Matthew to pick up in downtown LA",mode:"permits"},
-
-    {t:"Obtain Clearances",company:"Krystin to submit, Matthew to follow up w/coorispondance (DOT)",who:"",h:"",mode:"permits"},
-
-    {t:"Bureau of Engineering",company:"BOE",who:"Krystin",h:"",mode:"permits"},
-
-    {t:"Planning (includes Coastal)",company:"DCP",who:"Krystin",h:"",mode:"permits"},
-
-    {t:"Fire Department",company:"LAFD",who:"Krystin",h:"",mode:"permits"},
-
-    {t:"Transportation Department",company:"DOT",who:"Krystin",h:"",mode:"permits"},
-
-    {t:"Bureau of Street Services (Urban Forestry Division)",company:"BSS",who:"Krystin",h:"",mode:"permits"},
-
-    {t:"Resubmit to plan check or final plan check appointment",company:"LADBS",who:"Krystin/Cody",h:"Online or in person - Truss calcs if possible",mode:"permits"},
-
-    {t:"Pull permit",company:"LADBS",who:"",h:"",mode:"permits"}
-
-  ],
-
-  "Construction":[
-
-    {s:"Pre-Construction / Admin",t:"Relocate Neighboring Powerlines (If applicable)",h:"Call LADWP Service planning at 213-367-6937 and after you receive work request number contact David Flynn (Supervisor District) to confirm job and start date 310-524-8435",o:"g",mode:"construction"},
-
-    {s:"Pre-Construction / Admin",t:"Set up LADWP account (water and sewer) / Schedule electric meter to be removed",h:"Following Day, call Connection Center (213-367-6937) to confirm scheduling and directed to West LA District, not city of LA. 
-
-
-
-After confirmed, call West LA District to confirm work date. (310-524-8441)",o:"m",mode:"construction"},
-
-    {s:"Site Prep",t:"Order temp. fence & porta potty",h:"Andy Gump - Confirm Dates for Fence and Potty",o:"m",mode:"construction"},
-
-    {s:"Site Prep",t:"Hang BH Branded construction fabric on fence / Install Chain and Lock",h:"Fabrics in storage room (order more if needed) / Add lock code to notes",o:"m",mode:"construction"},
-
-    {s:"Site Prep",t:"Setup security system",h:"Have team install pole / cameras",o:"m",mode:"construction"},
-
-    {s:"Site Prep",t:"Call Dig Alert",h:"Confirm with GC this has been done",o:"g",mode:"construction"},
-
-    {s:"Site Prep",t:"Install temp. power",h:"Floor Plans Pros. Confirm with GC application has been submitted",o:"g",mode:"construction"},
-
-    {s:"Pre-Construction / Admin",t:"Sell appliances, if included in sale",h:"",o:"m",mode:"construction"},
-
-    {s:"Pre-Construction / Admin",t:"Verify fire sprinkler plan approval",h:"Can also check LADBS for inpsections. Matthew to f/u w/GC to ensure it's been completed.",o:"g",mode:"construction"},
-
-    {s:"Pre-Construction / Admin",t:"Create listing Floorplan once we have Approved Plans",h:"Floor Plans Pros info@floorplanspros.com",o:"m",mode:"construction"},
-
-    {s:"Pre-Construction / Admin",t:"Water line and meter upgrade",h:"Permit through LADWP",o:"m",mode:"construction"},
-
-    {s:"Pre-Construction / Admin",t:"Gas meter upgrade",h:"Submit new service form on Website. Confirm with Cody on specs.",o:"m",mode:"construction"},
-
-    {s:"Pre Ordering",t:"Order windows/ skylights / exterior doors",h:"Sean Superior Moulding: Confirm window and door sizes, finishes, grid styles, opening types, skylights, and jamb requirements.",o:"m",mode:"construction"},
-
-    {s:"Pre-Construction / Admin",t:"After window/ exterior door order, mark notes on plan",h:"Confirm rough openings, door swings, beam/fireplace locations, required clearances, and all header, door, slider, and window heights.",o:"m",mode:"construction"},
-
-    {s:"Pre Ordering",t:"Order plumbing: Rough-in and Finishes | Tubs and Toilets",h:"Rough and Trims delivery to office. Tubs, Sinks, Toilets held by vendor.",o:"m",mode:"construction"},
-
-    {s:"Pre Ordering",t:"Order Appliances",h:"Justin Univeral Appliances: Email appliance specs to GC, designer, and cabinet maker",o:"m",mode:"construction"},
-
-    {s:"Demo",t:"Demo existing property",h:"",o:"g",mode:"construction"},
-
-    {s:"Sewer",t:"Expose sewer and cap it",h:"(Inspection required) Expose sewer line during demo so nothing goes into the sewer. Install liner. Leave open until rough plumbing completed",o:"g",mode:"construction"},
-
-    {s:"Demo Inspection",t:"Demo Final Inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"Admin",t:"School fee refund (only for new construction)",h:"LA City* Need to provide ASAP after demo permit is finaled.",o:"m",mode:"construction"},
-
-    {s:"Sewer",t:"Sewer repair and liner if needed",h:"John Just Right: Check reports provided during escrow",o:"m",mode:"construction"},
-
-    {s:"Grading",t:"Start R&R left side",h:"(Removal and recompaction)",o:"g",mode:"construction"},
-
-    {s:"Grading Inspection",t:"Grading inspection - Left Side",h:"For bottom of left side",o:"i",mode:"construction"},
-
-    {s:"Grading",t:"Start R&R right side",h:"(Removal and recompaction)",o:"g",mode:"construction"},
-
-    {s:"Grading Inspection",t:"Grading inspection - Right Side",h:"For bottom of right side",o:"i",mode:"construction"},
-
-    {s:"Grading",t:"Submit compaction report to grading",h:"Mark and Sean LK Geotechnical. Take soils packet to city and pay the fee.",o:"m",mode:"construction"},
-
-    {s:"Pool",t:"Dig pool",h:"(If applicable)",o:"g",mode:"construction"},
-
-    {s:"Foundation",t:"Schedule surveyor for house boundary staking plan",h:"Jerry Horizons: Complete after grading.",o:"m",mode:"construction"},
-
-    {s:"Foundation",t:"Dig footings / Install forms",h:"Dig main sewer line throughout house at same time",o:"g",mode:"construction"},
-
-    {s:"Foundation",t:"Install rebar for footings / install ufer ground",h:"Confirm panel location for ufer ground",o:"g",mode:"construction"},
-
-    {s:"Foundation Inspection",t:"Footing / rebar inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"Foundation - Admin",t:"Mark underground rough on site after footing rebar for plumbing / electrical locations",h:"Measure and double check or mark location (spray paint)",o:"m",mode:"construction"},
-
-    {s:"Foundation",t:"Underground rough - electrical",h:"",o:"g",mode:"construction"},
-
-    {s:"Foundation",t:"Underground rough - plumbing",h:"",o:"g",mode:"construction"},
-
-    {s:"Foundation",t:"Underground rough - low voltage",h:"",o:"g",mode:"construction"},
-
-    {s:"Foundation - Admin",t:"Verify all underground rough",h:"",o:"m",mode:"construction"},
-
-    {s:"Foundation Inspection",t:"Rough underground elec. / plumbing inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"Foundation",t:"Pour footings",h:"",o:"g",mode:"construction"},
-
-    {s:"Foundation",t:"Slab rebar, gravel, and visqueen",h:"",o:"g",mode:"construction"},
-
-    {s:"Foundation - Admin",t:"Verify slider/door depression in field",h:"",o:"m",mode:"construction"},
-
-    {s:"Foundation Inspection",t:"Slab rebar inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"Foundation",t:"Pour slab",h:"",o:"g",mode:"construction"},
-
-    {s:"Pre Ordering",t:"Order fireplace(s)",h:"",o:"g",mode:"construction"},
-
-    {s:"Pre Ordering",t:"Order Garage Fire Rated Pedestrian Door(s)",h:"Shawn Imperial: Garage door into home and exterior door into garage.",o:"m",mode:"construction"},
-
-    {s:"Framing",t:"Start framing",h:"Meet with GC to verify framing, beams, niches, etc.",o:"m",mode:"construction"},
-
-    {s:"Framing Inspection",t:"Floor nailing / roof diaphragm inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"Framing",t:"Start 2nd floor",h:"",o:"g",mode:"construction"},
-
-    {s:"Framing",t:"Order Trusses",h:"After second floor walls are snapped with chalk line on the floor",o:"m",mode:"construction"},
-
-    {s:"Framing",t:"Install Trusses",h:"",o:"g",mode:"construction"},
-
-    {s:"Framing",t:"Structural observation report for roof diaphragm, roof nailing, sheer walls",h:"",o:"g",mode:"construction"},
-
-    {s:"Framing - Admin",t:"Schedule height survey",h:"Jerry Horizon",o:"m",mode:"construction"},
-
-    {s:"Framing - Inspection",t:"Roof nailing inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"Framing - Inspection",t:"Shear wall inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"Admin",t:"Get electric meter location approved by DWP",h:"Schedule after 2nd floor is framed. Verify roof is finished before DWP comes to field and location for drop",o:"m",mode:"construction"},
-
-    {s:"Framing - Admin",t:"Blocking for towel / toilet paper holders, door stops, soffits, beams, TVs etc.",h:"",o:"m",mode:"construction"},
-
-    {s:"Framing - Admin",t:"Framing walkthrough",h:"Check size of fireplace, window & door size/placement, doors, niches, etc.",o:"m",mode:"construction"},
-
-    {s:"Admin",t:"Schedule garage door company to field measure",h:"",o:"m",mode:"construction"},
-
-    {s:"GC",t:"Install scaffolding",h:"",o:"g",mode:"construction"},
-
-    {s:"MEP's",t:"Install fireplace",h:"",o:"g",mode:"construction"},
-
-    {s:"MEP's",t:"Mechanical (HVAC)",h:"",o:"g",mode:"construction"},
-
-    {s:"MEP's",t:"Electrical",h:"Confirm sleeve has been run at roof for future solar",o:"g",mode:"construction"},
-
-    {s:"MEP's",t:"Plumbing",h:"",o:"g",mode:"construction"},
-
-    {s:"MEP's",t:"Fire sprinklers",h:"Golden State: Ensure fire sprinkler vendor has submitted plan for supp",o:"g",mode:"construction"},
-
-    {s:"MEP's",t:"Low voltage",h:"Set up dedicated home system email and confirm all smart home, AV, security, lighting control, and device locations.",o:"g",mode:"construction"},
-
-    {s:"MEP - Admin",t:"Verify Car Charger Location and Install",h:"",o:"g",mode:"construction"},
-
-    {s:"MEP Inspection",t:"(Mechanical) HVAC inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"MEP Inspection",t:"Electrical inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"MEP Inspection",t:"Plumbing inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"Waterproofing",t:"Waterproof shower floors / balconies / laundry",h:"",o:"g",mode:"construction"},
-
-    {s:"Waterproofing Inspection",t:"Shower pan inspection",h:"(Plug / fill shower floors w/water before inspection)",o:"i",mode:"construction"},
-
-    {s:"MEP Inspection",t:"Fire sprinkler inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"Mid Ordering",t:"Order Hood to site if it's being drywalled",h:"",o:"m",mode:"construction"},
-
-    {s:"Mid Ordering",t:"Order Interior Doors",h:"If Bob, he can build. Other vendor - Shawn (Imperial). If no door casing, order early, once framing is completed.",o:"m",mode:"construction"},
-
-    {s:"Pre ordering",t:"Order Door Hardware/ Stops",h:"",o:"m",mode:"construction"},
-
-    {s:"Pre ordering",t:"Order Light fixtures",h:"",o:"m",mode:"construction"},
-
-    {s:"Pre ordering",t:"Order Mirrors",h:"",o:"m",mode:"construction"},
-
-    {s:"Pre ordering",t:"Order Bath Accessories",h:"",o:"m",mode:"construction"},
-
-    {s:"Pre ordering",t:"Order Mailbox",h:"https://www.rejuvenation.com/products/post-porch-city-mailbox/ Black - Locking",o:"m",mode:"construction"},
-
-    {s:"GC",t:"Install windows",h:"",o:"g",mode:"construction"},
-
-    {s:"GC",t:"Install exterior doors",h:"",o:"g",mode:"construction"},
-
-    {s:"Admin",t:"Video all walls and cielings prior to insulation",h:"",o:"m",mode:"construction"},
-
-    {s:"Admin",t:"Confirm all electrical, lighting, AV, and low-voltage rough-in locations, heights, alignments, controls, and device placements.",h:"",o:"m",mode:"construction"},
-
-    {s:"Admin",t:"Confirm all plumbing, HVAC, venting, and fireplace rough-in locations, terminations, and fixture heights prior to wall close-up and stucco.",h:"",o:"m",mode:"construction"},
-
-    {s:"Admin",t:"Verify door swings, switch accessibility, niche locations, panel locations, and overall coordination between trades.",h:"",o:"m",mode:"construction"},
-
-    {s:"Admin",t:"Confirm all required future infrastructure and exterior penetrations, including solar sleeves, venting, overflow locations, and equipment connections.",h:"",o:"m",mode:"construction"},
-
-    {s:"Framing Inspection",t:"Final framing inspection",h:"(Get ok to wrap house)",o:"i",mode:"construction"},
-
-    {s:"GC",t:"Straight edge for drywall",h:"",o:"g",mode:"construction"},
-
-    {s:"GC",t:"Clean all interior framing prior to insulation.",h:"",o:"g",mode:"construction"},
-
-    {s:"GC",t:"Spray the framing",h:"Bora-Care with Mold-Care treatment (add dye to see where spraying)",o:"g",mode:"construction"},
-
-    {s:"Exterior",t:"Wrap house",h:"",o:"g",mode:"construction"},
-
-    {s:"Exterior Inspection",t:"Exterior lathe inspection for house wrap",h:"(Get ok to insulate)",o:"i",mode:"construction"},
-
-    {s:"Exterior",t:"Install upper roof",h:"Confirm backing is in for flashing. Roofer to return for lower roof after stucco and painting.",o:"g",mode:"construction"},
-
-    {s:"Exterior",t:"Start siding",h:"",o:"g",mode:"construction"},
-
-    {s:"Exterior",t:"Paint exterior",h:"",o:"g",mode:"construction"},
-
-    {s:"Exterior",t:"Install chimney shroud",h:"",o:"g",mode:"construction"},
-
-    {s:"Exterior",t:"Paint chimney shroud",h:"(Before roofing material install)",o:"g",mode:"construction"},
-
-    {s:"Exterior",t:"Install shutters / Window Details",h:"(If applicable)",o:"g",mode:"construction"},
-
-    {s:"Exterior",t:"Install upper gutters / downspouts",h:"",o:"g",mode:"construction"},
-
-    {s:"Exterior",t:"Remove scaffolding",h:"",o:"g",mode:"construction"},
-
-    {s:"Exterior",t:"Install lower roof",h:"(Depending on the contractor)",o:"g",mode:"construction"},
-
-    {s:"Insulation",t:"Insulate entire house",h:"Insulate in exterior showers / tubs first",o:"g",mode:"construction"},
-
-    {s:"Inspection Inspection",t:"Insulation inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"Drywall",t:"Start drywall",h:"(Bathrooms and behind shower / tub walls first)",o:"g",mode:"construction"},
-
-    {s:"Mid Ordering",t:"Order tile",h:"Include grout, etc. in tile budget",o:"g",mode:"construction"},
-
-    {s:"Tile Inspection",t:"Shower/Tub WALL waterproofing / lathe",h:"",o:"i",mode:"construction"},
-
-    {s:"Tile Inspection",t:"Shower lathe inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"Tile",t:"Install hardy board or float shower/tubs with concrete",h:"Verify drywall is installed behind showers",o:"g",mode:"construction"},
-
-    {s:"Tile",t:"Install tile",h:"Once tile is delivered, let team and Designer know",o:"g",mode:"construction"},
-
-    {s:"Drywall Inspection",t:"Drywall nailing inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"Admin",t:"Walkthrough after drywall to verify no outlets covered over",h:"",o:"g",mode:"construction"},
-
-    {s:"Mid Ordering",t:"Order flooring",h:"",o:"g",mode:"construction"},
-
-    {s:"Drywall",t:"Skim coat drywall",h:"",o:"g",mode:"construction"},
-
-    {s:"Paint",t:"Prime all interior walls / cielings",h:"",o:"g",mode:"construction"},
-
-    {s:"Admin",t:"Schedule vendor to measure/design closets",h:"If Bob, he can build",o:"m",mode:"construction"},
-
-    {s:"Admin",t:"Schedule cabinet company to field measure",h:"",o:"m",mode:"construction"},
-
-    {s:"Mid Ordering",t:"Order cabinet hardware after cabinets are verified",h:"",o:"m",mode:"construction"},
-
-    {s:"Mid Ordering",t:"Order HVAC Registers",h:"Request sizes from GC",o:"m",mode:"construction"},
-
-    {s:"Mid Ordering",t:"Order smart light switches - Lutron",h:"For specified areas only - Claro Smart Switch for Caseta",o:"g",mode:"construction"},
-
-    {s:"Mid Ordering",t:"Order screwless outlet and switch covers",h:"If Ted, we order. Get count in field.",o:"g",mode:"construction"},
-
-    {s:"Mid Ordering",t:"Source slab for countertops",h:"GC pays and picks up",o:"m",mode:"construction"},
-
-    {s:"Mid Ordering",t:"Order BBQ (BBQ Guys)",h:"",o:"m",mode:"construction"},
-
-    {s:"Finishes",t:"Start finish carpentry",h:"",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Start staircase hardwood",h:"",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Install interior doors",h:"",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Install cabinets",h:"",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Install cabinet hardware",h:"",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Install countertops",h:"Confirm with GC for Sink Delivery",o:"g",mode:"construction"},
-
-    {s:"Admin",t:"Schedule Appliance Inspection",h:"Need flooring and countertops in | 1-2 Week inspection lead time",o:"m",mode:"construction"},
-
-    {s:"Finishes",t:"Install fireplace slabs",h:"",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Install wood flooring",h:"",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Install baseboards",h:"",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Install closets",h:"Coordinate w/GC if site needs to be prepped if Closet World",o:"m",mode:"construction"},
-
-    {s:"Admin",t:"Schedule Delivery of Standing Tubs and Toilets",h:"Winsupply Michael",o:"m",mode:"construction"},
-
-    {s:"Landscape/Hardscape",t:"Public Work A-Permit",h:"BOE - Online permit",o:"g",mode:"construction"},
-
-    {s:"Landscape/Hardscape",t:"Install area drains",h:"",o:"g",mode:"construction"},
-
-    {s:"Landscape/Hardscape",t:"Have plumber run gas line / water line",h:"",o:"g",mode:"construction"},
-
-    {s:"Landscape/Hardscape Inspection",t:"Gas line / water line inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"Landscape/Hardscape",t:"Install driveway, patio, and walkway concrete",h:"",o:"g",mode:"construction"},
-
-    {s:"Exterior",t:"Install garage door after driveway is poured",h:"Make sure GC is ready for Garage door",o:"g",mode:"construction"},
-
-    {s:"Exterior",t:"Install lower gutters",h:"",o:"g",mode:"construction"},
-
-    {s:"Exterior Inspection",t:"Grading final",h:"",o:"i",mode:"construction"},
-
-    {s:"Landscape/Hardscape",t:"Start final landscaping",h:"Need landscape/hardscape plan",o:"g",mode:"construction"},
-
-    {s:"Final Trades",t:"Electrical",h:"",o:"g",mode:"construction"},
-
-    {s:"Final Trades",t:"Plumbing",h:"",o:"g",mode:"construction"},
-
-    {s:"Final Trades",t:"HVAC",h:"",o:"g",mode:"construction"},
-
-    {s:"Final Trades",t:"HERS testing",h:"Matthew to f/u w/GC.",o:"m",mode:"construction"},
-
-    {s:"Final Trades",t:"Low voltage",h:"",o:"g",mode:"construction"},
-
-    {s:"Final Trades",t:"Fire sprinkler",h:"",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Have finish carpenter install all final hardware",h:"Admin to provide",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Verify weatherstrips installed",h:"",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Paint final colors",h:"Admin to provide",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Paint garage door",h:"",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Paint garage floor w/epoxy",h:"",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Exterior touch ups",h:"",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Install mirrors",h:"Admin to provide",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Install glass enclosures",h:"Admin to provide",o:"g",mode:"construction"},
-
-    {s:"Finishes",t:"Install window hardware",h:"",o:"g",mode:"construction"},
-
-    {s:"Admin",t:"Schedule delivery and install appliances",h:"",o:"m",mode:"construction"},
-
-    {s:"Final Inspection",t:"Final electrical inspection",h:"Once electrical final is issued, it takes 2–4 business days for the BMI inspector to release electrical service.",o:"i",mode:"construction"},
-
-    {s:"Admin",t:"Get power released / meter install",h:"Track Electrical Service Installation Status",o:"m",mode:"construction"},
-
-    {s:"Admin",t:"Install DWP meter",h:"Once utilities are released, call LADWP to setup service / install meter.",o:"g",mode:"construction"},
-
-    {s:"Final Inspection",t:"Final plumbing inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"Final Inspection",t:"Gas test inspection",h:"SoCalGas is released automatically once SGSOV-Seismic Gas S/O Valve is approved.",o:"i",mode:"construction"},
-
-    {s:"Admin",t:"Set up gas account",h:"Fill out application on SoCalGas for meter install. (Search Builder Services - 2nd option - Scroll down to new res. construction - Fill out app. Can take 7-10 biz days for SoCalGas to call back and install meter).",o:"m",mode:"construction"},
-
-    {s:"Final Inspection",t:"Final HVAC inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"Final Inspection",t:"Final fire sprinkler inspection",h:"",o:"i",mode:"construction"},
-
-    {s:"Admin",t:"Put together buyers packet w/all manuals",h:"",o:"g",mode:"construction"},
-
-    {s:"Final",t:"Print green forms",h:"",o:"g",mode:"construction"},
-
-    {s:"Final Inspection",t:"Green final",h:"",o:"i",mode:"construction"},
-
-    {s:"Final Inspection",t:"Main final",h:"",o:"i",mode:"construction"},
-
-    {s:"Admin",t:"Check LADBS Activity report to confirm all units finaled",h:"LADBS Permit & Inspection Report",o:"m",mode:"construction"},
-
-    {s:"Admin",t:"Call LADWP for new trash, recycle, yard bins",h:"Take photos of seriel number of each can. Call 1-800-773-2489 (option 1). Give Ryan's name & Name on Utility Bill.",o:"m",mode:"construction"},
-
-    {s:"Admin",t:"Post Construction Cleaner",h:"",o:"m",mode:"construction"},
-
-    {s:"",t:"Drop off Supply Box (Booties, TP, Cleaning Wipes, etc)",h:"",o:"m",mode:"construction"},
-
-    {s:"Admin",t:"Refer to 'Disposition (Escrow)' tab for next steps",h:"",o:"g",mode:"construction"}
-
-  ],
-
-  "Walkthrough Before Drywall":[
-
-    {t:"Confirm switch layout, heights, and lighting controls.",h:"",mode:"checkbox"},
-
-    {t:"Confirm outlet placements for AV components, bidets, island plugs, and other required locations.",h:"",mode:"checkbox"},
-
-    {t:"Height of light fixtures",h:"",mode:"checkbox"},
-
-    {t:"Height of plumbing",h:"",mode:"checkbox"},
-
-    {t:"Confirm door swings do not interfere with light switch locations",h:"",mode:"checkbox"},
-
-    {t:"Confirm in-wall bathroom plumbing locations, fixture walls, and shower head heights.",h:"",mode:"checkbox"},
-
-    {t:"Lighting is centered, aligned with each other, etc.",h:"",mode:"checkbox"},
-
-    {t:"Confirm placement of speakers, control pads, security cameras, and other AV devices.",h:"",mode:"checkbox"},
-
-    {t:"HVAC connections / placement",h:"",mode:"checkbox"},
-
-    {t:"Confirm HVAC exterior overflow termination locations prior to stucco.",h:"",mode:"checkbox"},
-
-    {t:"Laundry venting",h:"",mode:"checkbox"},
-
-    {t:"Range venting",h:"",mode:"checkbox"},
-
-    {t:"Fireplace venting",h:"",mode:"checkbox"},
-
-    {t:"Nitch locations in Kitchen and Bathrooms",h:"",mode:"checkbox"},
-
-    {t:"Sub panel location",h:"",mode:"checkbox"},
-
-    {t:"Confirm sleeve has been run at roof for future solar",h:"",mode:"checkbox"},
-
-    {t:"Exterior Range venting",h:"",mode:"checkbox"},
-
-    {t:"Exterior Fireplace venting",h:"",mode:"checkbox"}
-
-  ],
-
-  "Disposition":[
-
-    {s:"Disposing",t:"Prop walkthrough 6 wks. prior to est. completion date",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Deep clean",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Staging",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Photography / Matterport",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Property cheat sheet for Agents",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Seller disclosures",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Retrofit",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Counter Offer (title binder)",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Sell Side Checklist",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Opening escrow email (title binder)",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Work with the Buyer's Agent to confirm access to the property for inspections.",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"TC to add contingencies and COE to our calendars.",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Send all discs. and docs to Buyer's Agent",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Confirm Buyer has wired their EMD to escrow.",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Comps for appraisal",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Review escrow instructions",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Inspections",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Confirm the appraisal has been scheduled / completed",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"RR / punchlist",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Notify escrow and lender of any Credits",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"DPC to walkthrough and complete punchlist items",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"F/u w/Agent about loan",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"CR-All",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Provide list of utility providers",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"VP",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"P/u cleaning supply basket and internet equipment from property",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Email Agent location for keys, clickers, FOBs, etc. / utility providers",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Schedule cancellation of utilities",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Call insurance for premium refund",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Closing Day!",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Pick up lockbox",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Add docs to G-Drive",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Send controller closing statement",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Add project to Bespoke Homes Project Info sheet",h:"",mode:"checkbox"},
-
-    {s:"Disposing",t:"Email to investors - FLS from [Date of Statement], final Balance Sheet, P&L, Disbursement Schedule, Seller Settlement Statement (include a link to G-Drive folder) PTET",h:"",mode:"checkbox"}
-
-  ]
-
-};
-
-
-
-const TABS = Object.keys(DATA);
-
-
-
-// ── STATE ─────────────────────────────────────────────────────────────────────
-
-let st = {
-
-  user: null,
-
-  view: 'login',
-
-  projects: [],
-
-  proj: null,       // full project object
-
-  tab: 'Initial Walkthrough',
-
-  taskCache: {},    // proj_id -> { task_key -> task_row }
-
-  actLog: [],
-
-  users: JSON.parse(JSON.stringify(USERS)),
-
-};
-
-
-
-// ── HELPERS ───────────────────────────────────────────────────────────────────
-
-const $ = id => document.getElementById(id);
-
+const USERS=[{id:'MP',name:'Matthew Pichardo',initials:'MP',password:'BespokeMatthew',role:'admin'},{id:'CW',name:'Cody Wetzel',initials:'CW',password:'BespokeCody',role:'user'},{id:'KH',name:'Kyle Hata',initials:'KH',password:'BespokeKyle',role:'user'},{id:'RJ',name:'Ryan Jancula',initials:'RJ',password:'BespokeRyan',role:'user'},{id:'BA',name:'Bespoke Admin',initials:'BA',password:'Bespoke@Info',role:'admin'}];
+const DATA={"Initial Walkthrough":[{s:"UTILITIES",t:"Water meter location",h:"Existing meter placement and accessibility",mode:"checkbox"},{s:"UTILITIES",t:"Water main size",h:"Verify main size and potential upgrade needs",mode:"checkbox"},{s:"UTILITIES",t:"Gas meter location",h:"Existing gas meter location",mode:"checkbox"},{s:"UTILITIES",t:"Gas main size",h:"Verify capacity for proposed project",mode:"checkbox"},{s:"UTILITIES",t:"Power poles",h:"Pole locations impacting driveway, frontage, or utilities",mode:"checkbox"},{s:"UTILITIES",t:"Overhead wires",h:"Electrical/telephone wires crossing lot or build envelope",mode:"checkbox"},{s:"UTILITIES",t:"Hydrant location",h:"Hydrant in front of or near property",mode:"checkbox"},{s:"SITE CONDITIONS",t:"Slope / hillside",h:"Flat lot or hillside? Estimate usable yard/build area",mode:"checkbox"},{s:"SITE CONDITIONS",t:"Drainage conditions",h:"Signs of poor drainage, runoff, low points",mode:"checkbox"},{s:"SITE CONDITIONS",t:"Ejector pump requirements",h:"Any below-grade areas requiring pump systems",mode:"checkbox"},{s:"SITE CONDITIONS",t:"Mature trees / vegetation",h:"Protected trees? Large root systems? Removal concerns",mode:"checkbox"},{s:"SITE CONDITIONS",t:"Lot dimensions",h:"Frontage, depth, irregular shape, easements",mode:"checkbox"},{s:"SITE CONDITIONS",t:"Lot usability",h:"Overall buildable footprint and constraints",mode:"checkbox"},{s:"SITE CONDITIONS",t:"Driveway approach",h:"Existing curb cut, slope, access issues",mode:"checkbox"},{s:"SITE CONDITIONS",t:"Sidewalk condition",h:"Damage, uplift, replacement requirements",mode:"checkbox"},{s:"SITE CONDITIONS",t:"Existing retaining walls",h:"Condition, height, replacement concerns",mode:"checkbox"},{s:"NEIGHBOR IMPACTS",t:"Neighbor privacy concerns",h:"Apartments, hillside homes, offices overlooking backyard",mode:"checkbox"},{s:"NEIGHBOR IMPACTS",t:"Surrounding area context",h:"Industrial nearby? Apartments? Commercial influence?",mode:"checkbox"},{s:"NEIGHBOR IMPACTS",t:"Neighborhood quality",h:"Street appeal, development activity, resale perception",mode:"checkbox"},{s:"EXISTING STRUCTURES",t:"Existing structure condition",h:"Overall condition of house/buildings",mode:"checkbox"},{s:"EXISTING STRUCTURES",t:"Foundation type",h:"Raised foundation or slab",mode:"checkbox"},{s:"EXISTING STRUCTURES",t:"Major systems",h:"Roof, HVAC, plumbing, electrical updates",mode:"checkbox"},{s:"EXISTING STRUCTURES",t:"Existing detached garage",h:"ADU conversion potential",mode:"checkbox"},{s:"EXISTING STRUCTURES",t:"Existing usable improvements",h:"Anything worth keeping/incorporating",mode:"checkbox"},{s:"EXISTING STRUCTURES",t:"Permitted spaces",h:"Verify existing permitted additions/spaces",mode:"checkbox"},{s:"EXISTING STRUCTURES",t:"Nonconforming spaces",h:"Unpermitted additions or zoning concerns",mode:"checkbox"},{s:"PLANNING / ZONING",t:"Zoning review",h:"Review ZIMAS: setbacks, FAR, height, overlays",mode:"checkbox"},{s:"PLANNING / ZONING",t:"Development potential",h:"New build, remodel, ADU, SB9, lot split potential",mode:"checkbox"},{s:"PLANNING / ZONING",t:"Easements / restrictions",h:"Utility easements, access easements, encroachments",mode:"checkbox"},{s:"DEMO / SITE WORK",t:"Demo scope",h:"Estimate structure/demo requirements",mode:"checkbox"},{s:"DEMO / SITE WORK",t:"Site clearing",h:"Tree removal, debris, grading scope",mode:"checkbox"},{s:"DEMO / SITE WORK",t:"Landscaping impacts",h:"Existing hardscape/landscape removal",mode:"checkbox"},{s:"DEMO / SITE WORK",t:"Retaining wall scope",h:"New retaining walls likely required?",mode:"checkbox"},{s:"DOCUMENTATION",t:"Site photos",h:"Full property, street, neighbors, utilities, slopes",mode:"checkbox"},{s:"DOCUMENTATION",t:"BOE photos",h:"Take driveway/apron/sidewalk photos for BOE",mode:"checkbox"},{s:"DOCUMENTATION",t:"Urban Forestry photos",h:"Required parkway/tree documentation",mode:"checkbox"},{s:"DOCUMENTATION",t:"Measurements",h:"Lot dimensions, setbacks, elevation changes",mode:"checkbox"},{s:"DOCUMENTATION",t:"Drone photos (if needed)",h:"Helpful for slope/privacy/context review",mode:"checkbox"}],"Acquisition":[{t:"Inform DPC of Accepted Offer",h:"",mode:"checkbox",hasDate:true},{t:"Opening Escrow Email",h:"",mode:"checkbox",hasDate:true},{t:"Send escrow Buyer contact info",h:"",mode:"checkbox",hasDate:true},{t:"Request Title Binder from Escrow",h:"",mode:"checkbox",hasDate:true},{t:"Order inspections ASAP and confirm access with the LA (Sewer, soils, survey)",h:"",mode:"checkbox",hasDate:true},{t:"Send FX docs to lender",h:"",mode:"checkbox",hasDate:true},{t:"Intro Escrow and the Lender",h:"",mode:"checkbox",hasDate:true},{t:"Send email to insurance provider",h:"",mode:"checkbox",hasDate:true},{t:"Coordinate wire for EMD",h:"",mode:"checkbox",hasDate:true},{t:"TC / JG Ops to add contingencies & COE to cal.",h:"",mode:"checkbox",hasDate:true},{t:"Work w/DPC on plans, budget, and timeline",h:"",mode:"checkbox",hasDate:true},{t:"Prep G Drive folder for project",h:"",mode:"checkbox",hasDate:true},{t:"Review Escrow Instructions and disclosures",h:"",mode:"checkbox",hasDate:true},{t:"Request developer fee discount w/escrow",h:"",mode:"checkbox",hasDate:true},{t:"Investor Outreach",h:"",mode:"checkbox",hasDate:true},{t:"Confirm appraisal date and time",h:"",mode:"checkbox",hasDate:true},{t:"Conduct inspections",h:"",mode:"checkbox",hasDate:true},{t:"Complete AVID",h:"",mode:"checkbox",hasDate:true},{t:"Prepare the RR if necessary.",h:"",mode:"checkbox",hasDate:true},{t:"Notify escrow and lender of any Credits",h:"",mode:"checkbox",hasDate:true},{t:"Send CR-All.",h:"",mode:"checkbox",hasDate:true},{t:"Create LLC",h:"",mode:"checkbox",hasDate:true},{t:"Set up bank acct. for project",h:"",mode:"checkbox",hasDate:true},{t:"F/u w/lender on docs",h:"",mode:"checkbox",hasDate:true},{t:"VP",h:"",mode:"checkbox",hasDate:true},{t:"Confirm title binder w/escrow",h:"",mode:"checkbox",hasDate:true},{t:"Confirm location of keys, clickers, FOBs, etc.",h:"",mode:"checkbox",hasDate:true},{t:"Utility set up",h:"",mode:"checkbox",hasDate:true},{t:"Schedule notary for closing docs",h:"",mode:"checkbox",hasDate:true},{t:"Sign closing docs",h:"",mode:"checkbox",hasDate:true},{t:"Send final funds to escrow",h:"",mode:"checkbox",hasDate:true},{t:"Closing Day!",h:"",mode:"checkbox",hasDate:true},{t:"Add docs to G-Drive",h:"",mode:"checkbox",hasDate:true},{t:"Send controller closing statement",h:"",mode:"checkbox",hasDate:true},{t:"Add project to Bespoke Homes Project Info sheet",h:"",mode:"checkbox",hasDate:true},{t:"Set up cal. invite for a month before insurance policy expiration",h:"",mode:"checkbox",hasDate:true},{t:"Send handoff email to DPC",h:"",mode:"checkbox",hasDate:true},{t:"Add Loan to FCI",h:"",mode:"checkbox",hasDate:true}],"Plans & Permits":[{t:"Obtain Survey",company:"Horizon",who:"Matthew",h:"Slope Band Analysis required if in Hillside",mode:"permits"},{t:"Verify Items on Plans Checklist",company:"Cody/Matthew",who:"",h:"",mode:"permits"},{t:"Pull all records (Permits, CofOs, Plot Plans)",company:"LADBS",who:"Matthew",h:"",mode:"permits"},{t:"Submit DWP encroachment application (building within 10' of easement)",company:"DWP",who:"Matthew/Cody",h:"Basic floorplan and elevations/survey - submit asap",mode:"permits"},{t:"Submit to Bureau of Street Services (Urban Forestry Division) to remove any trees in parkway",company:"BSS",who:"Matthew/Cody/Krystin",h:"Krystin to submit - we provide photos",mode:"permits"},{t:"Submit DPI/Posting (if applicable)",company:"LADBS",who:"Matthew",h:"Posting required if building is over 45 years old",mode:"permits"},{t:"Submit GPI/Posting (if applicable) or get GPI waiver after submittal",company:"LADBS/Grading",who:"Krystin",h:"Need architectural plan. Posting required for Hillside lots",mode:"permits"},{t:"Obtain Soils Report (if applicable)",company:"LK Geotechnical",who:"Matthew",h:"Need architectural plan",mode:"permits"},{t:"Submit Soils Report (if applicable)",company:"Grading",who:"Krystin",h:"",mode:"permits"},{t:"Send 30 Day Notice of Intent to Excavate (if applicable)",company:"Admin",who:"Matthew",h:"Required if any excavation surcharge on neighboring property",mode:"permits"},{t:"Obtain Slope Band Analysis approval from planning (if applicable)",company:"DCP",who:"Krystin",h:"With any hillside property",mode:"permits"},{t:"Obtain Fire Sprinkler Plans",company:"GC",who:"Matthew",h:"",mode:"permits"},{t:"Obtain Truss Calcs",company:"Goldenwood",who:"Matthew",h:"Need architectural and structural plans",mode:"permits"},{t:"Submit plans to plan check",company:"LADBS",who:"Krystin",h:"",mode:"permits"},{t:"Submit plans to Coastal once permit number is generated (if applicable)",company:"Coastal",who:"Krystin",h:"",mode:"permits"},{t:"Submit truss calcs if ready or submit truss calcs during final plan check",company:"LADBS",who:"Krystin",h:"",mode:"permits"},{t:"Submit fire sprinkler plans to Fire Department",company:"LAFD",who:"Krystin",h:"",mode:"permits"},{t:"Pickup plan check corrections",company:"LADBS",who:"Krystin",h:"Check online to see if approved - Matthew to pick up in downtown LA",mode:"permits"},{t:"Obtain Clearances",company:"Krystin to submit / Matthew to follow up",who:"",h:"",mode:"permits"},{t:"Bureau of Engineering",company:"BOE",who:"Krystin",h:"",mode:"permits"},{t:"Planning (includes Coastal)",company:"DCP",who:"Krystin",h:"",mode:"permits"},{t:"Fire Department",company:"LAFD",who:"Krystin",h:"",mode:"permits"},{t:"Transportation Department",company:"DOT",who:"Krystin",h:"",mode:"permits"},{t:"Bureau of Street Services (Urban Forestry Division)",company:"BSS",who:"Krystin",h:"",mode:"permits"},{t:"Resubmit to plan check or final plan check appointment",company:"LADBS",who:"Krystin/Cody",h:"Online or in person - Truss calcs if possible",mode:"permits"},{t:"Pull permit",company:"LADBS",who:"",h:"",mode:"permits"}],"Construction":[{s:"Pre-Construction / Admin",t:"Relocate Neighboring Powerlines (If applicable)",h:"Call LADWP Service planning at 213-367-6937",o:"g",mode:"construction"},{s:"Pre-Construction / Admin",t:"Set up LADWP account (water and sewer) / Schedule electric meter to be removed",h:"Call Connection Center 213-367-6937 to confirm scheduling",o:"m",mode:"construction"},{s:"Site Prep",t:"Order temp. fence & porta potty",h:"Andy Gump - Confirm Dates",o:"m",mode:"construction"},{s:"Site Prep",t:"Hang BH Branded construction fabric on fence / Install Chain and Lock",h:"Fabrics in storage room - order more if needed",o:"m",mode:"construction"},{s:"Site Prep",t:"Setup security system",h:"Have team install pole / cameras",o:"m",mode:"construction"},{s:"Site Prep",t:"Call Dig Alert",h:"Confirm with GC this has been done",o:"g",mode:"construction"},{s:"Site Prep",t:"Install temp. power",h:"Confirm with GC application has been submitted",o:"g",mode:"construction"},{s:"Pre-Construction / Admin",t:"Sell appliances, if included in sale",h:"",o:"m",mode:"construction"},{s:"Pre-Construction / Admin",t:"Verify fire sprinkler plan approval",h:"Can also check LADBS for inspections",o:"g",mode:"construction"},{s:"Pre-Construction / Admin",t:"Create listing Floorplan once we have Approved Plans",h:"info@floorplanspros.com",o:"m",mode:"construction"},{s:"Pre-Construction / Admin",t:"Water line and meter upgrade",h:"Permit through LADWP",o:"m",mode:"construction"},{s:"Pre-Construction / Admin",t:"Gas meter upgrade",h:"Submit new service form on SoCalGas website",o:"m",mode:"construction"},{s:"Pre Ordering",t:"Order windows / skylights / exterior doors",h:"Sean Superior Moulding - confirm sizes, finishes, grid styles",o:"m",mode:"construction"},{s:"Pre-Construction / Admin",t:"After window/exterior door order, mark notes on plan",h:"Confirm rough openings, door swings, beam/fireplace locations",o:"m",mode:"construction"},{s:"Pre Ordering",t:"Order plumbing: Rough-in and Finishes / Tubs and Toilets",h:"Rough and Trims delivery to office. Tubs/Sinks/Toilets held by vendor",o:"m",mode:"construction"},{s:"Pre Ordering",t:"Order Appliances",h:"Justin Universal Appliances - email specs to GC, designer, cabinet maker",o:"m",mode:"construction"},{s:"Demo",t:"Demo existing property",h:"",o:"g",mode:"construction"},{s:"Sewer",t:"Expose sewer and cap it",h:"Inspection required. Leave open until rough plumbing completed",o:"g",mode:"construction"},{s:"Demo Inspection",t:"Demo Final Inspection",h:"",o:"i",mode:"construction"},{s:"Admin",t:"School fee refund (only for new construction)",h:"LA City - provide ASAP after demo permit is finaled",o:"m",mode:"construction"},{s:"Sewer",t:"Sewer repair and liner if needed",h:"John Just Right - check reports from escrow",o:"m",mode:"construction"},{s:"Grading",t:"Start R&R left side",h:"Removal and recompaction",o:"g",mode:"construction"},{s:"Grading Inspection",t:"Grading inspection - Left Side",h:"For bottom of left side",o:"i",mode:"construction"},{s:"Grading",t:"Start R&R right side",h:"Removal and recompaction",o:"g",mode:"construction"},{s:"Grading Inspection",t:"Grading inspection - Right Side",h:"For bottom of right side",o:"i",mode:"construction"},{s:"Grading",t:"Submit compaction report to grading",h:"Mark and Sean LK Geotechnical - take soils packet to city",o:"m",mode:"construction"},{s:"Pool",t:"Dig pool",h:"If applicable",o:"g",mode:"construction"},{s:"Foundation",t:"Schedule surveyor for house boundary staking plan",h:"Jerry Horizons - complete after grading",o:"m",mode:"construction"},{s:"Foundation",t:"Dig footings / Install forms",h:"Dig main sewer line throughout house at same time",o:"g",mode:"construction"},{s:"Foundation",t:"Install rebar for footings / install ufer ground",h:"Confirm panel location for ufer ground",o:"g",mode:"construction"},{s:"Foundation Inspection",t:"Footing / rebar inspection",h:"",o:"i",mode:"construction"},{s:"Foundation - Admin",t:"Mark underground rough on site after footing rebar",h:"Measure and mark location with spray paint",o:"m",mode:"construction"},{s:"Foundation",t:"Underground rough - electrical",h:"",o:"g",mode:"construction"},{s:"Foundation",t:"Underground rough - plumbing",h:"",o:"g",mode:"construction"},{s:"Foundation",t:"Underground rough - low voltage",h:"",o:"g",mode:"construction"},{s:"Foundation - Admin",t:"Verify all underground rough",h:"",o:"m",mode:"construction"},{s:"Foundation Inspection",t:"Rough underground elec. / plumbing inspection",h:"",o:"i",mode:"construction"},{s:"Foundation",t:"Pour footings",h:"",o:"g",mode:"construction"},{s:"Foundation",t:"Slab rebar, gravel, and visqueen",h:"",o:"g",mode:"construction"},{s:"Foundation - Admin",t:"Verify slider/door depression in field",h:"",o:"m",mode:"construction"},{s:"Foundation Inspection",t:"Slab rebar inspection",h:"",o:"i",mode:"construction"},{s:"Foundation",t:"Pour slab",h:"",o:"g",mode:"construction"},{s:"Pre Ordering",t:"Order fireplace(s)",h:"1-2 week lead time",o:"g",mode:"construction"},{s:"Pre Ordering",t:"Order Garage Fire Rated Pedestrian Door(s)",h:"Shawn Imperial - garage door into home and exterior into garage",o:"m",mode:"construction"},{s:"Framing",t:"Start framing",h:"Meet with GC to verify framing, beams, niches, etc.",o:"m",mode:"construction"},{s:"Framing Inspection",t:"Floor nailing / roof diaphragm inspection",h:"",o:"i",mode:"construction"},{s:"Framing",t:"Start 2nd floor",h:"",o:"g",mode:"construction"},{s:"Framing",t:"Order Trusses",h:"After second floor walls are snapped with chalk line",o:"m",mode:"construction"},{s:"Framing",t:"Install Trusses",h:"",o:"g",mode:"construction"},{s:"Framing",t:"Structural observation report for roof diaphragm, roof nailing, shear walls",h:"",o:"g",mode:"construction"},{s:"Framing - Admin",t:"Schedule height survey",h:"Jerry Horizon",o:"m",mode:"construction"},{s:"Framing - Inspection",t:"Roof nailing inspection",h:"",o:"i",mode:"construction"},{s:"Framing - Inspection",t:"Shear wall inspection",h:"",o:"i",mode:"construction"},{s:"Admin",t:"Get electric meter location approved by DWP",h:"Schedule after 2nd floor is framed",o:"m",mode:"construction"},{s:"Framing - Admin",t:"Blocking for towel / toilet paper holders, door stops, soffits, beams, TVs",h:"",o:"m",mode:"construction"},{s:"Framing - Admin",t:"Framing walkthrough",h:"Check size of fireplace, window and door size/placement, niches",o:"m",mode:"construction"},{s:"Admin",t:"Schedule garage door company to field measure",h:"",o:"m",mode:"construction"},{s:"GC",t:"Install scaffolding",h:"",o:"g",mode:"construction"},{s:"MEP's",t:"Install fireplace",h:"",o:"g",mode:"construction"},{s:"MEP's",t:"Mechanical (HVAC)",h:"",o:"g",mode:"construction"},{s:"MEP's",t:"Electrical",h:"Confirm sleeve has been run at roof for future solar",o:"g",mode:"construction"},{s:"MEP's",t:"Plumbing",h:"",o:"g",mode:"construction"},{s:"MEP's",t:"Fire sprinklers",h:"Golden State - ensure vendor has submitted plan",o:"g",mode:"construction"},{s:"MEP's",t:"Low voltage",h:"Set up dedicated home system email and confirm all smart home device locations",o:"g",mode:"construction"},{s:"MEP - Admin",t:"Verify Car Charger Location and Install",h:"",o:"g",mode:"construction"},{s:"MEP Inspection",t:"(Mechanical) HVAC inspection",h:"",o:"i",mode:"construction"},{s:"MEP Inspection",t:"Electrical inspection",h:"",o:"i",mode:"construction"},{s:"MEP Inspection",t:"Plumbing inspection",h:"",o:"i",mode:"construction"},{s:"Waterproofing",t:"Waterproof shower floors / balconies / laundry",h:"",o:"g",mode:"construction"},{s:"Waterproofing Inspection",t:"Shower pan inspection",h:"Plug / fill shower floors with water before inspection",o:"i",mode:"construction"},{s:"MEP Inspection",t:"Fire sprinkler inspection",h:"",o:"i",mode:"construction"},{s:"Mid Ordering",t:"Order Hood to site if it's being drywalled",h:"",o:"m",mode:"construction"},{s:"Mid Ordering",t:"Order Interior Doors",h:"Shawn Imperial - if no door casing, order when framing is completed",o:"m",mode:"construction"},{s:"Pre ordering",t:"Order Door Hardware / Stops",h:"",o:"m",mode:"construction"},{s:"Pre ordering",t:"Order Light fixtures",h:"",o:"m",mode:"construction"},{s:"Pre ordering",t:"Order Mirrors",h:"",o:"m",mode:"construction"},{s:"Pre ordering",t:"Order Bath Accessories",h:"",o:"m",mode:"construction"},{s:"Pre ordering",t:"Order Mailbox",h:"rejuvenation.com - Black Locking",o:"m",mode:"construction"},{s:"GC",t:"Install windows",h:"",o:"g",mode:"construction"},{s:"GC",t:"Install exterior doors",h:"",o:"g",mode:"construction"},{s:"Admin",t:"Video all walls and ceilings prior to insulation",h:"",o:"m",mode:"construction"},{s:"Admin",t:"Confirm all electrical, lighting, AV, and low-voltage rough-in locations",h:"",o:"m",mode:"construction"},{s:"Admin",t:"Confirm all plumbing, HVAC, venting, and fireplace rough-in locations",h:"",o:"m",mode:"construction"},{s:"Admin",t:"Verify door swings, switch accessibility, niche locations, panel locations",h:"",o:"m",mode:"construction"},{s:"Admin",t:"Confirm all required future infrastructure and exterior penetrations",h:"Including solar sleeves, venting, overflow locations",o:"m",mode:"construction"},{s:"Framing Inspection",t:"Final framing inspection",h:"Get ok to wrap house",o:"i",mode:"construction"},{s:"GC",t:"Straight edge for drywall",h:"",o:"g",mode:"construction"},{s:"GC",t:"Clean all interior framing prior to insulation",h:"",o:"g",mode:"construction"},{s:"GC",t:"Spray the framing",h:"Bora-Care with Mold-Care treatment",o:"g",mode:"construction"},{s:"Exterior",t:"Wrap house",h:"",o:"g",mode:"construction"},{s:"Exterior Inspection",t:"Exterior lathe inspection for house wrap",h:"Get ok to insulate",o:"i",mode:"construction"},{s:"Exterior",t:"Install upper roof",h:"Confirm backing is in for flashing",o:"g",mode:"construction"},{s:"Exterior",t:"Start siding",h:"",o:"g",mode:"construction"},{s:"Exterior",t:"Paint exterior",h:"",o:"g",mode:"construction"},{s:"Exterior",t:"Install chimney shroud",h:"",o:"g",mode:"construction"},{s:"Exterior",t:"Paint chimney shroud",h:"Before roofing material install",o:"g",mode:"construction"},{s:"Exterior",t:"Install shutters / Window Details",h:"If applicable",o:"g",mode:"construction"},{s:"Exterior",t:"Install upper gutters / downspouts",h:"",o:"g",mode:"construction"},{s:"Exterior",t:"Remove scaffolding",h:"",o:"g",mode:"construction"},{s:"Exterior",t:"Install lower roof",h:"",o:"g",mode:"construction"},{s:"Insulation",t:"Insulate entire house",h:"Insulate in exterior showers / tubs first",o:"g",mode:"construction"},{s:"Insulation Inspection",t:"Insulation inspection",h:"",o:"i",mode:"construction"},{s:"Drywall",t:"Start drywall",h:"Bathrooms and behind shower / tub walls first",o:"g",mode:"construction"},{s:"Mid Ordering",t:"Order tile",h:"Include grout in tile budget",o:"g",mode:"construction"},{s:"Tile Inspection",t:"Shower/Tub WALL waterproofing / lathe",h:"",o:"i",mode:"construction"},{s:"Tile Inspection",t:"Shower lathe inspection",h:"",o:"i",mode:"construction"},{s:"Tile",t:"Install hardy board or float shower/tubs with concrete",h:"Verify drywall is installed behind showers",o:"g",mode:"construction"},{s:"Tile",t:"Install tile",h:"Let team and Designer know when tile is delivered",o:"g",mode:"construction"},{s:"Drywall Inspection",t:"Drywall nailing inspection",h:"",o:"i",mode:"construction"},{s:"Admin",t:"Walkthrough after drywall to verify no outlets covered over",h:"",o:"g",mode:"construction"},{s:"Mid Ordering",t:"Order flooring",h:"",o:"g",mode:"construction"},{s:"Drywall",t:"Skim coat drywall",h:"",o:"g",mode:"construction"},{s:"Paint",t:"Prime all interior walls / ceilings",h:"",o:"g",mode:"construction"},{s:"Admin",t:"Schedule vendor to measure/design closets",h:"",o:"m",mode:"construction"},{s:"Admin",t:"Schedule cabinet company to field measure",h:"",o:"m",mode:"construction"},{s:"Mid Ordering",t:"Order cabinet hardware after cabinets are verified",h:"",o:"m",mode:"construction"},{s:"Mid Ordering",t:"Order HVAC Registers",h:"Request sizes from GC",o:"m",mode:"construction"},{s:"Mid Ordering",t:"Order smart light switches - Lutron",h:"Claro Smart Switch for Caseta",o:"g",mode:"construction"},{s:"Mid Ordering",t:"Order screwless outlet and switch covers",h:"Get count in field",o:"g",mode:"construction"},{s:"Mid Ordering",t:"Source slab for countertops",h:"GC pays and picks up",o:"m",mode:"construction"},{s:"Mid Ordering",t:"Order BBQ (BBQ Guys)",h:"",o:"m",mode:"construction"},{s:"Finishes",t:"Start finish carpentry",h:"",o:"g",mode:"construction"},{s:"Finishes",t:"Start staircase hardwood",h:"",o:"g",mode:"construction"},{s:"Finishes",t:"Install interior doors",h:"",o:"g",mode:"construction"},{s:"Finishes",t:"Install cabinets",h:"",o:"g",mode:"construction"},{s:"Finishes",t:"Install cabinet hardware",h:"",o:"g",mode:"construction"},{s:"Finishes",t:"Install countertops",h:"Confirm with GC for Sink Delivery",o:"g",mode:"construction"},{s:"Admin",t:"Schedule Appliance Inspection",h:"Need flooring and countertops in - 1-2 week lead time",o:"m",mode:"construction"},{s:"Finishes",t:"Install fireplace slabs",h:"",o:"g",mode:"construction"},{s:"Finishes",t:"Install wood flooring",h:"",o:"g",mode:"construction"},{s:"Finishes",t:"Install baseboards",h:"",o:"g",mode:"construction"},{s:"Finishes",t:"Install closets",h:"Coordinate w/GC to prep space",o:"m",mode:"construction"},{s:"Admin",t:"Schedule Delivery of Standing Tubs and Toilets",h:"Winsupply Michael - deliver to site",o:"m",mode:"construction"},{s:"Landscape/Hardscape",t:"Public Work A-Permit",h:"BOE - Online permit",o:"g",mode:"construction"},{s:"Landscape/Hardscape",t:"Install area drains",h:"",o:"g",mode:"construction"},{s:"Landscape/Hardscape",t:"Have plumber run gas line / water line",h:"",o:"g",mode:"construction"},{s:"Landscape/Hardscape Inspection",t:"Gas line / water line inspection",h:"",o:"i",mode:"construction"},{s:"Landscape/Hardscape",t:"Install driveway, patio, and walkway concrete",h:"",o:"g",mode:"construction"},{s:"Exterior",t:"Install garage door after driveway is poured",h:"Make sure GC is ready for garage door",o:"g",mode:"construction"},{s:"Exterior",t:"Install lower gutters",h:"",o:"g",mode:"construction"},{s:"Exterior Inspection",t:"Grading final",h:"",o:"i",mode:"construction"},{s:"Landscape/Hardscape",t:"Start final landscaping",h:"Need landscape/hardscape plan",o:"g",mode:"construction"},{s:"Final Trades",t:"Electrical",h:"",o:"g",mode:"construction"},{s:"Final Trades",t:"Plumbing",h:"",o:"g",mode:"construction"},{s:"Final Trades",t:"HVAC",h:"",o:"g",mode:"construction"},{s:"Final Trades",t:"HERS testing",h:"Matthew to follow up with GC",o:"m",mode:"construction"},{s:"Final Trades",t:"Low voltage",h:"",o:"g",mode:"construction"},{s:"Final Trades",t:"Fire sprinkler",h:"",o:"g",mode:"construction"},{s:"Finishes",t:"Have finish carpenter install all final hardware",h:"Admin to provide",o:"g",mode:"construction"},{s:"Finishes",t:"Verify weatherstrips installed",h:"",o:"g",mode:"construction"},{s:"Finishes",t:"Paint final colors",h:"Admin to provide",o:"g",mode:"construction"},{s:"Finishes",t:"Paint garage door",h:"",o:"g",mode:"construction"},{s:"Finishes",t:"Paint garage floor w/epoxy",h:"",o:"g",mode:"construction"},{s:"Finishes",t:"Exterior touch ups",h:"",o:"g",mode:"construction"},{s:"Finishes",t:"Install mirrors",h:"Admin to provide",o:"g",mode:"construction"},{s:"Finishes",t:"Install glass enclosures",h:"Admin to provide",o:"g",mode:"construction"},{s:"Finishes",t:"Install window hardware",h:"",o:"g",mode:"construction"},{s:"Admin",t:"Schedule delivery and install appliances",h:"",o:"m",mode:"construction"},{s:"Final Inspection",t:"Final electrical inspection",h:"Takes 2-4 business days for BMI inspector to release electrical service",o:"i",mode:"construction"},{s:"Admin",t:"Get power released / meter install",h:"wmis.powersystem.ladwp.com",o:"m",mode:"construction"},{s:"Admin",t:"Install DWP meter",h:"Call LADWP to setup service once utilities are released",o:"g",mode:"construction"},{s:"Final Inspection",t:"Final plumbing inspection",h:"",o:"i",mode:"construction"},{s:"Final Inspection",t:"Gas test inspection",h:"SoCalGas released automatically once SGSOV valve is approved",o:"i",mode:"construction"},{s:"Admin",t:"Set up gas account",h:"Fill out application on SoCalGas - can take 7-10 biz days",o:"m",mode:"construction"},{s:"Final Inspection",t:"Final HVAC inspection",h:"",o:"i",mode:"construction"},{s:"Final Inspection",t:"Final fire sprinkler inspection",h:"",o:"i",mode:"construction"},{s:"Admin",t:"Put together buyers packet w/all manuals",h:"",o:"g",mode:"construction"},{s:"Final",t:"Print green forms",h:"",o:"g",mode:"construction"},{s:"Final Inspection",t:"Green final",h:"",o:"i",mode:"construction"},{s:"Final Inspection",t:"Main final",h:"",o:"i",mode:"construction"},{s:"Admin",t:"Check LADBS Activity report to confirm all units finaled",h:"ladbsservices2.lacity.org",o:"m",mode:"construction"},{s:"Admin",t:"Call LADWP for new trash, recycle, yard bins",h:"Call 1-800-773-2489 option 1",o:"m",mode:"construction"},{s:"Admin",t:"Post Construction Cleaner",h:"",o:"m",mode:"construction"},{s:"Admin",t:"Drop off Supply Box (Booties, TP, Cleaning Wipes, etc)",h:"",o:"m",mode:"construction"},{s:"Admin",t:"Refer to Disposition tab for next steps",h:"",o:"g",mode:"construction"}],"Walkthrough Before Drywall":[{t:"Confirm switch layout, heights, and lighting controls.",h:"",mode:"checkbox"},{t:"Confirm outlet placements for AV components, bidets, island plugs, and other required locations.",h:"",mode:"checkbox"},{t:"Height of light fixtures",h:"",mode:"checkbox"},{t:"Height of plumbing",h:"",mode:"checkbox"},{t:"Confirm door swings do not interfere with light switch locations",h:"",mode:"checkbox"},{t:"Confirm in-wall bathroom plumbing locations, fixture walls, and shower head heights.",h:"",mode:"checkbox"},{t:"Lighting is centered, aligned with each other, etc.",h:"",mode:"checkbox"},{t:"Confirm placement of speakers, control pads, security cameras, and other AV devices.",h:"",mode:"checkbox"},{t:"HVAC connections / placement",h:"",mode:"checkbox"},{t:"Confirm HVAC exterior overflow termination locations prior to stucco.",h:"",mode:"checkbox"},{t:"Laundry venting",h:"",mode:"checkbox"},{t:"Range venting",h:"",mode:"checkbox"},{t:"Fireplace venting",h:"",mode:"checkbox"},{t:"Niche locations in Kitchen and Bathrooms",h:"",mode:"checkbox"},{t:"Sub panel location",h:"",mode:"checkbox"},{t:"Confirm sleeve has been run at roof for future solar",h:"",mode:"checkbox"},{t:"Exterior Range venting",h:"",mode:"checkbox"},{t:"Exterior Fireplace venting",h:"",mode:"checkbox"}],"Disposition":[{s:"Disposing",t:"Prop walkthrough 6 wks. prior to est. completion date",h:"",mode:"checkbox"},{s:"Disposing",t:"Deep clean",h:"",mode:"checkbox"},{s:"Disposing",t:"Staging",h:"",mode:"checkbox"},{s:"Disposing",t:"Photography / Matterport",h:"",mode:"checkbox"},{s:"Disposing",t:"Property cheat sheet for Agents",h:"",mode:"checkbox"},{s:"Disposing",t:"Seller disclosures",h:"",mode:"checkbox"},{s:"Disposing",t:"Retrofit",h:"",mode:"checkbox"},{s:"Disposing",t:"Counter Offer (title binder)",h:"",mode:"checkbox"},{s:"Disposing",t:"Sell Side Checklist",h:"",mode:"checkbox"},{s:"Disposing",t:"Opening escrow email (title binder)",h:"",mode:"checkbox"},{s:"Disposing",t:"Work with the Buyer's Agent to confirm access to the property for inspections.",h:"",mode:"checkbox"},{s:"Disposing",t:"TC to add contingencies and COE to our calendars.",h:"",mode:"checkbox"},{s:"Disposing",t:"Send all discs. and docs to Buyer's Agent",h:"",mode:"checkbox"},{s:"Disposing",t:"Confirm Buyer has wired their EMD to escrow.",h:"",mode:"checkbox"},{s:"Disposing",t:"Comps for appraisal",h:"",mode:"checkbox"},{s:"Disposing",t:"Review escrow instructions",h:"",mode:"checkbox"},{s:"Disposing",t:"Inspections",h:"",mode:"checkbox"},{s:"Disposing",t:"Confirm the appraisal has been scheduled / completed",h:"",mode:"checkbox"},{s:"Disposing",t:"RR / punchlist",h:"",mode:"checkbox"},{s:"Disposing",t:"Notify escrow and lender of any Credits",h:"",mode:"checkbox"},{s:"Disposing",t:"DPC to walkthrough and complete punchlist items",h:"",mode:"checkbox"},{s:"Disposing",t:"F/u w/Agent about loan",h:"",mode:"checkbox"},{s:"Disposing",t:"CR-All",h:"",mode:"checkbox"},{s:"Disposing",t:"Provide list of utility providers",h:"",mode:"checkbox"},{s:"Disposing",t:"VP",h:"",mode:"checkbox"},{s:"Disposing",t:"P/u cleaning supply basket and internet equipment from property",h:"",mode:"checkbox"},{s:"Disposing",t:"Email Agent location for keys, clickers, FOBs, etc. / utility providers",h:"",mode:"checkbox"},{s:"Disposing",t:"Schedule cancellation of utilities",h:"",mode:"checkbox"},{s:"Disposing",t:"Call insurance for premium refund",h:"",mode:"checkbox"},{s:"Disposing",t:"Closing Day!",h:"",mode:"checkbox"},{s:"Disposing",t:"Pick up lockbox",h:"",mode:"checkbox"},{s:"Disposing",t:"Add docs to G-Drive",h:"",mode:"checkbox"},{s:"Disposing",t:"Send controller closing statement",h:"",mode:"checkbox"},{s:"Disposing",t:"Add project to Bespoke Homes Project Info sheet",h:"",mode:"checkbox"},{s:"Disposing",t:"Email to investors - FLS, final Balance Sheet, P&L, Disbursement Schedule, Seller Settlement Statement",h:"",mode:"checkbox"}]};
+const TABS=Object.keys(DATA);
+let st={user:null,view:'login',projects:[],proj:null,tab:'Initial Walkthrough',taskCache:{},actLog:[],users:JSON.parse(JSON.stringify(USERS))};
+const $=id=>document.getElementById(id);
 function toast(msg,dur=2500){const t=$('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),dur);}
-
 function fd(){return new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}
-
-function addLog(action,detail,projId){
-
-  sb.from('bh_activity').insert({project_id:projId||st.proj?.id,user_initials:st.user.initials,user_name:st.user.name,action,detail}).then(()=>{});
-
-}
-
-
-
-function isComplete(tab,idx){
-
-  const item=DATA[tab][idx];
-
-  const k=tab+'|'+idx;
-
-  const t=st.taskCache[st.proj?.id]?.[k];
-
-  if(!t)return false;
-
-  if(item.mode==='checkbox')return!!t.checked;
-
-  if(item.mode==='construction'){
-
-    if(item.o==='g')return false;
-
-    if(item.o==='i')return false;
-
-    return t.status==='complete';
-
-  }
-
-  if(item.mode==='permits')return t.status==='completed';
-
-  return t.status==='complete'||t.status==='completed';
-
-}
-
-
-
-function countTab(tab){
-
-  const items=DATA[tab];
-
-  let done=0,total=0;
-
-  items.forEach((item,idx)=>{
-
-    if(item.mode==='construction'&&(item.o==='g'||item.o==='i'))return;
-
-    total++;
-
-    if(isComplete(tab,idx))done++;
-
-  });
-
-  return{done,total};
-
-}
-
-
-
-// ── SUPABASE DATA ─────────────────────────────────────────────────────────────
-
-async function loadProjects(){
-
-  const{data,error}=await sb.from('bh_projects').select('*').order('created_at',{ascending:false});
-
-  if(error)return[];
-
-  st.projects=data||[];
-
-}
-
-
-
-async function loadTasks(projId){
-
-  if(!projId)return;
-
-  if(st.taskCache[projId])return;
-
-  const{data}=await sb.from('bh_tasks').select('*').eq('project_id',projId);
-
-  const map={};
-
-  (data||[]).forEach(t=>map[t.task_key]=t);
-
-  st.taskCache[projId]=map;
-
-}
-
-
-
-async function upsertTask(projId,taskKey,updates){
-
-  const existing=st.taskCache[projId]?.[taskKey];
-
-  const row={
-
-    project_id:projId,
-
-    task_key:taskKey,
-
-    updated_by:st.user.initials,
-
-    updated_by_name:st.user.name,
-
-    updated_at:new Date().toISOString(),
-
-    ...updates
-
-  };
-
-  if(existing){
-
-    await sb.from('bh_tasks').update(row).eq('project_id',projId).eq('task_key',taskKey);
-
-  }else{
-
-    await sb.from('bh_tasks').insert(row);
-
-  }
-
-  if(!st.taskCache[projId])st.taskCache[projId]={};
-
-  st.taskCache[projId][taskKey]={...existing,...row};
-
-}
-
-
-
-async function loadActivity(projId){
-
-  const{data}=await sb.from('bh_activity').select('*').eq('project_id',projId).order('created_at',{ascending:false}).limit(50);
-
-  st.actLog=data||[];
-
-}
-
-
-
-// ── EXPORT TO XLSX ────────────────────────────────────────────────────────────
-
-function exportProject(){
-
-  if(!st.proj)return;
-
-  const wb=XLSX.utils.book_new();
-
-  TABS.forEach(tab=>{
-
-    const items=DATA[tab];
-
-    const rows=[['Task','Status/Checked','Note','Date','Updated By']];
-
-    items.forEach((item,idx)=>{
-
-      const k=tab+'|'+idx;
-
-      const t=st.taskCache[st.proj.id]?.[k]||{};
-
-      rows.push([
-
-        item.t,
-
-        item.mode==='checkbox'?(t.checked?'✓':''):( t.status||''),
-
-        t.note||'',
-
-        t.date_completed||'',
-
-        t.updated_by_name||''
-
-      ]);
-
-    });
-
-    const ws=XLSX.utils.aoa_to_sheet(rows);
-
-    ws['!cols']=[{wch:45},{wch:15},{wch:35},{wch:12},{wch:18}];
-
-    XLSX.utils.book_append_sheet(wb,ws,tab.substring(0,31));
-
-  });
-
-  XLSX.writeFile(wb,`${st.proj.name.replace(/[^a-z0-9]/gi,'_')}_Checklist.xlsx`);
-
-  toast('Downloaded!');
-
-}
-
-
-
-// ── RENDER ────────────────────────────────────────────────────────────────────
-
-function render(){
-
-  if(st.view==='login'){rLogin();return;}
-
-  if(st.view==='admin'){rAdmin();return;}
-
-  rMain();
-
-}
-
-
-
-function rLogin(){
-
-  $('app').innerHTML=`<div class="lp"><div class="lh"><div class="ll">${S2}<span class="lb">BESPOKE <em>Homes</em></span></div><div class="lt">Trust ✦ Craftsmanship ✦ Taste</div></div>
-
-  <div class="lc"><div class="ltitle">Sign In</div><div class="lsub">Project Checklist & Tracker</div>
-
-  <input class="li" id="lu" placeholder="Full name" list="ul" autocomplete="off"/><datalist id="ul">${st.users.map(u=>`<option value="${u.name}">`).join('')}</datalist>
-
-  <input class="li" id="lp" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')login()"/>
-
-  <div class="le" id="le"></div><button class="btn-login" onclick="login()">Sign In</button></div></div>`;
-
-  setTimeout(()=>$('lu')?.focus(),80);
-
-}
-
-
-
-function login(){
-
-  const n=$('lu').value.trim(),p=$('lp').value;
-
-  const u=st.users.find(x=>x.name.toLowerCase()===n.toLowerCase()||x.initials.toLowerCase()===n.toLowerCase());
-
-  if(!u||u.password!==p){$('le').textContent='Incorrect name or password.';return;}
-
-  st.user=u;st.view='main';
-
-  loadProjects().then(()=>render());
-
-}
-
+function addLog(action,detail,projId){sb.from('bh_activity').insert({project_id:projId||st.proj?.id,user_initials:st.user.initials,user_name:st.user.name,action,detail}).then(()=>{});}
+function isComplete(tab,idx){const item=DATA[tab][idx];const k=tab+'|'+idx;const t=st.taskCache[st.proj?.id]?.[k];if(!t)return false;if(item.mode==='checkbox')return!!t.checked;if(item.mode==='construction'){if(item.o==='g')return false;if(item.o==='i')return false;return t.status==='complete';}if(item.mode==='permits')return t.status==='completed';return t.status==='complete'||t.status==='completed';}
+function countTab(tab){const items=DATA[tab];let done=0,total=0;items.forEach((item,idx)=>{if(item.mode==='construction'&&(item.o==='g'||item.o==='i'))return;total++;if(isComplete(tab,idx))done++;});return{done,total};}
+async function loadProjects(){const{data,error}=await sb.from('bh_projects').select('*').order('created_at',{ascending:false});if(error)return[];st.projects=data||[];}
+async function loadTasks(projId){if(!projId)return;if(st.taskCache[projId])return;const{data}=await sb.from('bh_tasks').select('*').eq('project_id',projId);const map={};(data||[]).forEach(t=>map[t.task_key]=t);st.taskCache[projId]=map;}
+async function upsertTask(projId,taskKey,updates){const existing=st.taskCache[projId]?.[taskKey];const row={project_id:projId,task_key:taskKey,updated_by:st.user.initials,updated_by_name:st.user.name,updated_at:new Date().toISOString(),...updates};if(existing){await sb.from('bh_tasks').update(row).eq('project_id',projId).eq('task_key',taskKey);}else{await sb.from('bh_tasks').insert(row);}if(!st.taskCache[projId])st.taskCache[projId]={};st.taskCache[projId][taskKey]={...existing,...row};}
+function exportProject(){if(!st.proj)return;const wb=XLSX.utils.book_new();TABS.forEach(tab=>{const items=DATA[tab];const rows=[['Task','Status/Checked','Note','Date','Updated By']];items.forEach((item,idx)=>{const k=tab+'|'+idx;const t=st.taskCache[st.proj.id]?.[k]||{};rows.push([item.t,item.mode==='checkbox'?(t.checked?'✓':''):(t.status||''),t.note||'',t.date_completed||'',t.updated_by_name||'']);});const ws=XLSX.utils.aoa_to_sheet(rows);ws['!cols']=[{wch:45},{wch:15},{wch:35},{wch:12},{wch:18}];XLSX.utils.book_append_sheet(wb,ws,tab.substring(0,31));});XLSX.writeFile(wb,`${st.proj.name.replace(/[^a-z0-9]/gi,'_')}_Checklist.xlsx`);toast('Downloaded!');}
+function render(){if(st.view==='login'){rLogin();return;}if(st.view==='admin'){rAdmin();return;}rMain();}
+function rLogin(){$('app').innerHTML=`<div class="lp"><div class="lh"><div class="ll">${S2}<span class="lb">BESPOKE <em>Homes</em></span></div><div class="lt">Trust ✦ Craftsmanship ✦ Taste</div></div><div class="lc"><div class="ltitle">Sign In</div><div class="lsub">Project Checklist & Tracker</div><input class="li" id="lu" placeholder="Full name" list="ul" autocomplete="off"/><datalist id="ul">${st.users.map(u=>`<option value="${u.name}">`).join('')}</datalist><input class="li" id="lp" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')login()"/><div class="le" id="le"></div><button class="btn-login" onclick="login()">Sign In</button></div></div>`;setTimeout(()=>$('lu')?.focus(),80);}
+function login(){const n=$('lu').value.trim(),p=$('lp').value;const u=st.users.find(x=>x.name.toLowerCase()===n.toLowerCase()||x.initials.toLowerCase()===n.toLowerCase());if(!u||u.password!==p){$('le').textContent='Incorrect name or password.';return;}st.user=u;st.view='main';loadProjects().then(()=>render());}
 function logout(){st.user=null;st.view='login';render();}
-
-
-
-function navH(){
-
-  const u=st.user;
-
-  const projOpts=st.projects.filter(p=>!p.sold).sort((a,b)=>a.name.localeCompare(b.name))
-
-    .map(p=>`<option value="${p.id}" ${st.proj?.id===p.id?'selected':''}>${p.name}${p.address?' — '+p.address:''}</option>`).join('');
-
-  return`<div class="nav">
-
-    <div class="nav-left"><span class="logo-stars">${S2}</span><div><div class="logo-text">BESPOKE <em>Homes</em></div><div class="logo-sub">Trust ✦ Craftsmanship ✦ Taste</div></div></div>
-
-    <div class="nav-center"><select class="proj-sel" onchange="switchProj(this.value)"><option value="">— Select Project —</option>${projOpts}</select><button class="btn-np" onclick="openNew()">+ New</button></div>
-
-    <div class="nav-right"><div class="av">${u.initials}</div><span class="nav-name">${u.name.split(' ')[0]}</span>${u.role==='admin'?`<button class="btn-admin" onclick="st.view='admin';rAdmin()">Admin</button>`:''}
-
-    <button class="btn-signout" onclick="logout()">Sign Out</button></div>
-
-  </div><div class="gold-rule"></div>`;
-
-}
-
-
-
-async function rMain(){
-
-  const pd=st.proj;
-
-  if(pd)await loadTasks(pd.id);
-
-  let total=0,done=0;
-
-  if(pd){
-
-    TABS.forEach(tab=>{const c=countTab(tab);total+=c.total;done+=c.done;});
-
-  }
-
-  const pct=total>0?Math.round((done/total)*100):0;
-
-  const nv=pd&&(pd.project_type||pd.contractor||pd.designer);
-
-  const ladbs=pd?.permit_number?`<a class="info-link" href="https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr" target="_blank">LADBS ↗</a>`:'';
-
-
-
-  $('app').innerHTML=`${navH()}
-
-  ${nv||pd?.permit_number?`<div class="info-bar on">
-
-    ${pd.project_type?`<span class="info-lbl">Type</span><span>${pd.project_type}</span>`:''}
-
-    ${pd.contractor?`<span class="info-lbl" style="margin-left:8px">Contractor</span><span>${pd.contractor}</span>`:''}
-
-    ${pd.designer?`<span class="info-lbl" style="margin-left:8px">Designer</span><span>${pd.designer}</span>`:''}
-
-    ${pd.permit_number?`<span class="info-lbl" style="margin-left:8px">Permit</span><span>${pd.permit_number}</span>${ladbs}`:''}
-
-  </div>`:''}
-
-  ${pd?`<div class="prog-bar on"><span class="prog-lbl">Progress</span><div class="prog-track"><div class="prog-fill" id="pf" style="width:${pct}%"></div></div><span class="prog-pct" id="pp">${pct}%</span><span class="prog-ct" id="pc">${done} / ${total}</span>
-
-  <button class="btn-export" onclick="exportProject()">⬇ Export XLSX</button>
-
-  <button class="btn-sold" onclick="markSold()">${pd.sold?'Reopen':'Mark Sold'}</button><button class="btn-del" onclick="doDel()">Delete</button></div>`:''}
-
-  <div class="layout"><div class="sidebar"><div class="sb-lbl">Checklist</div>
-
-  ${TABS.map(tab=>{const{done:td,total:tt}=pd?countTab(tab):{done:0,total:0};return`<button class="tb ${tab===st.tab?'on':''}" onclick="swTab('${tab.replace(/'/g,"\'")}')"><span>${tab}</span><span class="pill${pd&&td===tt&&tt>0?' done':''}">${pd?td+'/'+tt:'—'}</span></button>`;}).join('')}
-
-  ${st.projects.filter(p=>p.sold).length?`<div class="sb-div"></div><div class="sb-lbl">Sold Projects</div>${st.projects.filter(p=>p.sold).map(p=>`<button class="tb ${st.proj?.id===p.id?'on':''}" onclick="switchProj('${p.id}')"><span>${p.name}<span class="sold-bdg">Sold</span></span></button>`).join('')}`:''}
-
-  </div>
-
-  <div class="main" id="mc">${pd?rTab():`<div class="empty"><div class="ed">✦ ✦ ✦</div><div class="et">No Project Selected</div><div class="eb">Create a new project or select one to begin.</div></div>`}</div>
-
-  </div>
-
-  <div class="mbg" id="mbg" onclick="if(event.target===this)closeM()"><div class="mc" id="mcc"></div></div>`;
-
-}
-
-
-
-function rTab(){
-
-  const pd=st.proj,tab=st.tab,items=DATA[tab];
-
-  const cache=st.taskCache[pd.id]||{};
-
-  const{done:dc,total:tt}=countTab(tab);
-
-
-
-  // Group by section
-
-  const secs={};
-
-  items.forEach((item,idx)=>{
-
-    const sec=item.s||tab;
-
-    if(!secs[sec])secs[sec]=[];
-
-    secs[sec].push({...item,idx});
-
-  });
-
-
-
-  let h=`<div class="ph"><div><div class="pt">${tab}</div><div class="pm">${items.length} items · ${pd.name}${pd.address?' — '+pd.address:''}</div></div>
-
-  <div class="ps"><div><span class="sn" id="dc">${dc}</span><span class="sl">Done</span></div><div><span class="sn" id="rm">${tt-dc}</span><span class="sl">Remaining</span></div></div></div>`;
-
-
-
-  // Plans & Permits gets special column header
-
-  if(tab==='Plans & Permits'){
-
-    h+=`<div style="display:flex;gap:8px;padding:6px 3px;border-bottom:1.5px solid var(--blk);margin-bottom:4px">
-
-      <div style="flex:2;font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Task</div>
-
-      <div style="flex:0 0 90px;font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Who</div>
-
-      <div style="flex:0 0 120px;font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Status</div>
-
-    </div>`;
-
-  }
-
-
-
-  Object.entries(secs).forEach(([sec,si])=>{
-
-    // Only show section headers for tabs with sections
-
-    const hasSecs=['Initial Walkthrough','Construction','Disposition'].includes(tab);
-
-    if(hasSecs&&sec!==tab){
-
-      const sd=si.filter(item=>isComplete(tab,item.idx)).length;
-
-      const tr2=si.filter(item=>!(item.mode==='construction'&&(item.o==='g'||item.o==='i')));
-
-      h+=`<div class="shdr"><span class="stitle">${sec}</span><span class="sprog">${tr2.length>0?sd+' / '+tr2.length:''}</span></div>`;
-
-    }
-
-
-
-    si.forEach(item=>{
-
-      const k=tab+'|'+item.idx;
-
-      const t=cache[k]||{};
-
-      const mode=item.mode;
-
-      const isGC=mode==='construction'&&item.o==='g';
-
-      const isInsp=mode==='construction'&&item.o==='i';
-
-      const comp=isComplete(tab,item.idx);
-
-      const hasN=t.note&&t.note.trim().length>0;
-
-      const sv=t.status||'';
-
-
-
-      if(mode==='permits'){
-
-        // Plans & Permits — column layout
-
-        h+=`<div class="pp-row">
-
-          <div class="pp-task"><div class="tt">${item.t}</div>
-
-            ${item.company?`<div class="pp-meta">📍 ${item.company}</div>`:''}
-
-            ${item.h?`<div class="th">${item.h}</div>`:''}
-
-            <div class="na${hasN?' open':''}" id="na${item.idx}">
-
-              <textarea class="nta" placeholder="Add a note..." onchange="saveNote('${tab}',${item.idx},this.value)">${t.note||''}</textarea>
-
-            </div>
-
-          </div>
-
-          <div class="pp-who">${item.who||''}</div>
-
-          <div class="pp-ctrl">
-
-            <select class="ss ${sv||'not-started'}" onchange="doSt('${tab}',${item.idx},this.value)">
-
-              <option value="not-started" ${sv==='not-started'?'selected':''}>Not Started</option>
-
-              <option value="in-progress" ${sv==='in-progress'?'selected':''}>In Progress</option>
-
-              <option value="completed" ${sv==='completed'?'selected':''}>Completed</option>
-
-              <option value="n-a" ${sv==='n-a'?'selected':''}>N/A</option>
-
-            </select>
-
-            <button class="nb${hasN?' on':''}" onclick="togN(${item.idx})" id="nb${item.idx}">${hasN?'📝':'+ Note'}</button>
-
-          </div>
-
-        </div>`;
-
-        return;
-
-      }
-
-
-
-      // Stamp
-
-      const blank=!sv||sv==='not-started'||sv==='not-present'||sv==='incomplete'||sv==='default';
-
-      const showStamp=t.updated_by&&!blank&&!isGC&&!isInsp;
-
-
-
-      let rc='tr';
-
-      if(isGC||isInsp)rc+=' readonly';
-
-      else if(mode==='checkbox'&&t.checked)rc+=' checked';
-
-      else if(comp)rc+=' done';
-
-
-
-      h+=`<div class="${rc}" id="r${item.idx}">`;
-
-      // Checkbox for checkbox-mode
-
-      if(mode==='checkbox'){
-
-        h+=`<input type="checkbox" class="chk" ${t.checked?'checked':''} onchange="doChk('${tab}',${item.idx},this.checked)">`;
-
-      }
-
-      h+=`<div class="tb2"><div class="tt">${item.t}</div>
-
-        ${item.h?`<div class="th">${item.h}</div>`:''}
-
-        <div class="stamp" id="st${item.idx}" style="${showStamp?'display:flex':'display:none'}">
-
-          ${showStamp?`<span class="stav">${t.updated_by}</span><span class="stnm">${t.updated_by_name||t.updated_by}</span><span class="stdt">· ${t.date_completed||fd()}</span><span class="stpill ${sv}">${sv.replace(/-/g,' ')}</span>`:''}
-
-        </div>
-
-        <div class="na${hasN?' open':''}" id="na${item.idx}">
-
-          <textarea class="nta" placeholder="Add a note..." onchange="saveNote('${tab}',${item.idx},this.value)">${t.note||''}</textarea>
-
-        </div>
-
-      </div><div class="tc">`;
-
-
-
-      if(isGC){
-
-        h+=`<span class="gc-lbl">GC</span>`;
-
-      }else if(isInsp){
-
-        h+=`<select class="ss ${sv||'not-started'}" onchange="doSt('${tab}',${item.idx},this.value)">
-
-          <option value="not-started" ${!sv||sv==='not-started'?'selected':''}>—</option>
-
-          <option value="scheduled" ${sv==='scheduled'?'selected':''}>Scheduled</option>
-
-          <option value="passed" ${sv==='passed'?'selected':''}>Passed</option>
-
-          <option value="corrections" ${sv==='corrections'?'selected':''}>Corrections</option>
-
-        </select>`;
-
-      }else if(mode==='construction'){
-
-        // Matthew/Cody dropdown
-
-        h+=`<select class="ss ${sv||'not-started'}" onchange="doSt('${tab}',${item.idx},this.value)">
-
-          <option value="not-started" ${!sv||sv==='not-started'?'selected':''}>Not Started</option>
-
-          <option value="in-progress" ${sv==='in-progress'?'selected':''}>In Progress</option>
-
-          <option value="complete" ${sv==='complete'?'selected':''}>Complete</option>
-
-          <option value="n-a" ${sv==='n-a'?'selected':''}>N/A</option>
-
-        </select>`;
-
-      }
-
-      // Checkbox-only tabs have no dropdown
-
-
-
-      // Date field for Acquisition
-
-      if(item.hasDate){
-
-        h+=`<input type="date" class="date-inp" value="${t.date_completed||''}" onchange="saveDate('${tab}',${item.idx},this.value)" title="Date completed">`;
-
-      }
-
-
-
-      // Note button — not on GC rows
-
-      if(!isGC){
-
-        h+=`<button class="nb${hasN?' on':''}" onclick="togN(${item.idx})" id="nb${item.idx}">${hasN?'📝':'+ Note'}</button>`;
-
-      }
-
-      h+=`</div></div>`;
-
-    });
-
-  });
-
-  return h;
-
-}
-
-
-
-function rAdmin(){
-
-  $('app').innerHTML=`${navH()}
-
-  <div class="layout">
-
-    <div class="sidebar"><div class="sb-lbl">Navigation</div><button class="tb" onclick="st.view='main';rMain()">← Back</button></div>
-
-    <div class="main"><div class="aw"><div class="at">Admin Panel</div><div class="asub">Signed in as ${st.user.name}.</div>
-
-    <div class="sh2">Team Members</div>
-
-    ${st.users.map(u=>`<div class="uc"><div class="uav">${u.initials}</div><div class="ui"><div class="un">${u.name}</div><div class="um">Initials: ${u.initials}</div></div>${u.role==='admin'?'<span class="urb">Admin</span>':''}<button class="brs" onclick="showReset('${u.id}')">Reset Password</button></div>`).join('')}
-
-    <div class="sh2">Recent Activity</div>
-
-    <div id="actlog"><div style="color:var(--mut);font-size:11px">Loading...</div></div>
-
-    </div></div>
-
-  </div>
-
-  <div class="mbg" id="mbg" onclick="if(event.target===this)closeM()"><div class="mc" id="mcc"></div></div>`;
-
-
-
-  // Load activity across all projects
-
-  sb.from('bh_activity').select('*').order('created_at',{ascending:false}).limit(50).then(({data})=>{
-
-    const el=$('actlog');if(!el)return;
-
-    if(!data||!data.length){el.innerHTML='<div style="color:var(--mut);font-size:11px;padding:8px 0">No activity yet.</div>';return;}
-
-    el.innerHTML=data.map(a=>`<div class="ar"><div class="aav">${a.user_initials}</div><div class="at2"><strong>${a.user_name}</strong> — ${a.detail}</div><div class="ad">${new Date(a.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div></div>`).join('');
-
-  });
-
-}
-
-
-
-function showReset(uid){
-
-  const u=st.users.find(x=>x.id===uid);if(!u)return;
-
-  $('mbg').classList.add('open');
-
-  $('mcc').innerHTML=`<div class="mt">Reset Password</div><div class="ms">New password for ${u.name}.</div>
-
-  <div class="fg"><label class="fl">New Password</label><input class="fi" type="password" id="np"/></div>
-
-  <div class="fg"><label class="fl">Confirm</label><input class="fi" type="password" id="cp"/></div>
-
-  <div style="color:var(--rdt);font-size:10.5px;min-height:13px;margin-bottom:3px" id="pe"></div>
-
-  <div class="ma"><button class="bc" onclick="closeM()">Cancel</button><button class="bp" onclick="doReset('${uid}')">Save</button></div>`;
-
-}
-
-function doReset(uid){
-
-  const np=$('np').value,cp=$('cp').value;
-
-  if(!np){$('pe').textContent='Enter a password.';return;}
-
-  if(np!==cp){$('pe').textContent='Passwords do not match.';return;}
-
-  const u=st.users.find(x=>x.id===uid);
-
-  if(u){u.password=np;toast('Password updated');}
-
-  closeM();
-
-}
-
-
-
-function openNew(){
-
-  $('mbg').classList.add('open');
-
-  $('mcc').innerHTML=`<div class="mt">New Project</div><div class="ms">Each project has its own independent checklist.</div>
-
-  <div class="fg"><label class="fl">Project Name</label><input class="fi" type="text" id="pn" placeholder="e.g. 123 Maple Street"/></div>
-
-  <div class="fg"><label class="fl">Address</label><input class="fi" type="text" id="pa" placeholder="Full address"/></div>
-
-  <div class="fg"><label class="fl">Project Type</label><input class="fi" type="text" id="pt" placeholder="e.g. New Construction, Remodel"/></div>
-
-  <div class="fg"><label class="fl">Contractor</label><input class="fi" type="text" id="pg" placeholder="GC / Builder name"/></div>
-
-  <div class="fg"><label class="fl">Designer</label><input class="fi" type="text" id="pd" placeholder="Designer name"/></div>
-
-  <div class="fg"><label class="fl">Permit Number (optional)</label><input class="fi" type="text" id="pm" placeholder="e.g. 23010-10000-12345"/></div>
-
-  <div class="ma"><button class="bc" onclick="closeM()">Cancel</button><button class="bp" onclick="createProj()">Create Project</button></div>`;
-
-  setTimeout(()=>$('pn')?.focus(),80);
-
-}
-
-
-
-async function createProj(){
-
-  const name=$('pn').value.trim();if(!name)return;
-
-  const{data,error}=await sb.from('bh_projects').insert({
-
-    name,
-
-    address:$('pa').value.trim(),
-
-    project_type:$('pt').value.trim(),
-
-    contractor:$('pg').value.trim(),
-
-    designer:$('pd').value.trim(),
-
-    permit_number:$('pm').value.trim(),
-
-    created_by:st.user.initials
-
-  }).select().single();
-
-  if(error){toast('Error creating project');return;}
-
-  st.projects.unshift(data);
-
-  st.proj=data;
-
-  st.tab='Initial Walkthrough';
-
-  await loadTasks(data.id);
-
-  addLog('created',`Created project "${name}"`,data.id);
-
-  closeM();
-
-  rMain();
-
-}
-
-
-
-async function switchProj(pid){
-
-  if(!pid){st.proj=null;rMain();return;}
-
-  st.proj=st.projects.find(p=>p.id===pid)||null;
-
-  st.tab='Initial Walkthrough';
-
-  if(st.proj)await loadTasks(st.proj.id);
-
-  rMain();
-
-}
-
-
-
+function navH(){const u=st.user;const projOpts=st.projects.filter(p=>!p.sold).sort((a,b)=>a.name.localeCompare(b.name)).map(p=>`<option value="${p.id}" ${st.proj?.id===p.id?'selected':''}>${p.name}${p.address?' — '+p.address:''}</option>`).join('');return`<div class="nav"><div class="nav-left"><span class="logo-stars">${S2}</span><div><div class="logo-text">BESPOKE <em>Homes</em></div><div class="logo-sub">Trust ✦ Craftsmanship ✦ Taste</div></div></div><div class="nav-center"><select class="proj-sel" onchange="switchProj(this.value)"><option value="">— Select Project —</option>${projOpts}</select><button class="btn-np" onclick="openNew()">+ New</button></div><div class="nav-right"><div class="av">${u.initials}</div><span class="nav-name">${u.name.split(' ')[0]}</span>${u.role==='admin'?`<button class="btn-admin" onclick="st.view='admin';rAdmin()">Admin</button>`:''}<button class="btn-signout" onclick="logout()">Sign Out</button></div></div><div class="gold-rule"></div>`;}
+async function rMain(){const pd=st.proj;if(pd)await loadTasks(pd.id);let total=0,done=0;if(pd){TABS.forEach(tab=>{const c=countTab(tab);total+=c.total;done+=c.done;});}const pct=total>0?Math.round((done/total)*100):0;const nv=pd&&(pd.project_type||pd.contractor||pd.designer);const ladbs=pd?.permit_number?`<a class="info-link" href="https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr" target="_blank">LADBS ↗</a>`:'';$('app').innerHTML=`${navH()}${nv||pd?.permit_number?`<div class="info-bar on">${pd.project_type?`<span class="info-lbl">Type</span><span>${pd.project_type}</span>`:''} ${pd.contractor?`<span class="info-lbl" style="margin-left:8px">Contractor</span><span>${pd.contractor}</span>`:''} ${pd.designer?`<span class="info-lbl" style="margin-left:8px">Designer</span><span>${pd.designer}</span>`:''} ${pd.permit_number?`<span class="info-lbl" style="margin-left:8px">Permit</span><span>${pd.permit_number}</span>${ladbs}`:''}</div>`:''}${pd?`<div class="prog-bar on"><span class="prog-lbl">Progress</span><div class="prog-track"><div class="prog-fill" id="pf" style="width:${pct}%"></div></div><span class="prog-pct" id="pp">${pct}%</span><span class="prog-ct" id="pc">${done} / ${total}</span><button class="btn-export" onclick="exportProject()">⬇ Export XLSX</button><button class="btn-sold" onclick="markSold()">${pd.sold?'Reopen':'Mark Sold'}</button><button class="btn-del" onclick="doDel()">Delete</button></div>`:''}<div class="layout"><div class="sidebar"><div class="sb-lbl">Checklist</div>${TABS.map(tab=>{const{done:td,total:tt}=pd?countTab(tab):{done:0,total:0};return`<button class="tb ${tab===st.tab?'on':''}" onclick="swTab('${tab.replace(/'/g,"\\'")}')"><span>${tab}</span><span class="pill${pd&&td===tt&&tt>0?' done':''}">${pd?td+'/'+tt:'—'}</span></button>`;}).join('')}${st.projects.filter(p=>p.sold).length?`<div class="sb-div"></div><div class="sb-lbl">Sold Projects</div>${st.projects.filter(p=>p.sold).map(p=>`<button class="tb ${st.proj?.id===p.id?'on':''}" onclick="switchProj('${p.id}')"><span>${p.name}<span class="sold-bdg">Sold</span></span></button>`).join('')}`:''}</div><div class="main" id="mc">${pd?rTab():`<div class="empty"><div class="ed">✦ ✦ ✦</div><div class="et">No Project Selected</div><div class="eb">Create a new project or select one to begin.</div></div>`}</div></div><div class="mbg" id="mbg" onclick="if(event.target===this)closeM()"><div class="mc" id="mcc"></div></div>`;}
+function rTab(){const pd=st.proj,tab=st.tab,items=DATA[tab];const cache=st.taskCache[pd.id]||{};const{done:dc,total:tt}=countTab(tab);const secs={};items.forEach((item,idx)=>{const sec=item.s||tab;if(!secs[sec])secs[sec]=[];secs[sec].push({...item,idx});});let h=`<div class="ph"><div><div class="pt">${tab}</div><div class="pm">${items.length} items · ${pd.name}${pd.address?' — '+pd.address:''}</div></div><div class="ps"><div><span class="sn" id="dc">${dc}</span><span class="sl">Done</span></div><div><span class="sn" id="rm">${tt-dc}</span><span class="sl">Remaining</span></div></div></div>`;if(tab==='Plans & Permits'){h+=`<div style="display:flex;gap:8px;padding:6px 3px;border-bottom:1.5px solid var(--blk);margin-bottom:4px"><div style="flex:2;font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Task</div><div style="flex:0 0 90px;font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Who</div><div style="flex:0 0 120px;font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Status</div></div>`;}Object.entries(secs).forEach(([sec,si])=>{const hasSecs=['Initial Walkthrough','Construction','Disposition'].includes(tab);if(hasSecs&&sec!==tab){const sd=si.filter(item=>isComplete(tab,item.idx)).length;const tr2=si.filter(item=>!(item.mode==='construction'&&(item.o==='g'||item.o==='i')));h+=`<div class="shdr"><span class="stitle">${sec}</span><span class="sprog">${tr2.length>0?sd+' / '+tr2.length:''}</span></div>`;}si.forEach(item=>{const k=tab+'|'+item.idx;const t=cache[k]||{};const mode=item.mode;const isGC=mode==='construction'&&item.o==='g';const isInsp=mode==='construction'&&item.o==='i';const comp=isComplete(tab,item.idx);const hasN=t.note&&t.note.trim().length>0;const sv=t.status||'';if(mode==='permits'){h+=`<div class="pp-row"><div class="pp-task"><div class="tt">${item.t}</div>${item.company?`<div class="pp-meta">📍 ${item.company}</div>`:''} ${item.h?`<div class="th">${item.h}</div>`:''}<div class="na${hasN?' open':''}" id="na${item.idx}"><textarea class="nta" placeholder="Add a note..." onchange="saveNote('${tab}',${item.idx},this.value)">${t.note||''}</textarea></div></div><div class="pp-who">${item.who||''}</div><div class="pp-ctrl"><select class="ss ${sv||'not-started'}" onchange="doSt('${tab}',${item.idx},this.value)"><option value="not-started" ${sv==='not-started'?'selected':''}>Not Started</option><option value="in-progress" ${sv==='in-progress'?'selected':''}>In Progress</option><option value="completed" ${sv==='completed'?'selected':''}>Completed</option><option value="n-a" ${sv==='n-a'?'selected':''}>N/A</option></select><button class="nb${hasN?' on':''}" onclick="togN(${item.idx})" id="nb${item.idx}">${hasN?'📝':'+ Note'}</button></div></div>`;return;}const blank=!sv||sv==='not-started'||sv==='not-present'||sv==='incomplete'||sv==='default';const showStamp=t.updated_by&&!blank&&!isGC&&!isInsp;let rc='tr';if(isGC||isInsp)rc+=' readonly';else if(mode==='checkbox'&&t.checked)rc+=' checked';else if(comp)rc+=' done';h+=`<div class="${rc}" id="r${item.idx}">`;if(mode==='checkbox'){h+=`<input type="checkbox" class="chk" ${t.checked?'checked':''} onchange="doChk('${tab}',${item.idx},this.checked)">`;}h+=`<div class="tb2"><div class="tt">${item.t}</div>${item.h?`<div class="th">${item.h}</div>`:''}<div class="stamp" id="st${item.idx}" style="${showStamp?'display:flex':'display:none'}">${showStamp?`<span class="stav">${t.updated_by}</span><span class="stnm">${t.updated_by_name||t.updated_by}</span><span class="stdt">· ${t.date_completed||fd()}</span><span class="stpill ${sv}">${sv.replace(/-/g,' ')}</span>`:''}</div><div class="na${hasN?' open':''}" id="na${item.idx}"><textarea class="nta" placeholder="Add a note..." onchange="saveNote('${tab}',${item.idx},this.value)">${t.note||''}</textarea></div></div><div class="tc">`;if(isGC){h+=`<span class="gc-lbl">GC</span>`;}else if(isInsp){h+=`<select class="ss ${sv||'not-started'}" onchange="doSt('${tab}',${item.idx},this.value)"><option value="not-started" ${!sv||sv==='not-started'?'selected':''}>—</option><option value="scheduled" ${sv==='scheduled'?'selected':''}>Scheduled</option><option value="passed" ${sv==='passed'?'selected':''}>Passed</option><option value="corrections" ${sv==='corrections'?'selected':''}>Corrections</option></select>`;}else if(mode==='construction'){h+=`<select class="ss ${sv||'not-started'}" onchange="doSt('${tab}',${item.idx},this.value)"><option value="not-started" ${!sv||sv==='not-started'?'selected':''}>Not Started</option><option value="in-progress" ${sv==='in-progress'?'selected':''}>In Progress</option><option value="complete" ${sv==='complete'?'selected':''}>Complete</option><option value="n-a" ${sv==='n-a'?'selected':''}>N/A</option></select>`;}if(item.hasDate){h+=`<input type="date" class="date-inp" value="${t.date_completed||''}" onchange="saveDate('${tab}',${item.idx},this.value)" title="Date completed">`;}if(!isGC){h+=`<button class="nb${hasN?' on':''}" onclick="togN(${item.idx})" id="nb${item.idx}">${hasN?'📝':'+ Note'}</button>`;}h+=`</div></div>`;});});return h;}
+function rAdmin(){$('app').innerHTML=`${navH()}<div class="layout"><div class="sidebar"><div class="sb-lbl">Navigation</div><button class="tb" onclick="st.view='main';rMain()">← Back</button></div><div class="main"><div class="aw"><div class="at">Admin Panel</div><div class="asub">Signed in as ${st.user.name}.</div><div class="sh2">Team Members</div>${st.users.map(u=>`<div class="uc"><div class="uav">${u.initials}</div><div class="ui"><div class="un">${u.name}</div><div class="um">Initials: ${u.initials}</div></div>${u.role==='admin'?'<span class="urb">Admin</span>':''}<button class="brs" onclick="showReset('${u.id}')">Reset Password</button></div>`).join('')}<div class="sh2">Recent Activity</div><div id="actlog"><div style="color:var(--mut);font-size:11px">Loading...</div></div></div></div></div><div class="mbg" id="mbg" onclick="if(event.target===this)closeM()"><div class="mc" id="mcc"></div></div>`;sb.from('bh_activity').select('*').order('created_at',{ascending:false}).limit(50).then(({data})=>{const el=$('actlog');if(!el)return;if(!data||!data.length){el.innerHTML='<div style="color:var(--mut);font-size:11px;padding:8px 0">No activity yet.</div>';return;}el.innerHTML=data.map(a=>`<div class="ar"><div class="aav">${a.user_initials}</div><div class="at2"><strong>${a.user_name}</strong> — ${a.detail}</div><div class="ad">${new Date(a.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})}</div></div>`).join('');});}
+function showReset(uid){const u=st.users.find(x=>x.id===uid);if(!u)return;$('mbg').classList.add('open');$('mcc').innerHTML=`<div class="mt">Reset Password</div><div class="ms">New password for ${u.name}.</div><div class="fg"><label class="fl">New Password</label><input class="fi" type="password" id="np"/></div><div class="fg"><label class="fl">Confirm</label><input class="fi" type="password" id="cp"/></div><div style="color:var(--rdt);font-size:10.5px;min-height:13px;margin-bottom:3px" id="pe"></div><div class="ma"><button class="bc" onclick="closeM()">Cancel</button><button class="bp" onclick="doReset('${uid}')">Save</button></div>`;}
+function doReset(uid){const np=$('np').value,cp=$('cp').value;if(!np){$('pe').textContent='Enter a password.';return;}if(np!==cp){$('pe').textContent='Passwords do not match.';return;}const u=st.users.find(x=>x.id===uid);if(u){u.password=np;toast('Password updated');}closeM();}
+function openNew(){$('mbg').classList.add('open');$('mcc').innerHTML=`<div class="mt">New Project</div><div class="ms">Each project has its own independent checklist.</div><div class="fg"><label class="fl">Project Name</label><input class="fi" type="text" id="pn" placeholder="e.g. 123 Maple Street"/></div><div class="fg"><label class="fl">Address</label><input class="fi" type="text" id="pa" placeholder="Full address"/></div><div class="fg"><label class="fl">Project Type</label><input class="fi" type="text" id="pt" placeholder="e.g. New Construction, Remodel"/></div><div class="fg"><label class="fl">Contractor</label><input class="fi" type="text" id="pg" placeholder="GC / Builder name"/></div><div class="fg"><label class="fl">Designer</label><input class="fi" type="text" id="pd" placeholder="Designer name"/></div><div class="fg"><label class="fl">Permit Number (optional)</label><input class="fi" type="text" id="pm" placeholder="e.g. 23010-10000-12345"/></div><div class="ma"><button class="bc" onclick="closeM()">Cancel</button><button class="bp" onclick="createProj()">Create Project</button></div>`;setTimeout(()=>$('pn')?.focus(),80);}
+async function createProj(){const name=$('pn').value.trim();if(!name)return;const{data,error}=await sb.from('bh_projects').insert({name,address:$('pa').value.trim(),project_type:$('pt').value.trim(),contractor:$('pg').value.trim(),designer:$('pd').value.trim(),permit_number:$('pm').value.trim(),created_by:st.user.initials}).select().single();if(error){toast('Error creating project');return;}st.projects.unshift(data);st.proj=data;st.tab='Initial Walkthrough';await loadTasks(data.id);addLog('created',`Created project "${name}"`,data.id);closeM();rMain();}
+async function switchProj(pid){if(!pid){st.proj=null;rMain();return;}st.proj=st.projects.find(p=>p.id===pid)||null;st.tab='Initial Walkthrough';if(st.proj)await loadTasks(st.proj.id);rMain();}
 function swTab(tab){st.tab=tab;rMain();}
-
-
-
-async function markSold(){
-
-  if(!st.proj)return;
-
-  const sold=!st.proj.sold;
-
-  await sb.from('bh_projects').update({sold,sold_date:sold?new Date().toISOString():null}).eq('id',st.proj.id);
-
-  st.proj.sold=sold;
-
-  const idx=st.projects.findIndex(p=>p.id===st.proj.id);
-
-  if(idx>=0)st.projects[idx].sold=sold;
-
-  addLog(sold?'sold':'reopened',`${sold?'Marked':'Reopened'} project "${st.proj.name}"`);
-
-  if(sold){st.proj=null;}
-
-  rMain();
-
-}
-
-
-
-function doDel(){
-
-  if(!st.proj)return;
-
-  $('mbg').classList.add('open');
-
-  $('mcc').innerHTML=`<div class="mt">Delete Project</div><div class="ms">Permanently delete "${st.proj.name}"? Cannot be undone.</div><div class="ma"><button class="bc" onclick="closeM()">Cancel</button><button class="bp" style="background:var(--red)" onclick="confirmDel()">Delete</button></div>`;
-
-}
-
-async function confirmDel(){
-
-  if(!st.proj)return;
-
-  await sb.from('bh_projects').delete().eq('id',st.proj.id);
-
-  st.projects=st.projects.filter(p=>p.id!==st.proj.id);
-
-  delete st.taskCache[st.proj.id];
-
-  st.proj=null;
-
-  closeM();rMain();
-
-}
-
-
-
-// ── TASK INTERACTIONS ─────────────────────────────────────────────────────────
-
-async function doSt(tab,idx,value){
-
-  if(!st.proj)return;
-
-  const k=tab+'|'+idx;
-
-  const item=DATA[tab][idx];
-
-  const isGCrow=item.o==='g'||item.o==='i';
-
-  const updates={status:value};
-
-  const blank=!value||value==='not-started'||value==='not-present'||value==='incomplete';
-
-  if(!blank){
-
-    updates.date_completed=fd();
-
-    if(!isGCrow){updates.updated_by=st.user.initials;updates.updated_by_name=st.user.name;}
-
-    addLog('update',`"${item.t}" → ${value} in ${tab}`);
-
-  }else{
-
-    updates.date_completed=null;
-
-    if(!isGCrow){updates.updated_by='';updates.updated_by_name='';}
-
-  }
-
-  await upsertTask(st.proj.id,k,updates);
-
-
-
-  // Update UI inline
-
-  const sel=document.querySelector(`#r${idx} select`);if(sel)sel.className=`ss ${value}`;
-
-  const row=$('r'+idx);
-
-  if(row&&!isGCrow){
-
-    row.className='tr';
-
-    if(isComplete(tab,idx))row.classList.add('done');
-
-  }
-
-  updStamp(tab,idx);
-
-  updProg();
-
-}
-
-
-
-async function doChk(tab,idx,checked){
-
-  if(!st.proj)return;
-
-  const k=tab+'|'+idx;
-
-  const item=DATA[tab][idx];
-
-  const updates={checked,status:checked?'checked':'default'};
-
-  if(checked){updates.updated_by=st.user.initials;updates.updated_by_name=st.user.name;updates.date_completed=fd();addLog('checked',`Checked "${item.t}" in ${tab}`);}
-
-  else{updates.updated_by='';updates.updated_by_name='';updates.date_completed=null;}
-
-  await upsertTask(st.proj.id,k,updates);
-
-  const row=$('r'+idx);if(row)row.classList.toggle('checked',checked);
-
-  updProg();
-
-}
-
-
-
-async function saveDate(tab,idx,val){
-
-  if(!st.proj)return;
-
-  const k=tab+'|'+idx;
-
-  await upsertTask(st.proj.id,k,{date_completed:val||null});
-
-  toast('Date saved');
-
-}
-
-
-
-async function saveNote(tab,idx,value){
-
-  if(!st.proj)return;
-
-  const k=tab+'|'+idx;
-
-  await upsertTask(st.proj.id,k,{note:value});
-
-  const btn=$('nb'+idx);
-
-  if(btn){btn.textContent=value.trim()?'📝':'+ Note';btn.className='nb'+(value.trim()?' on':'');}
-
-}
-
-
-
-function togN(idx){
-
-  const a=$('na'+idx);if(!a)return;
-
-  a.classList.toggle('open');
-
-  if(a.classList.contains('open'))a.querySelector('textarea').focus();
-
-}
-
-
-
-function updStamp(tab,idx){
-
-  const sd=$('st'+idx);if(!sd)return;
-
-  const k=tab+'|'+idx;
-
-  const t=st.taskCache[st.proj?.id]?.[k]||{};
-
-  const sv=t.status||'';
-
-  const blank=!sv||sv==='not-started'||sv==='default';
-
-  const item=DATA[tab][idx];
-
-  const isGC=item.mode==='construction'&&(item.o==='g'||item.o==='i');
-
-  if(t.updated_by&&!blank&&!isGC){
-
-    sd.style.display='flex';
-
-    sd.innerHTML=`<span class="stav">${t.updated_by}</span><span class="stnm">${t.updated_by_name||t.updated_by}</span><span class="stdt">· ${t.date_completed||''}</span><span class="stpill ${sv}">${sv.replace(/-/g,' ')}</span>`;
-
-  }else{sd.style.display='none';sd.innerHTML='';}
-
-}
-
-
-
-function updProg(){
-
-  if(!st.proj)return;
-
-  let total=0,done=0;
-
-  TABS.forEach(tab=>{const c=countTab(tab);total+=c.total;done+=c.done;});
-
-  const pct=total>0?Math.round((done/total)*100):0;
-
-  const pf=$('pf'),pp=$('pp'),pc=$('pc');
-
-  if(pf)pf.style.width=pct+'%';if(pp)pp.textContent=pct+'%';if(pc)pc.textContent=done+' / '+total;
-
-  const tab=st.tab;const{done:td,total:tt}=countTab(tab);
-
-  const dc=$('dc'),rm=$('rm');
-
-  if(dc)dc.textContent=td;if(rm)rm.textContent=tt-td;
-
-}
-
-
-
+async function markSold(){if(!st.proj)return;const sold=!st.proj.sold;await sb.from('bh_projects').update({sold,sold_date:sold?new Date().toISOString():null}).eq('id',st.proj.id);st.proj.sold=sold;const idx=st.projects.findIndex(p=>p.id===st.proj.id);if(idx>=0)st.projects[idx].sold=sold;addLog(sold?'sold':'reopened',`${sold?'Marked':'Reopened'} project "${st.proj.name}"`);if(sold){st.proj=null;}rMain();}
+function doDel(){if(!st.proj)return;$('mbg').classList.add('open');$('mcc').innerHTML=`<div class="mt">Delete Project</div><div class="ms">Permanently delete "${st.proj.name}"? Cannot be undone.</div><div class="ma"><button class="bc" onclick="closeM()">Cancel</button><button class="bp" style="background:var(--red)" onclick="confirmDel()">Delete</button></div>`;}
+async function confirmDel(){if(!st.proj)return;await sb.from('bh_projects').delete().eq('id',st.proj.id);st.projects=st.projects.filter(p=>p.id!==st.proj.id);delete st.taskCache[st.proj.id];st.proj=null;closeM();rMain();}
+async function doSt(tab,idx,value){if(!st.proj)return;const k=tab+'|'+idx;const item=DATA[tab][idx];const isGCrow=item.o==='g'||item.o==='i';const updates={status:value};const blank=!value||value==='not-started'||value==='not-present'||value==='incomplete';if(!blank){updates.date_completed=fd();if(!isGCrow){updates.updated_by=st.user.initials;updates.updated_by_name=st.user.name;}addLog('update',`"${item.t}" → ${value} in ${tab}`);}else{updates.date_completed=null;if(!isGCrow){updates.updated_by='';updates.updated_by_name='';}}await upsertTask(st.proj.id,k,updates);const sel=document.querySelector(`#r${idx} select`);if(sel)sel.className=`ss ${value}`;const row=$('r'+idx);if(row&&!isGCrow){row.className='tr';if(isComplete(tab,idx))row.classList.add('done');}updStamp(tab,idx);updProg();}
+async function doChk(tab,idx,checked){if(!st.proj)return;const k=tab+'|'+idx;const item=DATA[tab][idx];const updates={checked,status:checked?'checked':'default'};if(checked){updates.updated_by=st.user.initials;updates.updated_by_name=st.user.name;updates.date_completed=fd();addLog('checked',`Checked "${item.t}" in ${tab}`);}else{updates.updated_by='';updates.updated_by_name='';updates.date_completed=null;}await upsertTask(st.proj.id,k,updates);const row=$('r'+idx);if(row)row.classList.toggle('checked',checked);updProg();}
+async function saveDate(tab,idx,val){if(!st.proj)return;const k=tab+'|'+idx;await upsertTask(st.proj.id,k,{date_completed:val||null});toast('Date saved');}
+async function saveNote(tab,idx,value){if(!st.proj)return;const k=tab+'|'+idx;await upsertTask(st.proj.id,k,{note:value});const btn=$('nb'+idx);if(btn){btn.textContent=value.trim()?'📝':'+ Note';btn.className='nb'+(value.trim()?' on':'');}}
+function togN(idx){const a=$('na'+idx);if(!a)return;a.classList.toggle('open');if(a.classList.contains('open'))a.querySelector('textarea').focus();}
+function updStamp(tab,idx){const sd=$('st'+idx);if(!sd)return;const k=tab+'|'+idx;const t=st.taskCache[st.proj?.id]?.[k]||{};const sv=t.status||'';const blank=!sv||sv==='not-started'||sv==='default';const item=DATA[tab][idx];const isGC=item.mode==='construction'&&(item.o==='g'||item.o==='i');if(t.updated_by&&!blank&&!isGC){sd.style.display='flex';sd.innerHTML=`<span class="stav">${t.updated_by}</span><span class="stnm">${t.updated_by_name||t.updated_by}</span><span class="stdt">· ${t.date_completed||''}</span><span class="stpill ${sv}">${sv.replace(/-/g,' ')}</span>`;}else{sd.style.display='none';sd.innerHTML='';}}
+function updProg(){if(!st.proj)return;let total=0,done=0;TABS.forEach(tab=>{const c=countTab(tab);total+=c.total;done+=c.done;});const pct=total>0?Math.round((done/total)*100):0;const pf=$('pf'),pp=$('pp'),pc=$('pc');if(pf)pf.style.width=pct+'%';if(pp)pp.textContent=pct+'%';if(pc)pc.textContent=done+' / '+total;const tab=st.tab;const{done:td,total:tt}=countTab(tab);const dc=$('dc'),rm=$('rm');if(dc)dc.textContent=td;if(rm)rm.textContent=tt-td;}
 function closeM(){const b=$('mbg');if(b)b.classList.remove('open');}
-
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});
-
-
-
-// ── INIT ──────────────────────────────────────────────────────────────────────
-
-(async()=>{
-
-  $('app').innerHTML=`<div class="lp"><div style="color:rgba(250,250,247,0.4);font-size:12px;letter-spacing:0.1em">Loading...</div></div>`;
-
-  render();
-
-})();
-
+(async()=>{$('app').innerHTML=`<div class="lp"><div style="color:rgba(250,250,247,0.4);font-size:12px;letter-spacing:0.1em">Loading...</div></div>`;render();})();
 </script>
-
 </body>
-
 </html>
-
-
-
-
-
-
-
