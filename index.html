@@ -1,0 +1,1083 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.7">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 13.0px 'Helvetica Neue'; min-height: 15.0px}
+    p.p3 {margin: 0.0px 0.0px 2.0px 0.0px; font: 16.0px 'Helvetica Neue'; min-height: 19.0px}
+    span.s1 {font: 13.0px 'Zapf Dingbats'}
+  </style>
+</head>
+<body>
+<p class="p1">bash</p>
+<p class="p1">cat /mnt/user-data/outputs/BespokeHomes_Checklist_FINAL.html</p>
+<p class="p1">Output</p>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1">&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1">&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1">&lt;title&gt;Bespoke Homes — Project Checklist&lt;/title&gt;</p>
+<p class="p1">&lt;link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600&amp;family=DM+Sans:wght@300;400;500&amp;display=swap" rel="stylesheet"&gt;</p>
+<p class="p1">&lt;script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"&gt;&lt;/script&gt;</p>
+<p class="p1">&lt;style&gt;</p>
+<p class="p1">*{box-sizing:border-box;margin:0;padding:0}</p>
+<p class="p1">body{font-family:'DM Sans',sans-serif;background:#F6F2EB;color:#1A1A18;font-size:13px}</p>
+<p class="p1">:root{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--blk:#0E0E0C;--chr:#1A1A18;--drk:#2C2C28;--mid:#4A4A44;--mut:#888880;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--brd:#D8D2C4;--brl:#EAE4D8;--crm:#F6F2EB;--wrm:#FAFAF7;--wht:#FFFFFF;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--gld:#B8872A;--glp:#F2E8D4;--gll:#C99A3C;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--grn:#3D6B4A;--grb:#EAF2ED;--grt:#2D5238;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--red:#8B2E2E;--rdb:#F5EAEA;--rdt:#6B2020;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--amb:#A06820;--abb:#FBF0E0;--blu:#2A507A;--blb:#EAF0F8;</p>
+<p class="p1">}</p>
+<p class="p1">.nav{background:var(--blk);display:flex;align-items:center;justify-content:space-between;padding:0 16px;height:52px;position:sticky;top:0;z-index:200;gap:8px}</p>
+<p class="p1">.nav-left{display:flex;align-items:center;gap:9px;flex-shrink:0}</p>
+<p class="p1">.logo-stars svg{width:38px;height:19px}</p>
+<p class="p1">.logo-text{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:300;letter-spacing:0.2em;color:#FAFAF7;text-transform:uppercase;white-space:nowrap}</p>
+<p class="p1">.logo-text em{font-style:normal;color:var(--gld)}</p>
+<p class="p1">.logo-sub{font-size:7px;letter-spacing:0.18em;text-transform:uppercase;color:var(--mut)}</p>
+<p class="p1">.nav-center{display:flex;align-items:center;gap:7px;flex:1;justify-content:center;min-width:0}</p>
+<p class="p1">.proj-sel{background:rgba(255,255,255,0.08);border:1px solid rgba(184,135,42,0.4);color:#FAFAF7;padding:5px 22px 5px 8px;font-family:'DM Sans',sans-serif;font-size:11px;border-radius:2px;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%23B8872A' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;max-width:190px;min-width:120px}</p>
+<p class="p1">.btn-np{background:var(--gld);color:var(--blk);border:none;padding:5px 11px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;border-radius:2px;white-space:nowrap}</p>
+<p class="p1">.btn-np:hover{background:var(--gll)}</p>
+<p class="p1">.nav-right{display:flex;align-items:center;gap:7px;flex-shrink:0}</p>
+<p class="p1">.av{width:27px;height:27px;border-radius:50%;background:var(--gld);color:var(--blk);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}</p>
+<p class="p1">.nav-name{color:rgba(250,250,247,0.75);font-size:10.5px;white-space:nowrap}</p>
+<p class="p1">.btn-admin{background:rgba(184,135,42,0.18);border:1px solid var(--gld);color:var(--gld);font-size:10px;padding:4px 9px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;white-space:nowrap}</p>
+<p class="p1">.btn-admin:hover{background:rgba(184,135,42,0.3)}</p>
+<p class="p1">.btn-signout{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.4);color:#FAFAF7;font-size:10px;padding:4px 9px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}</p>
+<p class="p1">.btn-signout:hover{background:rgba(255,255,255,0.2)}</p>
+<p class="p1">.gold-rule{height:2px;background:linear-gradient(90deg,var(--gld) 0%,rgba(184,135,42,0.1) 100%)}</p>
+<p class="p1">.info-bar{background:var(--wrm);border-bottom:1px solid var(--brl);padding:6px 16px;font-size:10.5px;color:var(--mid);display:none;gap:10px;align-items:center;flex-wrap:wrap}</p>
+<p class="p1">.info-bar.on{display:flex}</p>
+<p class="p1">.info-lbl{font-size:7.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)}</p>
+<p class="p1">.info-link{font-size:10px;color:var(--blu);text-decoration:none;padding:1px 6px;border:1px solid var(--blu);border-radius:2px;background:var(--blb)}</p>
+<p class="p1">.info-link:hover{background:rgba(42,80,122,0.15)}</p>
+<p class="p1">.prog-bar{background:var(--chr);padding:7px 16px;display:none;align-items:center;gap:12px;border-bottom:1px solid #222}</p>
+<p class="p1">.prog-bar.on{display:flex}</p>
+<p class="p1">.prog-lbl{font-size:7.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);white-space:nowrap}</p>
+<p class="p1">.prog-track{flex:1;height:3px;background:#3A3A36;border-radius:2px}</p>
+<p class="p1">.prog-fill{height:100%;background:linear-gradient(90deg,var(--gld),var(--gll));border-radius:2px;transition:width 0.4s}</p>
+<p class="p1">.prog-pct{color:var(--gld);font-size:11px;font-weight:500;white-space:nowrap}</p>
+<p class="p1">.prog-ct{color:var(--mut);font-size:9.5px;white-space:nowrap}</p>
+<p class="p1">.btn-export{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.25);color:#FAFAF7;font-size:9px;padding:3px 8px;font-family:'DM Sans',sans-serif;cursor:pointer;border-radius:2px;white-space:nowrap;letter-spacing:0.05em}</p>
+<p class="p1">.btn-export:hover{background:rgba(255,255,255,0.16)}</p>
+<p class="p1">.btn-sold{background:rgba(184,135,42,0.12);border:1px solid rgba(184,135,42,0.4);color:var(--gld);font-size:9px;font-weight:500;padding:3px 8px;font-family:'DM Sans',sans-serif;cursor:pointer;border-radius:2px;white-space:nowrap}</p>
+<p class="p1">.btn-del{background:none;color:#7A4040;border:1px solid rgba(122,64,64,0.2);padding:2px 6px;font-family:'DM Sans',sans-serif;font-size:8px;cursor:pointer;border-radius:2px;white-space:nowrap}</p>
+<p class="p1">.layout{display:flex;height:calc(100vh - 52px);overflow:hidden}</p>
+<p class="p1">.sidebar{width:195px;min-width:195px;background:var(--wrm);border-right:1px solid var(--brd);overflow-y:auto;padding:14px 0 30px;flex-shrink:0}</p>
+<p class="p1">.sb-lbl{font-size:7.5px;letter-spacing:0.18em;text-transform:uppercase;color:var(--mut);padding:0 13px 9px}</p>
+<p class="p1">.tb{display:flex;align-items:center;justify-content:space-between;width:100%;padding:7px 13px;background:none;border:none;border-left:3px solid transparent;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;font-weight:400;color:var(--mid);text-align:left;transition:all 0.12s;gap:4px}</p>
+<p class="p1">.tb:hover{background:var(--glp);color:var(--chr)}</p>
+<p class="p1">.tb.on{border-left-color:var(--gld);background:var(--glp);color:var(--blk);font-weight:500}</p>
+<p class="p1">.pill{font-size:8px;background:var(--brl);color:var(--mut);padding:1px 5px;border-radius:10px;white-space:nowrap;flex-shrink:0}</p>
+<p class="p1">.tb.on .pill{background:var(--gld);color:var(--blk)}</p>
+<p class="p1">.pill.done{background:var(--grb);color:var(--grt)}</p>
+<p class="p1">.sb-div{height:1px;background:var(--brd);margin:9px 13px}</p>
+<p class="p1">.sold-bdg{display:inline-block;font-size:7.5px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;background:var(--gld);color:var(--blk);padding:1px 4px;border-radius:2px;margin-left:4px;vertical-align:middle}</p>
+<p class="p1">.main{flex:1;overflow-y:auto;padding:20px 24px}</p>
+<p class="p1">.ph{margin-bottom:18px;padding-bottom:12px;border-bottom:1px solid var(--brd);display:flex;align-items:flex-end;justify-content:space-between;gap:10px}</p>
+<p class="p1">.pt{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--blk);letter-spacing:0.03em;line-height:1}</p>
+<p class="p1">.pm{font-size:10px;color:var(--mut);margin-top:2px}</p>
+<p class="p1">.ps{display:flex;gap:14px;flex-shrink:0}</p>
+<p class="p1">.sn{display:block;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--gld);line-height:1}</p>
+<p class="p1">.sl{font-size:7.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mut)}</p>
+<p class="p1">.shdr{display:flex;align-items:center;justify-content:space-between;margin:18px 0 0;padding-bottom:5px;border-bottom:1.5px solid var(--blk)}</p>
+<p class="p1">.stitle{font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:400;letter-spacing:0.08em;color:var(--blk);text-transform:uppercase}</p>
+<p class="p1">.sprog{font-size:9px;color:var(--gld);font-weight:500}</p>
+<p class="p1">/* Task rows */</p>
+<p class="p1">.tr{display:flex;align-items:flex-start;gap:9px;padding:8px 3px;border-bottom:1px solid var(--brl);border-radius:3px;transition:background 0.1s}</p>
+<p class="p1">.tr:hover{background:rgba(242,232,212,0.2)}</p>
+<p class="p1">.tr.readonly{opacity:0.6}</p>
+<p class="p1">.tr.done .tt,.tr.checked .tt{color:var(--mut);text-decoration:line-through;text-decoration-color:var(--brd)}</p>
+<p class="p1">.tr.appr .tt{color:var(--mut);text-decoration:line-through;text-decoration-color:var(--grn)}</p>
+<p class="p1">.tb2{flex:1;min-width:0}</p>
+<p class="p1">.tt{font-size:12px;color:var(--drk);line-height:1.45}</p>
+<p class="p1">.th{font-size:9.5px;color:var(--mut);margin-top:2px;line-height:1.4;font-style:italic}</p>
+<p class="p1">/* Stamp */</p>
+<p class="p1">.stamp{display:flex;align-items:center;gap:4px;margin-top:4px;flex-wrap:wrap}</p>
+<p class="p1">.stav{width:16px;height:16px;border-radius:50%;background:var(--glp);color:var(--amb);display:inline-flex;align-items:center;justify-content:center;font-size:7.5px;font-weight:700;border:1px solid rgba(184,135,42,0.3);flex-shrink:0}</p>
+<p class="p1">.stnm{font-size:9.5px;font-weight:500;color:var(--mid)}</p>
+<p class="p1">.stdt{font-size:9.5px;color:var(--mut)}</p>
+<p class="p1">.stpill{font-size:8px;padding:1px 5px;border-radius:10px}</p>
+<p class="p1">.stpill.complete,.stpill.reviewed,.stpill.approved,.stpill.passed,.stpill.completed{background:var(--grb);color:var(--grt)}</p>
+<p class="p1">.stpill.in-progress{background:var(--abb);color:var(--amb)}</p>
+<p class="p1">.stpill.corrections{background:var(--rdb);color:var(--rdt)}</p>
+<p class="p1">/* Controls */</p>
+<p class="p1">.tc{display:flex;align-items:center;gap:5px;flex-shrink:0;padding-top:1px}</p>
+<p class="p1">.ss{font-family:'DM Sans',sans-serif;font-size:9.5px;font-weight:500;border-radius:2px;padding:3px 16px 3px 6px;cursor:pointer;border:1px solid var(--brd);background:var(--wht);color:var(--mut);letter-spacing:0.03em;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='7' height='4'%3E%3Cpath d='M0 0l3.5 4L7 0' stroke='%23888880' stroke-width='1.1' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 5px center;min-width:100px;transition:all 0.15s}</p>
+<p class="p1">.ss.not-started{color:var(--mut)}</p>
+<p class="p1">.ss.in-progress{color:var(--amb);border-color:var(--amb);background-color:var(--abb)}</p>
+<p class="p1">.ss.complete,.ss.completed{color:var(--grt);border-color:var(--grn);background-color:var(--grb)}</p>
+<p class="p1">.ss.n-a{color:var(--mut);border-color:var(--brd);background-color:var(--brl)}</p>
+<p class="p1">.ss.passed{color:var(--grt);border-color:var(--grn);background-color:var(--grb)}</p>
+<p class="p1">.ss.corrections{color:var(--rdt);border-color:var(--red);background-color:var(--rdb)}</p>
+<p class="p1">.gc-lbl{font-size:8px;letter-spacing:0.1em;text-transform:uppercase;color:var(--mut);border:1px solid var(--brl);padding:2px 6px;border-radius:2px;white-space:nowrap;flex-shrink:0}</p>
+<p class="p1">.chk{width:15px;height:15px;border:1.5px solid var(--brd);border-radius:2px;background:var(--wht);cursor:pointer;flex-shrink:0;margin-top:2px;appearance:none;-webkit-appearance:none;transition:all 0.15s;position:relative;display:block}</p>
+<p class="p1">.chk:checked{background:var(--chr);border-color:var(--chr)}</p>
+<p class="p1">.chk:checked::after{content:'';position:absolute;left:2px;top:0;width:5px;height:9px;border-right:2px solid white;border-bottom:2px solid white;transform:rotate(40deg)}</p>
+<p class="p1">.nb{background:none;border:1px solid var(--brl);color:var(--mut);font-size:9px;padding:3px 6px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;white-space:nowrap}</p>
+<p class="p1">.nb:hover{border-color:var(--gld);color:var(--gld)}</p>
+<p class="p1">.nb.on{border-color:var(--blu);color:var(--blu);background:var(--blb)}</p>
+<p class="p1">.na{display:none;margin-top:6px;padding-top:6px;border-top:1px dashed var(--brl)}</p>
+<p class="p1">.na.open{display:block}</p>
+<p class="p1">.nta{width:100%;font-family:'DM Sans',sans-serif;font-size:10.5px;border:1px solid var(--brd);background:var(--wrm);color:var(--drk);padding:6px 8px;border-radius:3px;resize:vertical;min-height:42px;line-height:1.6}</p>
+<p class="p1">.nta:focus{outline:none;border-color:var(--gld)}</p>
+<p class="p1">/* Date field */</p>
+<p class="p1">.date-inp{font-family:'DM Sans',sans-serif;font-size:9.5px;border:1px solid var(--brd);background:var(--wht);color:var(--drk);padding:3px 6px;border-radius:2px;cursor:pointer;width:108px}</p>
+<p class="p1">.date-inp:focus{outline:none;border-color:var(--gld)}</p>
+<p class="p1">/* Plans &amp; Permits columns */</p>
+<p class="p1">.pp-row{display:flex;align-items:flex-start;gap:8px;padding:8px 3px;border-bottom:1px solid var(--brl)}</p>
+<p class="p1">.pp-task{flex:2;font-size:11.5px;color:var(--drk);line-height:1.4}</p>
+<p class="p1">.pp-meta{font-size:9.5px;color:var(--mut);margin-top:2px}</p>
+<p class="p1">.pp-who{flex:0 0 90px;font-size:10px;color:var(--mid);font-weight:500}</p>
+<p class="p1">.pp-ctrl{display:flex;align-items:flex-start;gap:5px;flex-shrink:0}</p>
+<p class="p1">/* Modal */</p>
+<p class="p1">.mbg{display:none;position:fixed;inset:0;background:rgba(10,10,8,0.72);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(4px)}</p>
+<p class="p1">.mbg.open{display:flex}</p>
+<p class="p1">.mc{background:var(--wrm);border:1px solid var(--brd);border-top:3px solid var(--gld);border-radius:3px;padding:26px;width:440px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,0.2);max-height:90vh;overflow-y:auto}</p>
+<p class="p1">.mt{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;color:var(--blk);letter-spacing:0.05em;margin-bottom:3px}</p>
+<p class="p1">.ms{font-size:10.5px;color:var(--mut);margin-bottom:16px}</p>
+<p class="p1">.fg{margin-bottom:10px}</p>
+<p class="p1">.fl{display:block;font-size:7.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut);margin-bottom:3px}</p>
+<p class="p1">.fi{width:100%;font-family:'DM Sans',sans-serif;font-size:12px;border:1px solid var(--brd);background:var(--wht);color:var(--chr);padding:7px 9px;border-radius:2px}</p>
+<p class="p1">.fi:focus{outline:none;border-color:var(--gld)}</p>
+<p class="p1">.ma{display:flex;gap:6px;margin-top:16px}</p>
+<p class="p1">.bp{flex:1;background:var(--blk);color:var(--crm);border:none;padding:9px;font-family:'DM Sans',sans-serif;font-size:10.5px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:2px}</p>
+<p class="p1">.bp:hover{background:var(--drk)}</p>
+<p class="p1">.bc{background:none;color:var(--mut);border:1px solid var(--brd);padding:9px 12px;font-family:'DM Sans',sans-serif;font-size:10.5px;cursor:pointer;border-radius:2px}</p>
+<p class="p1">/* Login */</p>
+<p class="p1">.lp{min-height:100vh;background:var(--blk);display:flex;align-items:center;justify-content:center;flex-direction:column}</p>
+<p class="p1">.lh{text-align:center;margin-bottom:26px}</p>
+<p class="p1">.ll{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:7px}</p>
+<p class="p1">.ll svg{width:48px;height:24px}</p>
+<p class="p1">.lb{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:300;letter-spacing:0.24em;color:#FAFAF7;text-transform:uppercase}</p>
+<p class="p1">.lb em{font-style:normal;color:var(--gld)}</p>
+<p class="p1">.lt{font-size:8px;letter-spacing:0.18em;text-transform:uppercase;color:var(--mut)}</p>
+<p class="p1">.lc{background:#1A1A18;border:1px solid #2A2A26;border-top:2px solid var(--gld);border-radius:3px;padding:26px;width:320px}</p>
+<p class="p1">.ltitle{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;color:#FAFAF7;letter-spacing:0.06em;margin-bottom:3px}</p>
+<p class="p1">.lsub{font-size:10.5px;color:var(--mut);margin-bottom:16px}</p>
+<p class="p1">.li{width:100%;font-family:'DM Sans',sans-serif;font-size:12px;border:1px solid #3A3A36;background:#0E0E0C;color:#FAFAF7;padding:8px 9px;border-radius:2px;margin-bottom:8px}</p>
+<p class="p1">.li:focus{outline:none;border-color:var(--gld)}</p>
+<p class="p1">.li::placeholder{color:#4A4A44}</p>
+<p class="p1">.le{font-size:10.5px;color:#C47A7A;min-height:13px;margin-bottom:5px}</p>
+<p class="p1">.btn-login{width:100%;background:var(--gld);color:var(--blk);border:none;padding:10px;font-family:'DM Sans',sans-serif;font-size:10.5px;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;border-radius:2px}</p>
+<p class="p1">.btn-login:hover{background:var(--gll)}</p>
+<p class="p1">/* Admin */</p>
+<p class="p1">.aw{padding:20px 24px;max-width:600px}</p>
+<p class="p1">.at{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:300;color:var(--blk);margin-bottom:3px}</p>
+<p class="p1">.asub{font-size:10.5px;color:var(--mut);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--brd)}</p>
+<p class="p1">.sh2{font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:400;letter-spacing:0.08em;color:var(--blk);text-transform:uppercase;padding-bottom:5px;border-bottom:1.5px solid var(--blk);margin:18px 0 9px}</p>
+<p class="p1">.uc{background:var(--wht);border:1px solid var(--brd);border-radius:3px;padding:10px 13px;margin-bottom:6px;display:flex;align-items:center;gap:9px}</p>
+<p class="p1">.uav{width:30px;height:30px;border-radius:50%;background:var(--glp);color:var(--amb);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;border:1px solid rgba(184,135,42,0.25);flex-shrink:0}</p>
+<p class="p1">.ui{flex:1}</p>
+<p class="p1">.un{font-size:12px;font-weight:500;color:var(--drk)}</p>
+<p class="p1">.um{font-size:9px;color:var(--mut)}</p>
+<p class="p1">.urb{font-size:7.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gld);font-weight:500}</p>
+<p class="p1">.brs{background:none;border:1px solid var(--brd);color:var(--mid);font-size:9px;padding:3px 8px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif}</p>
+<p class="p1">.brs:hover{border-color:var(--gld);color:var(--gld)}</p>
+<p class="p1">.ar{display:flex;align-items:flex-start;gap:7px;padding:6px 0;border-bottom:1px solid var(--brl)}</p>
+<p class="p1">.aav{width:20px;height:20px;border-radius:50%;background:var(--glp);color:var(--amb);display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:600;flex-shrink:0;border:1px solid rgba(184,135,42,0.2)}</p>
+<p class="p1">.at2{flex:1;font-size:10.5px;color:var(--drk);line-height:1.4}</p>
+<p class="p1">.ad{font-size:9px;color:var(--mut);white-space:nowrap}</p>
+<p class="p1">.empty{text-align:center;padding:60px 30px;color:var(--mut)}</p>
+<p class="p1">.ed{font-size:20px;opacity:0.18;margin-bottom:12px;letter-spacing:8px}</p>
+<p class="p1">.et{font-family:'Cormorant Garamond',serif;font-size:20px;font-weight:300;color:var(--drk);margin-bottom:4px}</p>
+<p class="p1">.eb{font-size:11.5px;line-height:1.7}</p>
+<p class="p1">.toast{position:fixed;bottom:20px;right:20px;background:var(--chr);color:#FAFAF7;padding:9px 16px;border-radius:3px;font-size:11px;z-index:999;border-left:3px solid var(--gld);display:none}</p>
+<p class="p1">.toast.on{display:block}</p>
+<p class="p1">::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--brd);border-radius:2px}</p>
+<p class="p1">&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p1">&lt;div id="app"&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;div class="toast" id="toast"&gt;&lt;/div&gt;</p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1">// ── CONFIG ────────────────────────────────────────────────────────────────────</p>
+<p class="p1"><a href="https://nyasyzchugvqumzjxopu.supabase.co">const SUPABASE_URL = 'https://nyasyzchugvqumzjxopu.supabase.co';</a></p>
+<p class="p1"><a href="https://nyasyzchugvqumzjxopu.supabase.co">const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55YXN5emNodWd2cXVtemp4b3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MDkyODcsImV4cCI6MjA5Mjk4NTI4N30.Pc9_jceweINaxDtdrMZVSD1D1bkra7-bOmVr7bRKl0s';</a></p>
+<p class="p2"><br></p>
+<p class="p1">const S2=`&lt;svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg"&gt;&lt;path d="M50,2 C50,2 46,46 0,50 C46,54 50,98 50,98 C50,98 54,54 100,50 C54,46 50,2 50,2 Z" fill="#B8872A"/&gt;&lt;path d="M150,2 C150,2 146,46 100,50 C146,54 150,98 150,98 C150,98 154,54 200,50 C154,46 150,2 150,2 Z" fill="#B8872A"/&gt;&lt;/svg&gt;`;</p>
+<p class="p2"><br></p>
+<p class="p1">const USERS=[</p>
+<p class="p1"><span class="Apple-converted-space">  </span>{id:'MP',name:'Matthew Pichardo',initials:'MP',password:'BespokeMatthew',role:'admin'},</p>
+<p class="p1"><span class="Apple-converted-space">  </span>{id:'CW',name:'Cody Wetzel',initials:'CW',password:'BespokeCody',role:'user'},</p>
+<p class="p1"><span class="Apple-converted-space">  </span>{id:'KH',name:'Kyle Hata',initials:'KH',password:'BespokeKyle',role:'user'},</p>
+<p class="p1"><span class="Apple-converted-space">  </span>{id:'RJ',name:'Ryan Jancula',initials:'RJ',password:'BespokeRyan',role:'user'},</p>
+<p class="p1"><span class="Apple-converted-space">  </span>{id:'BA',name:'Bespoke Admin',initials:'BA',password:'Bespoke@Info',role:'admin'},</p>
+<p class="p1">];</p>
+<p class="p2"><br></p>
+<p class="p1">const DATA = {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>"Initial Walkthrough":[</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"UTILITIES",t:"Water meter location",h:"Existing meter placement and accessibility",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"UTILITIES",t:"Water main size",h:"Verify main size and potential upgrade needs",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"UTILITIES",t:"Gas meter location",h:"Existing gas meter location",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"UTILITIES",t:"Gas main size",h:"Verify capacity for proposed project",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"UTILITIES",t:"Power poles",h:"Pole locations impacting driveway, frontage, or utilities",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"UTILITIES",t:"Overhead wires",h:"Electrical/telephone wires crossing lot or build envelope",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"UTILITIES",t:"Hydrant location",h:"Hydrant in front of or near property",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"SITE CONDITIONS",t:"Slope / hillside",h:"Flat lot or hillside? Estimate usable yard/build area",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"SITE CONDITIONS",t:"Drainage conditions",h:"Signs of poor drainage, runoff, low points",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"SITE CONDITIONS",t:"Ejector pump requirements",h:"Any below-grade areas requiring pump systems",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"SITE CONDITIONS",t:"Mature trees / vegetation",h:"Protected trees? Large root systems? Removal concerns",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"SITE CONDITIONS",t:"Lot dimensions",h:"Frontage, depth, irregular shape, easements",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"SITE CONDITIONS",t:"Lot usability",h:"Overall buildable footprint and constraints",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"SITE CONDITIONS",t:"Driveway approach",h:"Existing curb cut, slope, access issues",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"SITE CONDITIONS",t:"Sidewalk condition",h:"Damage, uplift, replacement requirements",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"SITE CONDITIONS",t:"Existing retaining walls",h:"Condition, height, replacement concerns",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"NEIGHBOR IMPACTS",t:"Neighbor privacy concerns",h:"Apartments, hillside homes, offices overlooking backyard",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"NEIGHBOR IMPACTS",t:"Surrounding area context",h:"Industrial nearby? Apartments? Commercial influence?",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"NEIGHBOR IMPACTS",t:"Neighborhood quality",h:"Street appeal, development activity, resale perception",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"EXISTING STRUCTURES",t:"Existing structure condition",h:"Overall condition of house/buildings",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"EXISTING STRUCTURES",t:"Foundation type",h:"Raised foundation or slab",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"EXISTING STRUCTURES",t:"Major systems",h:"Roof, HVAC, plumbing, electrical updates",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"EXISTING STRUCTURES",t:"Existing detached garage",h:"ADU conversion potential",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"EXISTING STRUCTURES",t:"Existing usable improvements",h:"Anything worth keeping/incorporating",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"EXISTING STRUCTURES",t:"Permitted spaces",h:"Verify existing permitted additions/spaces",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"EXISTING STRUCTURES",t:"Nonconforming spaces",h:"Unpermitted additions or zoning concerns",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"PLANNING / ZONING",t:"Zoning review",h:"Review ZIMAS: setbacks, FAR, height, overlays",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"PLANNING / ZONING",t:"Development potential",h:"New build, remodel, ADU, SB9, lot split potential",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"PLANNING / ZONING",t:"Easements / restrictions",h:"Utility easements, access easements, encroachments",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"DEMO / SITE WORK",t:"Demo scope",h:"Estimate structure/demo requirements",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"DEMO / SITE WORK",t:"Site clearing",h:"Tree removal, debris, grading scope",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"DEMO / SITE WORK",t:"Landscaping impacts",h:"Existing hardscape/landscape removal",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"DEMO / SITE WORK",t:"Retaining wall scope",h:"New retaining walls likely required?",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"DOCUMENTATION",t:"Site photos",h:"Full property, street, neighbors, utilities, slopes",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"DOCUMENTATION",t:"BOE photos",h:"Take driveway/apron/sidewalk photos for BOE",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"DOCUMENTATION",t:"Urban Forestry photos",h:"Required parkway/tree documentation",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"DOCUMENTATION",t:"Measurements",h:"Lot dimensions, setbacks, elevation changes",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"DOCUMENTATION",t:"Drone photos (if needed)",h:"Helpful for slope/privacy/context review",mode:"checkbox"}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>],</p>
+<p class="p1"><span class="Apple-converted-space">  </span>"Acquisition":[</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Inform DPC of Accepted Offer",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Opening Escrow Email",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Send escrow Buyer contact info",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Request Title Binder from Escrow",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Order inspections ASAP and confirm access with the LA (Sewer, soils, survey)",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Send FX docs to lender",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Intro Escrow and the Lender",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Send email to insurance provider",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Coordinate wire for EMD",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"TC / JG Ops to add contingencies &amp; COE to cal.",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Work w/DPC on plans, budget, and timeline",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Prep G Drive folder for project",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Review Escrow Instructions and disclosures",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Request developer fee discount w/escrow",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Investor Outreach",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Confirm appraisal date and time",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Conduct inspections",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Complete AVID",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Prepare the RR if necessary.",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Notify escrow and lender of any Credits",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Send CR-All.",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Create LLC",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Set up bank acct. for project",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"F/u w/lender on docs",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"VP",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Confirm title binder w/escrow",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Confirm location of keys, clickers, FOBs, etc.",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Utility set up",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Schedule notary for closing docs",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Sign closing docs",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Send final funds to escrow",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Closing Day!",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Add docs to G-Drive",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Send controller closing statement",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Add project to Bespoke Homes Project Info sheet",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Set up cal. invite for a month before insurance policy expiration",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Send handoff email to DPC",h:"",mode:"checkbox",hasDate:true},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Add Loan to FCI",h:"",mode:"checkbox",hasDate:true}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>],</p>
+<p class="p1"><span class="Apple-converted-space">  </span>"Plans &amp; Permits":[</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Obtain Survey",company:"Horizon",who:"Matthew",h:"Slope Band Analysis required if in Hillside",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Verify Items on Plans Checklist",company:"Cody/Matthew",who:"",h:"",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Pull all records (Permits, CofOs, Plot Plans)",company:"LADBS",who:"Matthew",h:"",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Submit DWP encroachment application (building within 10’ of easement)",company:"DWP",who:"Matthew/Cody",h:"Basic floorplan and elevations/survey - submit asap - no permit needed and link after - Only if it's a new building note: connect link to dwp",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Submit to Bureau of Street Services (Urban Forestry Division) to remove any trees in parkway",company:"BSS",who:"Matthew/Cody/Krystin",h:"Krystin to submit - we provide photos",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Submit DPI/Posting (if applicable)",company:"LADBS",who:"Matthew",h:"Posting required if building is over 45 years old. Need site plan with existing building",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Submit GPI/Posting (if applicable) or get GPI waiver after submittal",company:"LADBS/Grading",who:"Krystin",h:"Need architectural plan. Posting required for Hillside lots. Posting not required for Fire Rebuild",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Obtain Soils Report (if applicable)",company:"LK Geotechnical",who:"Matthew",h:"Need architectural plan",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Submit Soils Report (if applicable)",company:"Grading",who:"Krystin",h:"",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Send 30 Day Notice of Intent to Excavate (if applicable)",company:"Admin",who:"Matthew",h:"Required if any excavation surcharge on neighboring property",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Obtain Slope Band Analysis approval from planning (if applicable)",company:"DCP",who:"Krystin",h:"With any hillside property",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Obtain Fire Sprinkler Plans",company:"GC",who:"Matthew",h:"",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Obtain Truss Calcs",company:"Goldenwood",who:"Matthew",h:"Need architectural and sturctural plans",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Submit plans to plan check",company:"LADBS",who:"Krystin",h:"",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Submit plans to Coastal once permit number is generated (if applicable)",company:"Coastal",who:"Krystin",h:"",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Submit truss calcs if ready or submit truss calcs during final plan check",company:"LADBS",who:"Krystin",h:"",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Submit fire sprinkler plans to Fire Department",company:"LAFD",who:"Krystin",h:"",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Pickup plan check corrections",company:"LADBS",who:"Krystin",h:"Check online to see if approved and let Krystin know - Matthew to pick up in downtown LA",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Obtain Clearances",company:"Krystin to submit, Matthew to follow up w/coorispondance (DOT)",who:"",h:"",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Bureau of Engineering",company:"BOE",who:"Krystin",h:"",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Planning (includes Coastal)",company:"DCP",who:"Krystin",h:"",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Fire Department",company:"LAFD",who:"Krystin",h:"",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Transportation Department",company:"DOT",who:"Krystin",h:"",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Bureau of Street Services (Urban Forestry Division)",company:"BSS",who:"Krystin",h:"",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Resubmit to plan check or final plan check appointment",company:"LADBS",who:"Krystin/Cody",h:"Online or in person - Truss calcs if possible",mode:"permits"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Pull permit",company:"LADBS",who:"",h:"",mode:"permits"}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>],</p>
+<p class="p1"><span class="Apple-converted-space">  </span>"Construction":[</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre-Construction / Admin",t:"Relocate Neighboring Powerlines (If applicable)",h:"Call LADWP Service planning at 213-367-6937 and after you receive work request number contact David Flynn (Supervisor District) to confirm job and start date 310-524-8435",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre-Construction / Admin",t:"Set up LADWP account (water and sewer) / Schedule electric meter to be removed",h:"Following Day, call Connection Center (213-367-6937) to confirm scheduling and directed to West LA District, not city of LA.<span class="Apple-converted-space"> </span></p>
+<p class="p2"><br></p>
+<p class="p1">After confirmed, call West LA District to confirm work date. (310-524-8441)",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Site Prep",t:"Order temp. fence &amp; porta potty",h:"Andy Gump - Confirm Dates for Fence and Potty",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Site Prep",t:"Hang BH Branded construction fabric on fence / Install Chain and Lock",h:"Fabrics in storage room (order more if needed) / Add lock code to notes",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Site Prep",t:"Setup security system",h:"Have team install pole / cameras",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Site Prep",t:"Call Dig Alert",h:"Confirm with GC this has been done",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Site Prep",t:"Install temp. power",h:"Floor Plans Pros. Confirm with GC application has been submitted",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre-Construction / Admin",t:"Sell appliances, if included in sale",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre-Construction / Admin",t:"Verify fire sprinkler plan approval",h:"Can also check LADBS for inpsections. Matthew to f/u w/GC to ensure it's been completed.",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre-Construction / Admin",t:"Create listing Floorplan once we have Approved Plans",h:"Floor Plans Pros info@floorplanspros.com",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre-Construction / Admin",t:"Water line and meter upgrade",h:"Permit through LADWP",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre-Construction / Admin",t:"Gas meter upgrade",h:"Submit new service form on Website. Confirm with Cody on specs.",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre Ordering",t:"Order windows/ skylights / exterior doors",h:"Sean Superior Moulding: Confirm window and door sizes, finishes, grid styles, opening types, skylights, and jamb requirements.",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre-Construction / Admin",t:"After window/ exterior door order, mark notes on plan",h:"Confirm rough openings, door swings, beam/fireplace locations, required clearances, and all header, door, slider, and window heights.",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre Ordering",t:"Order plumbing: Rough-in and Finishes | Tubs and Toilets",h:"Rough and Trims delivery to office. Tubs, Sinks, Toilets held by vendor.",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre Ordering",t:"Order Appliances",h:"Justin Univeral Appliances: Email appliance specs to GC, designer, and cabinet maker",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Demo",t:"Demo existing property",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Sewer",t:"Expose sewer and cap it",h:"(Inspection required) Expose sewer line during demo so nothing goes into the sewer. Install liner. Leave open until rough plumbing completed",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Demo Inspection",t:"Demo Final Inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"School fee refund (only for new construction)",h:"LA City* Need to provide ASAP after demo permit is finaled.",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Sewer",t:"Sewer repair and liner if needed",h:"John Just Right: Check reports provided during escrow",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Grading",t:"Start R&amp;R left side",h:"(Removal and recompaction)",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Grading Inspection",t:"Grading inspection - Left Side",h:"For bottom of left side",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Grading",t:"Start R&amp;R right side",h:"(Removal and recompaction)",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Grading Inspection",t:"Grading inspection - Right Side",h:"For bottom of right side",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Grading",t:"Submit compaction report to grading",h:"Mark and Sean LK Geotechnical. Take soils packet to city and pay the fee.",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pool",t:"Dig pool",h:"(If applicable)",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Foundation",t:"Schedule surveyor for house boundary staking plan",h:"Jerry Horizons: Complete after grading.",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Foundation",t:"Dig footings / Install forms",h:"Dig main sewer line throughout house at same time",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Foundation",t:"Install rebar for footings / install ufer ground",h:"Confirm panel location for ufer ground",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Foundation Inspection",t:"Footing / rebar inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Foundation - Admin",t:"Mark underground rough on site after footing rebar for plumbing / electrical locations",h:"Measure and double check or mark location (spray paint)",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Foundation",t:"Underground rough - electrical",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Foundation",t:"Underground rough - plumbing",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Foundation",t:"Underground rough - low voltage",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Foundation - Admin",t:"Verify all underground rough",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Foundation Inspection",t:"Rough underground elec. / plumbing inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Foundation",t:"Pour footings",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Foundation",t:"Slab rebar, gravel, and visqueen",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Foundation - Admin",t:"Verify slider/door depression in field",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Foundation Inspection",t:"Slab rebar inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Foundation",t:"Pour slab",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre Ordering",t:"Order fireplace(s)",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre Ordering",t:"Order Garage Fire Rated Pedestrian Door(s)",h:"Shawn Imperial: Garage door into home and exterior door into garage.",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Framing",t:"Start framing",h:"Meet with GC to verify framing, beams, niches, etc.",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Framing Inspection",t:"Floor nailing / roof diaphragm inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Framing",t:"Start 2nd floor",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Framing",t:"Order Trusses",h:"After second floor walls are snapped with chalk line on the floor",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Framing",t:"Install Trusses",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Framing",t:"Structural observation report for roof diaphragm, roof nailing, sheer walls",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Framing - Admin",t:"Schedule height survey",h:"Jerry Horizon",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Framing - Inspection",t:"Roof nailing inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Framing - Inspection",t:"Shear wall inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Get electric meter location approved by DWP",h:"Schedule after 2nd floor is framed. Verify roof is finished before DWP comes to field and location for drop",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Framing - Admin",t:"Blocking for towel / toilet paper holders, door stops, soffits, beams, TVs etc.",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Framing - Admin",t:"Framing walkthrough",h:"Check size of fireplace, window &amp; door size/placement, doors, niches, etc.",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Schedule garage door company to field measure",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"GC",t:"Install scaffolding",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"MEP's",t:"Install fireplace",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"MEP's",t:"Mechanical (HVAC)",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"MEP's",t:"Electrical",h:"Confirm sleeve has been run at roof for future solar",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"MEP's",t:"Plumbing",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"MEP's",t:"Fire sprinklers",h:"Golden State: Ensure fire sprinkler vendor has submitted plan for supp",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"MEP's",t:"Low voltage",h:"Set up dedicated home system email and confirm all smart home, AV, security, lighting control, and device locations.",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"MEP - Admin",t:"Verify Car Charger Location and Install",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"MEP Inspection",t:"(Mechanical) HVAC inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"MEP Inspection",t:"Electrical inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"MEP Inspection",t:"Plumbing inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Waterproofing",t:"Waterproof shower floors / balconies / laundry",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Waterproofing Inspection",t:"Shower pan inspection",h:"(Plug / fill shower floors w/water before inspection)",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"MEP Inspection",t:"Fire sprinkler inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Mid Ordering",t:"Order Hood to site if it's being drywalled",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Mid Ordering",t:"Order Interior Doors",h:"If Bob, he can build. Other vendor - Shawn (Imperial). If no door casing, order early, once framing is completed.",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre ordering",t:"Order Door Hardware/ Stops",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre ordering",t:"Order Light fixtures",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre ordering",t:"Order Mirrors",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre ordering",t:"Order Bath Accessories",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Pre ordering",t:"Order Mailbox",h:"https://www.rejuvenation.com/products/post-porch-city-mailbox/ Black - Locking",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"GC",t:"Install windows",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"GC",t:"Install exterior doors",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Video all walls and cielings prior to insulation",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Confirm all electrical, lighting, AV, and low-voltage rough-in locations, heights, alignments, controls, and device placements.",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Confirm all plumbing, HVAC, venting, and fireplace rough-in locations, terminations, and fixture heights prior to wall close-up and stucco.",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Verify door swings, switch accessibility, niche locations, panel locations, and overall coordination between trades.",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Confirm all required future infrastructure and exterior penetrations, including solar sleeves, venting, overflow locations, and equipment connections.",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Framing Inspection",t:"Final framing inspection",h:"(Get ok to wrap house)",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"GC",t:"Straight edge for drywall",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"GC",t:"Clean all interior framing prior to insulation.",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"GC",t:"Spray the framing",h:"Bora-Care with Mold-Care treatment (add dye to see where spraying)",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Exterior",t:"Wrap house",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Exterior Inspection",t:"Exterior lathe inspection for house wrap",h:"(Get ok to insulate)",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Exterior",t:"Install upper roof",h:"Confirm backing is in for flashing. Roofer to return for lower roof after stucco and painting.",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Exterior",t:"Start siding",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Exterior",t:"Paint exterior",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Exterior",t:"Install chimney shroud",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Exterior",t:"Paint chimney shroud",h:"(Before roofing material install)",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Exterior",t:"Install shutters / Window Details",h:"(If applicable)",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Exterior",t:"Install upper gutters / downspouts",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Exterior",t:"Remove scaffolding",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Exterior",t:"Install lower roof",h:"(Depending on the contractor)",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Insulation",t:"Insulate entire house",h:"Insulate in exterior showers / tubs first",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Inspection Inspection",t:"Insulation inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Drywall",t:"Start drywall",h:"(Bathrooms and behind shower / tub walls first)",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Mid Ordering",t:"Order tile",h:"Include grout, etc. in tile budget",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Tile Inspection",t:"Shower/Tub WALL waterproofing / lathe",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Tile Inspection",t:"Shower lathe inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Tile",t:"Install hardy board or float shower/tubs with concrete",h:"Verify drywall is installed behind showers",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Tile",t:"Install tile",h:"Once tile is delivered, let team and Designer know",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Drywall Inspection",t:"Drywall nailing inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Walkthrough after drywall to verify no outlets covered over",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Mid Ordering",t:"Order flooring",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Drywall",t:"Skim coat drywall",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Paint",t:"Prime all interior walls / cielings",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Schedule vendor to measure/design closets",h:"If Bob, he can build",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Schedule cabinet company to field measure",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Mid Ordering",t:"Order cabinet hardware after cabinets are verified",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Mid Ordering",t:"Order HVAC Registers",h:"Request sizes from GC",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Mid Ordering",t:"Order smart light switches - Lutron",h:"For specified areas only - Claro Smart Switch for Caseta",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Mid Ordering",t:"Order screwless outlet and switch covers",h:"If Ted, we order. Get count in field.",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Mid Ordering",t:"Source slab for countertops",h:"GC pays and picks up",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Mid Ordering",t:"Order BBQ (BBQ Guys)",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Start finish carpentry",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Start staircase hardwood",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Install interior doors",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Install cabinets",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Install cabinet hardware",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Install countertops",h:"Confirm with GC for Sink Delivery",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Schedule Appliance Inspection",h:"Need flooring and countertops in | 1-2 Week inspection lead time",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Install fireplace slabs",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Install wood flooring",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Install baseboards",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Install closets",h:"Coordinate w/GC if site needs to be prepped if Closet World",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Schedule Delivery of Standing Tubs and Toilets",h:"Winsupply Michael",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Landscape/Hardscape",t:"Public Work A-Permit",h:"BOE - Online permit",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Landscape/Hardscape",t:"Install area drains",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Landscape/Hardscape",t:"Have plumber run gas line / water line",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Landscape/Hardscape Inspection",t:"Gas line / water line inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Landscape/Hardscape",t:"Install driveway, patio, and walkway concrete",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Exterior",t:"Install garage door after driveway is poured",h:"Make sure GC is ready for Garage door",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Exterior",t:"Install lower gutters",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Exterior Inspection",t:"Grading final",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Landscape/Hardscape",t:"Start final landscaping",h:"Need landscape/hardscape plan",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Final Trades",t:"Electrical",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Final Trades",t:"Plumbing",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Final Trades",t:"HVAC",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Final Trades",t:"HERS testing",h:"Matthew to f/u w/GC.",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Final Trades",t:"Low voltage",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Final Trades",t:"Fire sprinkler",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Have finish carpenter install all final hardware",h:"Admin to provide",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Verify weatherstrips installed",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Paint final colors",h:"Admin to provide",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Paint garage door",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Paint garage floor w/epoxy",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Exterior touch ups",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Install mirrors",h:"Admin to provide",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Install glass enclosures",h:"Admin to provide",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Finishes",t:"Install window hardware",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Schedule delivery and install appliances",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Final Inspection",t:"Final electrical inspection",h:"Once electrical final is issued, it takes 2–4 business days for the BMI inspector to release electrical service.",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Get power released / meter install",h:"Track Electrical Service Installation Status",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Install DWP meter",h:"Once utilities are released, call LADWP to setup service / install meter.",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Final Inspection",t:"Final plumbing inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Final Inspection",t:"Gas test inspection",h:"SoCalGas is released automatically once SGSOV-Seismic Gas S/O Valve is approved.",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Set up gas account",h:"Fill out application on SoCalGas for meter install. (Search Builder Services - 2nd option - Scroll down to new res. construction - Fill out app. Can take 7-10 biz days for SoCalGas to call back and install meter).",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Final Inspection",t:"Final HVAC inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Final Inspection",t:"Final fire sprinkler inspection",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Put together buyers packet w/all manuals",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Final",t:"Print green forms",h:"",o:"g",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Final Inspection",t:"Green final",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Final Inspection",t:"Main final",h:"",o:"i",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Check LADBS Activity report to confirm all units finaled",h:"LADBS Permit &amp; Inspection Report",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Call LADWP for new trash, recycle, yard bins",h:"Take photos of seriel number of each can. Call 1-800-773-2489 (option 1). Give Ryan's name &amp; Name on Utility Bill.",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Post Construction Cleaner",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"",t:"Drop off Supply Box (Booties, TP, Cleaning Wipes, etc)",h:"",o:"m",mode:"construction"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Admin",t:"Refer to 'Disposition (Escrow)' tab for next steps",h:"",o:"g",mode:"construction"}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>],</p>
+<p class="p1"><span class="Apple-converted-space">  </span>"Walkthrough Before Drywall":[</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Confirm switch layout, heights, and lighting controls.",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Confirm outlet placements for AV components, bidets, island plugs, and other required locations.",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Height of light fixtures",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Height of plumbing",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Confirm door swings do not interfere with light switch locations",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Confirm in-wall bathroom plumbing locations, fixture walls, and shower head heights.",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Lighting is centered, aligned with each other, etc.",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Confirm placement of speakers, control pads, security cameras, and other AV devices.",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"HVAC connections / placement",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Confirm HVAC exterior overflow termination locations prior to stucco.",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Laundry venting",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Range venting",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Fireplace venting",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Nitch locations in Kitchen and Bathrooms",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Sub panel location",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Confirm sleeve has been run at roof for future solar",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Exterior Range venting",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{t:"Exterior Fireplace venting",h:"",mode:"checkbox"}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>],</p>
+<p class="p1"><span class="Apple-converted-space">  </span>"Disposition":[</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Prop walkthrough 6 wks. prior to est. completion date",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Deep clean",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Staging",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Photography / Matterport",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Property cheat sheet for Agents",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Seller disclosures",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Retrofit",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Counter Offer (title binder)",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Sell Side Checklist",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Opening escrow email (title binder)",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Work with the Buyer's Agent to confirm access to the property for inspections.",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"TC to add contingencies and COE to our calendars.",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Send all discs. and docs to Buyer's Agent",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Confirm Buyer has wired their EMD to escrow.",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Comps for appraisal",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Review escrow instructions",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Inspections",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Confirm the appraisal has been scheduled / completed",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"RR / punchlist",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Notify escrow and lender of any Credits",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"DPC to walkthrough and complete punchlist items",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"F/u w/Agent about loan",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"CR-All",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Provide list of utility providers",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"VP",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"P/u cleaning supply basket and internet equipment from property",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Email Agent location for keys, clickers, FOBs, etc. / utility providers",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Schedule cancellation of utilities",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Call insurance for premium refund",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Closing Day!",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Pick up lockbox",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Add docs to G-Drive",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Send controller closing statement",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Add project to Bespoke Homes Project Info sheet",h:"",mode:"checkbox"},</p>
+<p class="p1"><span class="Apple-converted-space">    </span>{s:"Disposing",t:"Email to investors - FLS from [Date of Statement], final Balance Sheet, P&amp;L, Disbursement Schedule, Seller Settlement Statement (include a link to G-Drive folder) PTET",h:"",mode:"checkbox"}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>]</p>
+<p class="p1">};</p>
+<p class="p2"><br></p>
+<p class="p1">const TABS = Object.keys(DATA);</p>
+<p class="p2"><br></p>
+<p class="p1">// ── STATE ─────────────────────────────────────────────────────────────────────</p>
+<p class="p1">let st = {</p>
+<p class="p1"><span class="Apple-converted-space">  </span>user: null,</p>
+<p class="p1"><span class="Apple-converted-space">  </span>view: 'login',</p>
+<p class="p1"><span class="Apple-converted-space">  </span>projects: [],</p>
+<p class="p1"><span class="Apple-converted-space">  </span>proj: null, <span class="Apple-converted-space">      </span>// full project object</p>
+<p class="p1"><span class="Apple-converted-space">  </span>tab: 'Initial Walkthrough',</p>
+<p class="p1"><span class="Apple-converted-space">  </span>taskCache: {},<span class="Apple-converted-space">    </span>// proj_id -&gt; { task_key -&gt; task_row }</p>
+<p class="p1"><span class="Apple-converted-space">  </span>actLog: [],</p>
+<p class="p1"><span class="Apple-converted-space">  </span>users: JSON.parse(JSON.stringify(USERS)),</p>
+<p class="p1">};</p>
+<p class="p2"><br></p>
+<p class="p1">// ── HELPERS ───────────────────────────────────────────────────────────────────</p>
+<p class="p1">const $ = id =&gt; document.getElementById(id);</p>
+<p class="p1">function toast(msg,dur=2500){const t=$('toast');t.textContent=msg;t.classList.add('on');setTimeout(()=&gt;t.classList.remove('on'),dur);}</p>
+<p class="p1">function fd(){return new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}</p>
+<p class="p1">function addLog(action,detail,projId){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>sb.from('bh_activity').insert({project_id:projId||st.proj?.id,user_initials:st.user.initials,user_name:st.user.name,action,detail}).then(()=&gt;{});</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function isComplete(tab,idx){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const item=DATA[tab][idx];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const k=tab+'|'+idx;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const t=st.taskCache[st.proj?.id]?.[k];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!t)return false;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(item.mode==='checkbox')return!!t.checked;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(item.mode==='construction'){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(item.o==='g')return false;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(item.o==='i')return false;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>return t.status==='complete';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(item.mode==='permits')return t.status==='completed';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>return t.status==='complete'||t.status==='completed';</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function countTab(tab){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const items=DATA[tab];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let done=0,total=0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>items.forEach((item,idx)=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(item.mode==='construction'&amp;&amp;(item.o==='g'||item.o==='i'))return;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>total++;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(isComplete(tab,idx))done++;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>return{done,total};</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">// ── SUPABASE DATA ─────────────────────────────────────────────────────────────</p>
+<p class="p1">async function loadProjects(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const{data,error}=await sb.from('bh_projects').select('*').order('created_at',{ascending:false});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(error)return[];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>st.projects=data||[];</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">async function loadTasks(projId){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!projId)return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(st.taskCache[projId])return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const{data}=await sb.from('bh_tasks').select('*').eq('project_id',projId);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const map={};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>(data||[]).forEach(t=&gt;map[t.task_key]=t);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>st.taskCache[projId]=map;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">async function upsertTask(projId,taskKey,updates){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const existing=st.taskCache[projId]?.[taskKey];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const row={</p>
+<p class="p1"><span class="Apple-converted-space">    </span>project_id:projId,</p>
+<p class="p1"><span class="Apple-converted-space">    </span>task_key:taskKey,</p>
+<p class="p1"><span class="Apple-converted-space">    </span>updated_by:st.user.initials,</p>
+<p class="p1"><span class="Apple-converted-space">    </span>updated_by_name:st.user.name,</p>
+<p class="p1"><span class="Apple-converted-space">    </span>updated_at:new Date().toISOString(),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>...updates</p>
+<p class="p1"><span class="Apple-converted-space">  </span>};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(existing){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>await sb.from('bh_tasks').update(row).eq('project_id',projId).eq('task_key',taskKey);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}else{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>await sb.from('bh_tasks').insert(row);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!st.taskCache[projId])st.taskCache[projId]={};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>st.taskCache[projId][taskKey]={...existing,...row};</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">async function loadActivity(projId){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const{data}=await sb.from('bh_activity').select('*').eq('project_id',projId).order('created_at',{ascending:false}).limit(50);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>st.actLog=data||[];</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">// ── EXPORT TO XLSX ────────────────────────────────────────────────────────────</p>
+<p class="p1">function exportProject(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!st.proj)return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const wb=XLSX.utils.book_new();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>TABS.forEach(tab=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const items=DATA[tab];</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const rows=[['Task','Status/Checked','Note','Date','Updated By']];</p>
+<p class="p1"><span class="Apple-converted-space">    </span>items.forEach((item,idx)=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const k=tab+'|'+idx;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const t=st.taskCache[st.proj.id]?.[k]||{};</p>
+<p class="p1"><span class="Apple-converted-space">      </span>rows.push([</p>
+<p class="p1"><span class="Apple-converted-space">        </span>item.t,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>item.mode==='checkbox'?(t.checked?'✓':''):( t.status||''),</p>
+<p class="p1"><span class="Apple-converted-space">        </span>t.note||'',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>t.date_completed||'',</p>
+<p class="p1"><span class="Apple-converted-space">        </span>t.updated_by_name||''</p>
+<p class="p1"><span class="Apple-converted-space">      </span>]);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const ws=XLSX.utils.aoa_to_sheet(rows);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>ws['!cols']=[{wch:45},{wch:15},{wch:35},{wch:12},{wch:18}];</p>
+<p class="p1"><span class="Apple-converted-space">    </span>XLSX.utils.book_append_sheet(wb,ws,tab.substring(0,31));</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>XLSX.writeFile(wb,`${st.proj.name.replace(/[^a-z0-9]/gi,'_')}_Checklist.xlsx`);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>toast('Downloaded!');</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">// ── RENDER ────────────────────────────────────────────────────────────────────</p>
+<p class="p1">function render(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(st.view==='login'){rLogin();return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(st.view==='admin'){rAdmin();return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rMain();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function rLogin(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>$('app').innerHTML=`&lt;div class="lp"&gt;&lt;div class="lh"&gt;&lt;div class="ll"&gt;${S2}&lt;span class="lb"&gt;BESPOKE &lt;em&gt;Homes&lt;/em&gt;&lt;/span&gt;&lt;/div&gt;&lt;div class="lt"&gt;Trust <span class="s1">✦</span> Craftsmanship <span class="s1">✦</span> Taste&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="lc"&gt;&lt;div class="ltitle"&gt;Sign In&lt;/div&gt;&lt;div class="lsub"&gt;Project Checklist &amp; Tracker&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;input class="li" id="lu" placeholder="Full name" list="ul" autocomplete="off"/&gt;&lt;datalist id="ul"&gt;${st.users.map(u=&gt;`&lt;option value="${u.name}"&gt;`).join('')}&lt;/datalist&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;input class="li" id="lp" type="password" placeholder="Password" onkeydown="if(event.key==='Enter')login()"/&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="le" id="le"&gt;&lt;/div&gt;&lt;button class="btn-login" onclick="login()"&gt;Sign In&lt;/button&gt;&lt;/div&gt;&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>setTimeout(()=&gt;$('lu')?.focus(),80);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function login(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const n=$('lu').value.trim(),p=$('lp').value;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const u=st.users.find(x=&gt;x.name.toLowerCase()===n.toLowerCase()||x.initials.toLowerCase()===n.toLowerCase());</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!u||u.password!==p){$('le').textContent='Incorrect name or password.';return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>st.user=u;st.view='main';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>loadProjects().then(()=&gt;render());</p>
+<p class="p1">}</p>
+<p class="p1">function logout(){st.user=null;st.view='login';render();}</p>
+<p class="p2"><br></p>
+<p class="p1">function navH(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const u=st.user;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const projOpts=st.projects.filter(p=&gt;!p.sold).sort((a,b)=&gt;a.name.localeCompare(b.name))</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.map(p=&gt;`&lt;option value="${p.id}" ${st.proj?.id===p.id?'selected':''}&gt;${p.name}${p.address?' — '+p.address:''}&lt;/option&gt;`).join('');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>return`&lt;div class="nav"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="nav-left"&gt;&lt;span class="logo-stars"&gt;${S2}&lt;/span&gt;&lt;div&gt;&lt;div class="logo-text"&gt;BESPOKE &lt;em&gt;Homes&lt;/em&gt;&lt;/div&gt;&lt;div class="logo-sub"&gt;Trust <span class="s1">✦</span> Craftsmanship <span class="s1">✦</span> Taste&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="nav-center"&gt;&lt;select class="proj-sel" onchange="switchProj(this.value)"&gt;&lt;option value=""&gt;— Select Project —&lt;/option&gt;${projOpts}&lt;/select&gt;&lt;button class="btn-np" onclick="openNew()"&gt;+ New&lt;/button&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="nav-right"&gt;&lt;div class="av"&gt;${u.initials}&lt;/div&gt;&lt;span class="nav-name"&gt;${u.name.split(' ')[0]}&lt;/span&gt;${u.role==='admin'?`&lt;button class="btn-admin" onclick="st.view='admin';rAdmin()"&gt;Admin&lt;/button&gt;`:''}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="btn-signout" onclick="logout()"&gt;Sign Out&lt;/button&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;&lt;div class="gold-rule"&gt;&lt;/div&gt;`;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">async function rMain(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const pd=st.proj;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(pd)await loadTasks(pd.id);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let total=0,done=0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(pd){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>TABS.forEach(tab=&gt;{const c=countTab(tab);total+=c.total;done+=c.done;});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const pct=total&gt;0?Math.round((done/total)*100):0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const nv=pd&amp;&amp;(pd.project_type||pd.contractor||pd.designer);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const ladbs=pd?.permit_number?`&lt;a class="info-link" href="https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr" target="_blank"&gt;LADBS ↗&lt;/a&gt;`:'';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>$('app').innerHTML=`${navH()}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>${nv||pd?.permit_number?`&lt;div class="info-bar on"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>${pd.project_type?`&lt;span class="info-lbl"&gt;Type&lt;/span&gt;&lt;span&gt;${pd.project_type}&lt;/span&gt;`:''}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>${pd.contractor?`&lt;span class="info-lbl" style="margin-left:8px"&gt;Contractor&lt;/span&gt;&lt;span&gt;${pd.contractor}&lt;/span&gt;`:''}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>${pd.designer?`&lt;span class="info-lbl" style="margin-left:8px"&gt;Designer&lt;/span&gt;&lt;span&gt;${pd.designer}&lt;/span&gt;`:''}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>${pd.permit_number?`&lt;span class="info-lbl" style="margin-left:8px"&gt;Permit&lt;/span&gt;&lt;span&gt;${pd.permit_number}&lt;/span&gt;${ladbs}`:''}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;`:''}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>${pd?`&lt;div class="prog-bar on"&gt;&lt;span class="prog-lbl"&gt;Progress&lt;/span&gt;&lt;div class="prog-track"&gt;&lt;div class="prog-fill" id="pf" style="width:${pct}%"&gt;&lt;/div&gt;&lt;/div&gt;&lt;span class="prog-pct" id="pp"&gt;${pct}%&lt;/span&gt;&lt;span class="prog-ct" id="pc"&gt;${done} / ${total}&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;button class="btn-export" onclick="exportProject()"&gt;⬇ Export XLSX&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;button class="btn-sold" onclick="markSold()"&gt;${pd.sold?'Reopen':'Mark Sold'}&lt;/button&gt;&lt;button class="btn-del" onclick="doDel()"&gt;Delete&lt;/button&gt;&lt;/div&gt;`:''}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="layout"&gt;&lt;div class="sidebar"&gt;&lt;div class="sb-lbl"&gt;Checklist&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>${TABS.map(tab=&gt;{const{done:td,total:tt}=pd?countTab(tab):{done:0,total:0};return`&lt;button class="tb ${tab===st.tab?'on':''}" onclick="swTab('${tab.replace(/'/g,"\'")}')"&gt;&lt;span&gt;${tab}&lt;/span&gt;&lt;span class="pill${pd&amp;&amp;td===tt&amp;&amp;tt&gt;0?' done':''}"&gt;${pd?td+'/'+tt:'—'}&lt;/span&gt;&lt;/button&gt;`;}).join('')}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>${st.projects.filter(p=&gt;p.sold).length?`&lt;div class="sb-div"&gt;&lt;/div&gt;&lt;div class="sb-lbl"&gt;Sold Projects&lt;/div&gt;${st.projects.filter(p=&gt;p.sold).map(p=&gt;`&lt;button class="tb ${st.proj?.id===p.id?'on':''}" onclick="switchProj('${p.id}')"&gt;&lt;span&gt;${p.name}&lt;span class="sold-bdg"&gt;Sold&lt;/span&gt;&lt;/span&gt;&lt;/button&gt;`).join('')}`:''}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="main" id="mc"&gt;${pd?rTab():`&lt;div class="empty"&gt;&lt;div class="ed"&gt;<span class="s1">✦</span> <span class="s1">✦</span> <span class="s1">✦</span>&lt;/div&gt;&lt;div class="et"&gt;No Project Selected&lt;/div&gt;&lt;div class="eb"&gt;Create a new project or select one to begin.&lt;/div&gt;&lt;/div&gt;`}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="mbg" id="mbg" onclick="if(event.target===this)closeM()"&gt;&lt;div class="mc" id="mcc"&gt;&lt;/div&gt;&lt;/div&gt;`;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function rTab(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const pd=st.proj,tab=st.tab,items=DATA[tab];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const cache=st.taskCache[pd.id]||{};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const{done:dc,total:tt}=countTab(tab);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Group by section</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const secs={};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>items.forEach((item,idx)=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const sec=item.s||tab;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(!secs[sec])secs[sec]=[];</p>
+<p class="p1"><span class="Apple-converted-space">    </span>secs[sec].push({...item,idx});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>let h=`&lt;div class="ph"&gt;&lt;div&gt;&lt;div class="pt"&gt;${tab}&lt;/div&gt;&lt;div class="pm"&gt;${items.length} items · ${pd.name}${pd.address?' — '+pd.address:''}&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="ps"&gt;&lt;div&gt;&lt;span class="sn" id="dc"&gt;${dc}&lt;/span&gt;&lt;span class="sl"&gt;Done&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span class="sn" id="rm"&gt;${tt-dc}&lt;/span&gt;&lt;span class="sl"&gt;Remaining&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Plans &amp; Permits gets special column header</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(tab==='Plans &amp; Permits'){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>h+=`&lt;div style="display:flex;gap:8px;padding:6px 3px;border-bottom:1.5px solid var(--blk);margin-bottom:4px"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="flex:2;font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)"&gt;Task&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="flex:0 0 90px;font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)"&gt;Who&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;div style="flex:0 0 120px;font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)"&gt;Status&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>Object.entries(secs).forEach(([sec,si])=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// Only show section headers for tabs with sections</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const hasSecs=['Initial Walkthrough','Construction','Disposition'].includes(tab);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(hasSecs&amp;&amp;sec!==tab){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const sd=si.filter(item=&gt;isComplete(tab,item.idx)).length;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const tr2=si.filter(item=&gt;!(item.mode==='construction'&amp;&amp;(item.o==='g'||item.o==='i')));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>h+=`&lt;div class="shdr"&gt;&lt;span class="stitle"&gt;${sec}&lt;/span&gt;&lt;span class="sprog"&gt;${tr2.length&gt;0?sd+' / '+tr2.length:''}&lt;/span&gt;&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>si.forEach(item=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const k=tab+'|'+item.idx;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const t=cache[k]||{};</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const mode=item.mode;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const isGC=mode==='construction'&amp;&amp;item.o==='g';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const isInsp=mode==='construction'&amp;&amp;item.o==='i';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const comp=isComplete(tab,item.idx);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const hasN=t.note&amp;&amp;t.note.trim().length&gt;0;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const sv=t.status||'';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(mode==='permits'){</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Plans &amp; Permits — column layout</p>
+<p class="p1"><span class="Apple-converted-space">        </span>h+=`&lt;div class="pp-row"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="pp-task"&gt;&lt;div class="tt"&gt;${item.t}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>${item.company?`&lt;div class="pp-meta"&gt;📍 ${item.company}&lt;/div&gt;`:''}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>${item.h?`&lt;div class="th"&gt;${item.h}&lt;/div&gt;`:''}</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;div class="na${hasN?' open':''}" id="na${item.idx}"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;textarea class="nta" placeholder="Add a note..." onchange="saveNote('${tab}',${item.idx},this.value)"&gt;${t.note||''}&lt;/textarea&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="pp-who"&gt;${item.who||''}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;div class="pp-ctrl"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;select class="ss ${sv||'not-started'}" onchange="doSt('${tab}',${item.idx},this.value)"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;option value="not-started" ${sv==='not-started'?'selected':''}&gt;Not Started&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;option value="in-progress" ${sv==='in-progress'?'selected':''}&gt;In Progress&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;option value="completed" ${sv==='completed'?'selected':''}&gt;Completed&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">              </span>&lt;option value="n-a" ${sv==='n-a'?'selected':''}&gt;N/A&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;/select&gt;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>&lt;button class="nb${hasN?' on':''}" onclick="togN(${item.idx})" id="nb${item.idx}"&gt;${hasN?'📝':'+ Note'}&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>return;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Stamp</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const blank=!sv||sv==='not-started'||sv==='not-present'||sv==='incomplete'||sv==='default';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const showStamp=t.updated_by&amp;&amp;!blank&amp;&amp;!isGC&amp;&amp;!isInsp;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>let rc='tr';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(isGC||isInsp)rc+=' readonly';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>else if(mode==='checkbox'&amp;&amp;t.checked)rc+=' checked';</p>
+<p class="p1"><span class="Apple-converted-space">      </span>else if(comp)rc+=' done';</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>h+=`&lt;div class="${rc}" id="r${item.idx}"&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Checkbox for checkbox-mode</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(mode==='checkbox'){</p>
+<p class="p1"><span class="Apple-converted-space">        </span>h+=`&lt;input type="checkbox" class="chk" ${t.checked?'checked':''} onchange="doChk('${tab}',${item.idx},this.checked)"&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>h+=`&lt;div class="tb2"&gt;&lt;div class="tt"&gt;${item.t}&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>${item.h?`&lt;div class="th"&gt;${item.h}&lt;/div&gt;`:''}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="stamp" id="st${item.idx}" style="${showStamp?'display:flex':'display:none'}"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>${showStamp?`&lt;span class="stav"&gt;${t.updated_by}&lt;/span&gt;&lt;span class="stnm"&gt;${t.updated_by_name||t.updated_by}&lt;/span&gt;&lt;span class="stdt"&gt;· ${t.date_completed||fd()}&lt;/span&gt;&lt;span class="stpill ${sv}"&gt;${sv.replace(/-/g,' ')}&lt;/span&gt;`:''}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;div class="na${hasN?' open':''}" id="na${item.idx}"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;textarea class="nta" placeholder="Add a note..." onchange="saveNote('${tab}',${item.idx},this.value)"&gt;${t.note||''}&lt;/textarea&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;/div&gt;&lt;div class="tc"&gt;`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(isGC){</p>
+<p class="p1"><span class="Apple-converted-space">        </span>h+=`&lt;span class="gc-lbl"&gt;GC&lt;/span&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}else if(isInsp){</p>
+<p class="p1"><span class="Apple-converted-space">        </span>h+=`&lt;select class="ss ${sv||'not-started'}" onchange="doSt('${tab}',${item.idx},this.value)"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="not-started" ${!sv||sv==='not-started'?'selected':''}&gt;—&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="scheduled" ${sv==='scheduled'?'selected':''}&gt;Scheduled&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="passed" ${sv==='passed'?'selected':''}&gt;Passed&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="corrections" ${sv==='corrections'?'selected':''}&gt;Corrections&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/select&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}else if(mode==='construction'){</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Matthew/Cody dropdown</p>
+<p class="p1"><span class="Apple-converted-space">        </span>h+=`&lt;select class="ss ${sv||'not-started'}" onchange="doSt('${tab}',${item.idx},this.value)"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="not-started" ${!sv||sv==='not-started'?'selected':''}&gt;Not Started&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="in-progress" ${sv==='in-progress'?'selected':''}&gt;In Progress&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="complete" ${sv==='complete'?'selected':''}&gt;Complete&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>&lt;option value="n-a" ${sv==='n-a'?'selected':''}&gt;N/A&lt;/option&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;/select&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Checkbox-only tabs have no dropdown</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Date field for Acquisition</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(item.hasDate){</p>
+<p class="p1"><span class="Apple-converted-space">        </span>h+=`&lt;input type="date" class="date-inp" value="${t.date_completed||''}" onchange="saveDate('${tab}',${item.idx},this.value)" title="Date completed"&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Note button — not on GC rows</p>
+<p class="p1"><span class="Apple-converted-space">      </span>if(!isGC){</p>
+<p class="p1"><span class="Apple-converted-space">        </span>h+=`&lt;button class="nb${hasN?' on':''}" onclick="togN(${item.idx})" id="nb${item.idx}"&gt;${hasN?'📝':'+ Note'}&lt;/button&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>h+=`&lt;/div&gt;&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>return h;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function rAdmin(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>$('app').innerHTML=`${navH()}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="layout"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="sidebar"&gt;&lt;div class="sb-lbl"&gt;Navigation&lt;/div&gt;&lt;button class="tb" onclick="st.view='main';rMain()"&gt;← Back&lt;/button&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="main"&gt;&lt;div class="aw"&gt;&lt;div class="at"&gt;Admin Panel&lt;/div&gt;&lt;div class="asub"&gt;Signed in as ${st.user.name}.&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="sh2"&gt;Team Members&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>${st.users.map(u=&gt;`&lt;div class="uc"&gt;&lt;div class="uav"&gt;${u.initials}&lt;/div&gt;&lt;div class="ui"&gt;&lt;div class="un"&gt;${u.name}&lt;/div&gt;&lt;div class="um"&gt;Initials: ${u.initials}&lt;/div&gt;&lt;/div&gt;${u.role==='admin'?'&lt;span class="urb"&gt;Admin&lt;/span&gt;':''}&lt;button class="brs" onclick="showReset('${u.id}')"&gt;Reset Password&lt;/button&gt;&lt;/div&gt;`).join('')}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="sh2"&gt;Recent Activity&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="actlog"&gt;&lt;div style="color:var(--mut);font-size:11px"&gt;Loading...&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="mbg" id="mbg" onclick="if(event.target===this)closeM()"&gt;&lt;div class="mc" id="mcc"&gt;&lt;/div&gt;&lt;/div&gt;`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Load activity across all projects</p>
+<p class="p1"><span class="Apple-converted-space">  </span>sb.from('bh_activity').select('*').order('created_at',{ascending:false}).limit(50).then(({data})=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const el=$('actlog');if(!el)return;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(!data||!data.length){el.innerHTML='&lt;div style="color:var(--mut);font-size:11px;padding:8px 0"&gt;No activity yet.&lt;/div&gt;';return;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>el.innerHTML=data.map(a=&gt;`&lt;div class="ar"&gt;&lt;div class="aav"&gt;${a.user_initials}&lt;/div&gt;&lt;div class="at2"&gt;&lt;strong&gt;${a.user_name}&lt;/strong&gt; — ${a.detail}&lt;/div&gt;&lt;div class="ad"&gt;${new Date(a.created_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})}&lt;/div&gt;&lt;/div&gt;`).join('');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>});</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function showReset(uid){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const u=st.users.find(x=&gt;x.id===uid);if(!u)return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>$('mbg').classList.add('open');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>$('mcc').innerHTML=`&lt;div class="mt"&gt;Reset Password&lt;/div&gt;&lt;div class="ms"&gt;New password for ${u.name}.&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="fg"&gt;&lt;label class="fl"&gt;New Password&lt;/label&gt;&lt;input class="fi" type="password" id="np"/&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="fg"&gt;&lt;label class="fl"&gt;Confirm&lt;/label&gt;&lt;input class="fi" type="password" id="cp"/&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div style="color:var(--rdt);font-size:10.5px;min-height:13px;margin-bottom:3px" id="pe"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="ma"&gt;&lt;button class="bc" onclick="closeM()"&gt;Cancel&lt;/button&gt;&lt;button class="bp" onclick="doReset('${uid}')"&gt;Save&lt;/button&gt;&lt;/div&gt;`;</p>
+<p class="p1">}</p>
+<p class="p1">function doReset(uid){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const np=$('np').value,cp=$('cp').value;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!np){$('pe').textContent='Enter a password.';return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(np!==cp){$('pe').textContent='Passwords do not match.';return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const u=st.users.find(x=&gt;x.id===uid);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(u){u.password=np;toast('Password updated');}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>closeM();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function openNew(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>$('mbg').classList.add('open');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>$('mcc').innerHTML=`&lt;div class="mt"&gt;New Project&lt;/div&gt;&lt;div class="ms"&gt;Each project has its own independent checklist.&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="fg"&gt;&lt;label class="fl"&gt;Project Name&lt;/label&gt;&lt;input class="fi" type="text" id="pn" placeholder="e.g. 123 Maple Street"/&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="fg"&gt;&lt;label class="fl"&gt;Address&lt;/label&gt;&lt;input class="fi" type="text" id="pa" placeholder="Full address"/&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="fg"&gt;&lt;label class="fl"&gt;Project Type&lt;/label&gt;&lt;input class="fi" type="text" id="pt" placeholder="e.g. New Construction, Remodel"/&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="fg"&gt;&lt;label class="fl"&gt;Contractor&lt;/label&gt;&lt;input class="fi" type="text" id="pg" placeholder="GC / Builder name"/&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="fg"&gt;&lt;label class="fl"&gt;Designer&lt;/label&gt;&lt;input class="fi" type="text" id="pd" placeholder="Designer name"/&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="fg"&gt;&lt;label class="fl"&gt;Permit Number (optional)&lt;/label&gt;&lt;input class="fi" type="text" id="pm" placeholder="e.g. 23010-10000-12345"/&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="ma"&gt;&lt;button class="bc" onclick="closeM()"&gt;Cancel&lt;/button&gt;&lt;button class="bp" onclick="createProj()"&gt;Create Project&lt;/button&gt;&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>setTimeout(()=&gt;$('pn')?.focus(),80);</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">async function createProj(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const name=$('pn').value.trim();if(!name)return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const{data,error}=await sb.from('bh_projects').insert({</p>
+<p class="p1"><span class="Apple-converted-space">    </span>name,</p>
+<p class="p1"><span class="Apple-converted-space">    </span>address:$('pa').value.trim(),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>project_type:$('pt').value.trim(),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>contractor:$('pg').value.trim(),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>designer:$('pd').value.trim(),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>permit_number:$('pm').value.trim(),</p>
+<p class="p1"><span class="Apple-converted-space">    </span>created_by:st.user.initials</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}).select().single();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(error){toast('Error creating project');return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>st.projects.unshift(data);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>st.proj=data;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>st.tab='Initial Walkthrough';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>await loadTasks(data.id);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>addLog('created',`Created project "${name}"`,data.id);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>closeM();</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rMain();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">async function switchProj(pid){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!pid){st.proj=null;rMain();return;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>st.proj=st.projects.find(p=&gt;p.id===pid)||null;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>st.tab='Initial Walkthrough';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(st.proj)await loadTasks(st.proj.id);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rMain();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function swTab(tab){st.tab=tab;rMain();}</p>
+<p class="p2"><br></p>
+<p class="p1">async function markSold(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!st.proj)return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const sold=!st.proj.sold;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>await sb.from('bh_projects').update({sold,sold_date:sold?new Date().toISOString():null}).eq('id',st.proj.id);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>st.proj.sold=sold;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const idx=st.projects.findIndex(p=&gt;p.id===st.proj.id);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(idx&gt;=0)st.projects[idx].sold=sold;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>addLog(sold?'sold':'reopened',`${sold?'Marked':'Reopened'} project "${st.proj.name}"`);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(sold){st.proj=null;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>rMain();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function doDel(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!st.proj)return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>$('mbg').classList.add('open');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>$('mcc').innerHTML=`&lt;div class="mt"&gt;Delete Project&lt;/div&gt;&lt;div class="ms"&gt;Permanently delete "${st.proj.name}"? Cannot be undone.&lt;/div&gt;&lt;div class="ma"&gt;&lt;button class="bc" onclick="closeM()"&gt;Cancel&lt;/button&gt;&lt;button class="bp" style="background:var(--red)" onclick="confirmDel()"&gt;Delete&lt;/button&gt;&lt;/div&gt;`;</p>
+<p class="p1">}</p>
+<p class="p1">async function confirmDel(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!st.proj)return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>await sb.from('bh_projects').delete().eq('id',st.proj.id);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>st.projects=st.projects.filter(p=&gt;p.id!==st.proj.id);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>delete st.taskCache[st.proj.id];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>st.proj=null;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>closeM();rMain();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">// ── TASK INTERACTIONS ─────────────────────────────────────────────────────────</p>
+<p class="p1">async function doSt(tab,idx,value){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!st.proj)return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const k=tab+'|'+idx;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const item=DATA[tab][idx];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const isGCrow=item.o==='g'||item.o==='i';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const updates={status:value};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const blank=!value||value==='not-started'||value==='not-present'||value==='incomplete';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!blank){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>updates.date_completed=fd();</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(!isGCrow){updates.updated_by=st.user.initials;updates.updated_by_name=st.user.name;}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>addLog('update',`"${item.t}" → ${value} in ${tab}`);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}else{</p>
+<p class="p1"><span class="Apple-converted-space">    </span>updates.date_completed=null;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(!isGCrow){updates.updated_by='';updates.updated_by_name='';}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>await upsertTask(st.proj.id,k,updates);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>// Update UI inline</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const sel=document.querySelector(`#r${idx} select`);if(sel)sel.className=`ss ${value}`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const row=$('r'+idx);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(row&amp;&amp;!isGCrow){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>row.className='tr';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>if(isComplete(tab,idx))row.classList.add('done');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>updStamp(tab,idx);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>updProg();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">async function doChk(tab,idx,checked){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!st.proj)return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const k=tab+'|'+idx;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const item=DATA[tab][idx];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const updates={checked,status:checked?'checked':'default'};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(checked){updates.updated_by=st.user.initials;updates.updated_by_name=st.user.name;updates.date_completed=fd();addLog('checked',`Checked "${item.t}" in ${tab}`);}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>else{updates.updated_by='';updates.updated_by_name='';updates.date_completed=null;}</p>
+<p class="p1"><span class="Apple-converted-space">  </span>await upsertTask(st.proj.id,k,updates);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const row=$('r'+idx);if(row)row.classList.toggle('checked',checked);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>updProg();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">async function saveDate(tab,idx,val){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!st.proj)return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const k=tab+'|'+idx;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>await upsertTask(st.proj.id,k,{date_completed:val||null});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>toast('Date saved');</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">async function saveNote(tab,idx,value){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!st.proj)return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const k=tab+'|'+idx;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>await upsertTask(st.proj.id,k,{note:value});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const btn=$('nb'+idx);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(btn){btn.textContent=value.trim()?'📝':'+ Note';btn.className='nb'+(value.trim()?' on':'');}</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function togN(idx){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const a=$('na'+idx);if(!a)return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>a.classList.toggle('open');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(a.classList.contains('open'))a.querySelector('textarea').focus();</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function updStamp(tab,idx){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const sd=$('st'+idx);if(!sd)return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const k=tab+'|'+idx;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const t=st.taskCache[st.proj?.id]?.[k]||{};</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const sv=t.status||'';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const blank=!sv||sv==='not-started'||sv==='default';</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const item=DATA[tab][idx];</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const isGC=item.mode==='construction'&amp;&amp;(item.o==='g'||item.o==='i');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(t.updated_by&amp;&amp;!blank&amp;&amp;!isGC){</p>
+<p class="p1"><span class="Apple-converted-space">    </span>sd.style.display='flex';</p>
+<p class="p1"><span class="Apple-converted-space">    </span>sd.innerHTML=`&lt;span class="stav"&gt;${t.updated_by}&lt;/span&gt;&lt;span class="stnm"&gt;${t.updated_by_name||t.updated_by}&lt;/span&gt;&lt;span class="stdt"&gt;· ${t.date_completed||''}&lt;/span&gt;&lt;span class="stpill ${sv}"&gt;${sv.replace(/-/g,' ')}&lt;/span&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>}else{sd.style.display='none';sd.innerHTML='';}</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function updProg(){</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(!st.proj)return;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>let total=0,done=0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>TABS.forEach(tab=&gt;{const c=countTab(tab);total+=c.total;done+=c.done;});</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const pct=total&gt;0?Math.round((done/total)*100):0;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const pf=$('pf'),pp=$('pp'),pc=$('pc');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(pf)pf.style.width=pct+'%';if(pp)pp.textContent=pct+'%';if(pc)pc.textContent=done+' / '+total;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const tab=st.tab;const{done:td,total:tt}=countTab(tab);</p>
+<p class="p1"><span class="Apple-converted-space">  </span>const dc=$('dc'),rm=$('rm');</p>
+<p class="p1"><span class="Apple-converted-space">  </span>if(dc)dc.textContent=td;if(rm)rm.textContent=tt-td;</p>
+<p class="p1">}</p>
+<p class="p2"><br></p>
+<p class="p1">function closeM(){const b=$('mbg');if(b)b.classList.remove('open');}</p>
+<p class="p1">document.addEventListener('keydown',e=&gt;{if(e.key==='Escape')closeM();});</p>
+<p class="p2"><br></p>
+<p class="p1">// ── INIT ──────────────────────────────────────────────────────────────────────</p>
+<p class="p1">(async()=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">  </span>$('app').innerHTML=`&lt;div class="lp"&gt;&lt;div style="color:rgba(250,250,247,0.4);font-size:12px;letter-spacing:0.1em"&gt;Loading...&lt;/div&gt;&lt;/div&gt;`;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>render();</p>
+<p class="p1">})();</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+<p class="p3"><b></b><br></p>
+<p class="p3"><b></b><br></p>
+</body>
+</html>
