@@ -578,7 +578,7 @@ async function rMain(){
   let total=0,done=0;if(pd){TABS.forEach(tab=>{const c=countTab(tab);total+=c.total;done+=c.done;});}
   const pct=total>0?Math.round((done/total)*100):0;
   const hasInfo=pd&&(pd.project_type||pd.contractor||pd.designer||pd.permit_number);
-  const ladbs=pd?.permit_number?`<a class="info-link" href="https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr&pcisno=${encodeURIComponent(pd.permit_number)}" target="_blank">🔍 LADBS Inspections ↗</a>`:'';
+const ladbs=pd?.permit_number?(()=>{const pp=pd.permit_number.split('-');return pp.length===3?`<a class="info-link" href="https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1=${pp[0]}&id2=${pp[1]}&id3=${pp[2]}" target="_blank">🔍 LADBS ↗</a>`:'';})():'';
   $('app').innerHTML=`${navH()}
   ${hasInfo?`<div class="info-bar on">
     ${pd.project_type?`<span class="info-lbl">Type</span><span>${pd.project_type}</span>`:''}
@@ -702,7 +702,7 @@ async function doSt(tab,idx,value){
   if(row&&!isGCrow){row.className='tr';if(isComplete(tab,idx))row.classList.add(item.o==='i'?'appr':'done');}
   updStamp(tab,idx);updProg();
 }
-async function doChk(tab,idx,checked){if(!st.proj)return;const k=tab+'|'+idx;const item=DATA[tab][idx];const updates={checked,status:checked?'checked':'default'};if(checked){updates.updated_by=st.user.initials;updates.updated_by_name=st.user.name;updates.date_completed=fd();addLog('checked',`Checked "${item.t}" in ${tab}`);}else{updates.updated_by='';updates.updated_by_name='';updates.date_completed=null;}await upsertTask(st.proj.id,k,updates);const row=$('r'+idx);if(row)row.classList.toggle('checked',checked);updProg();}
+async function doChk(tab,idx,checked){if(!st.proj)return;const k=tab+'|'+idx;const item=DATA[tab][idx];const updates={checked,status:checked?'checked':'default'};if(checked){updates.updated_by=st.user.initials;updates.updated_by_name=st.user.name;updates.date_completed=fd();addLog('checked',`Checked "${item.t}" in ${tab}`);}else{updates.updated_by='';updates.updated_by_name='';updates.date_completed=null;}await upsertTask(st.proj.id,k,updates);const row=$('r'+idx);if(row)row.classList.toggle('checked',checked);updStamp(tab,idx);updProg();}
 async function saveDate(tab,idx,val){if(!st.proj)return;const k=tab+'|'+idx;await upsertTask(st.proj.id,k,{date_completed:val||null});toast('Date saved');}
 async function saveNote(tab,idx,value){if(!st.proj)return;const k=tab+'|'+idx;await upsertTask(st.proj.id,k,{note:value});const btn=$('nb'+idx);if(btn){btn.textContent=value.trim()?'📝':'+ Note';btn.className='nb'+(value.trim()?' on':'');}}
 function togN(idx){const a=$('na'+idx);if(!a)return;a.classList.toggle('open');if(a.classList.contains('open'))a.querySelector('textarea').focus();}
