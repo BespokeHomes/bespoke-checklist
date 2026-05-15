@@ -118,7 +118,7 @@ body{font-family:'DM Sans',sans-serif;background:#F6F2EB;color:#1A1A18;font-size
 .pp-ctrl{display:flex;align-items:flex-start;gap:6px;flex-shrink:0}
 .mbg{display:none;position:fixed;inset:0;background:rgba(10,10,8,0.72);z-index:500;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
 .mbg.open{display:flex}
-.mc{background:var(--wrm);border:1px solid var(--brd);border-top:3px solid var(--gld);border-radius:3px;padding:28px;width:440px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,0.2);max-height:90vh;overflow-y:auto}
+.mc{background:var(--wrm);border:1px solid var(--brd);border-top:3px solid var(--gld);border-radius:3px;padding:28px;width:460px;max-width:95vw;box-shadow:0 20px 60px rgba(0,0,0,0.2);max-height:90vh;overflow-y:auto}
 .mt{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;color:var(--blk);letter-spacing:0.05em;margin-bottom:5px}
 .ms{font-size:11px;color:var(--mut);margin-bottom:18px}
 .fg{margin-bottom:11px}
@@ -210,6 +210,7 @@ const USERS=[
   {id:'RJ',name:'Ryan Jancula',initials:'RJ',password:'BespokeRyan',role:'user'},
   {id:'BA',name:'Bespoke Admin',initials:'BA',password:'Bespoke@Info',role:'admin'},
 ];
+const PHASE_TARGETS={"Pre-Construction / Admin":28,"Site Prep":7,"Demo":7,"Demo Admin":3,"Sewer":7,"Grading":14,"Pool":21,"Foundation":28,"Foundation - Admin":5,"Pre Ordering":14,"Framing":42,"Framing - Admin":7,"Framing Admin":3,"GC":7,"MEP's":28,"MEP - Admin":3,"Waterproofing":7,"Mid Ordering":7,"Pre ordering":7,"Pre-Drywall Admin":3,"Exterior":28,"Insulation":7,"Drywall":14,"Drywall Admin":3,"Tile":14,"Paint":7,"Finishes Admin":5,"Finishes":42,"Landscape/Hardscape":21,"Final Trades":14,"Final Admin":14,"Final":7};
 const DATA={
 "Initial Walkthrough":[
 {s:"UTILITIES",t:"Water meter location",h:"Existing meter placement and accessibility",mode:"checkbox"},
@@ -319,8 +320,7 @@ const DATA={
 {t:"Resubmit to plan check or final plan check appointment",company:"LADBS",who:"Expediter/BH",h:"Online or in person - Truss calcs if possible",mode:"permits"},
 {t:"Pull permit",company:"LADBS",who:"",h:"",mode:"permits"}
 ],
-"Construction":[
-{s:"Pre-Construction / Admin",t:"Relocate Neighboring Powerlines (If applicable)",h:"Call LADWP Service planning at 213-367-6937 and after you receive work request number contact David Flynn (Supervisor District) to confirm job and start date 310-524-8435",o:"g",mode:"construction"},
+"Construction":[{s:"Pre-Construction / Admin",t:"Relocate Neighboring Powerlines (If applicable)",h:"Call LADWP Service planning at 213-367-6937 and after you receive work request number contact David Flynn (Supervisor District) to confirm job and start date 310-524-8435",o:"g",mode:"construction"},
 {s:"Pre-Construction / Admin",t:"Set up LADWP account (water and sewer) / Schedule electric meter to be removed",h:"Following Day, call Connection Center (213-367-6937) to confirm scheduling and directed to West LA District, not city of LA. After confirmed, call West LA District to confirm work date. (310-524-8441)",o:"m",mode:"construction"},
 {s:"Site Prep",t:"Order temp. fence & porta potty",h:"Andy Gump - Confirm Dates for Fence and Potty",o:"m",mode:"construction"},
 {s:"Site Prep",t:"Hang BH Branded construction fabric on fence / Install Chain and Lock",h:"Fabrics in storage room (order more if needed) / Add lock code to notes",o:"m",mode:"construction"},
@@ -579,7 +579,7 @@ async function rMain(){
     ${pd.project_type?`<span class="info-lbl">Type</span><span>${pd.project_type}</span>`:''}
     ${pd.contractor?`<span class="info-lbl" style="margin-left:10px">Contractor</span><span>${pd.contractor}</span>`:''}
     ${pd.designer?`<span class="info-lbl" style="margin-left:10px">Designer</span><span>${pd.designer}</span>`:''}
-    ${pd.permit_number?`<span class="info-lbl" style="margin-left:10px">Permit</span><span>${pd.permit_number}</span>`:''}
+    ${pd.permit_number?getPermits(pd).map((p,i)=>`<span class="info-lbl" style="margin-left:${i>=0?10:0}px">${p.label||'Permit'}</span><span>${p.num}</span>`).join(''):''}
     ${st.user.role==='admin'?`<button onclick="openEdit()" style="margin-left:auto;background:none;border:1px solid rgba(184,135,42,0.4);color:var(--gld);font-size:10px;padding:3px 10px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;">✏️ Edit Project</button>`:''}
   </div>`:''}
   ${pd?`<div class="prog-bar on${hasInfo?' with-info':''}"><span class="prog-lbl">Progress</span><div class="prog-track"><div class="prog-fill" id="pf" style="width:${pct}%"></div></div><span class="prog-pct" id="pp">${pct}%</span><span class="prog-ct" id="pc">${done} / ${total}</span>
@@ -595,13 +595,27 @@ async function rMain(){
   </div>
   <div class="mbg" id="mbg" onclick="if(event.target===this)closeM()"><div class="mc" id="mcc"></div></div>`;
   if(st.tab==='Inspections'&&st.proj?.permit_number)setTimeout(()=>syncLADBS(),150);
+  if(st.tab==='Plans & Permits'&&st.proj?.permit_number)setTimeout(()=>syncPlanCheck(),150);
 }
 function rTab(){
   const pd=st.proj,tab=st.tab,items=DATA[tab];const cache=st.taskCache[pd.id]||{};const{done:dc,total:tt}=countTab(tab);
   const secs={};items.forEach((item,idx)=>{const sec=item.s||tab;if(!secs[sec])secs[sec]=[];secs[sec].push({...item,idx});});
   const isInspTab=tab==='Inspections';
   let h=`<div class="ph"><div><div class="pt">${tab}</div><div class="pm">${isInspTab?'Live data from LADBS · '+pd.name+(pd.address?' — '+pd.address:''):items.length+' items · '+pd.name+(pd.address?' — '+pd.address:'')}</div></div>${isInspTab?'':`<div class="ps"><div><span class="sn" id="dc">${dc}</span><span class="sl">Done</span></div><div><span class="sn" id="rm">${tt-dc}</span><span class="sl">Remaining</span></div></div>`}</div>`;
-  if(tab==='Plans & Permits'){h+=`<div style="display:flex;gap:8px;padding:7px 4px;border-bottom:1.5px solid var(--blk);margin-bottom:4px"><div style="flex:2;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Task</div><div style="flex:0 0 100px;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Who</div><div style="flex:0 0 130px;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Status</div></div>`;}
+  if(tab==='Plans & Permits'){
+    const _permits=getPermits(pd);
+    if(_permits.length>0){
+      h+=`<div id="plancheck-panel" style="margin-bottom:20px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-size:13px;font-weight:600;color:var(--blk)">Live Plan Check Status</div><div style="display:flex;gap:8px">`;
+      _permits.forEach(p=>{
+        const _pp2=p.num.split('-');
+        const _dUrl=_pp2.length===3?'https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1='+_pp2[0]+'&id2='+_pp2[1]+'&id3='+_pp2[2]:'';
+        if(_dUrl)h+=`<a href="${_dUrl}" target="_blank" style="font-size:10px;color:var(--blu);text-decoration:none;border:1px solid var(--blu);padding:3px 8px;border-radius:3px;background:var(--blb)">${p.label} ↗</a>`;
+      });
+      h+=`<button onclick="syncPlanCheck()" id="pc-sync-btn" style="background:var(--blk);color:#fff;border:none;padding:4px 12px;border-radius:3px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">🔄 Sync</button></div></div>`;
+      h+=`<div id="plancheck-content" style="color:var(--mut);font-size:12px;padding:12px 0;">Click Sync to load live plan check status from LADBS.</div></div>`;
+    }
+    h+=`<div style="display:flex;gap:8px;padding:7px 4px;border-bottom:1.5px solid var(--blk);margin-bottom:4px"><div style="flex:2;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Task</div><div style="flex:0 0 100px;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Who</div><div style="flex:0 0 130px;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Status</div></div>`;
+  }
   if(tab==='Inspections'){
     if(!pd?.permit_number){
       h+='<div style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Add a permit number via ✏️ Edit Project to sync live LADBS inspection data here.</div>';
@@ -609,24 +623,28 @@ function rTab(){
       const _pp=pd.permit_number.split('-');
       const _ladbsUrl=_pp.length===3?'https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1='+_pp[0]+'&id2='+_pp[1]+'&id3='+_pp[2]:'https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr';
       h+=`<div id="ladbs-panel"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--brl)">
-        <div>
-          <div style="font-size:15px;font-weight:600;color:var(--blk)">Live LADBS Inspections</div>
-          <div style="font-size:11px;color:var(--mut);margin-top:3px">Permit ${pd.permit_number} · Synced from LADBS in real time</div>
-        </div>
+        <div><div style="font-size:15px;font-weight:600;color:var(--blk)">Live LADBS Inspections</div>
+        <div style="font-size:11px;color:var(--mut);margin-top:3px">Permit ${pd.permit_number} · Synced from LADBS in real time</div></div>
         <div style="display:flex;gap:8px;align-items:center">
           <a href="${_ladbsUrl}" target="_blank" style="font-size:11px;color:var(--blu);text-decoration:none;border:1px solid var(--blu);padding:5px 10px;border-radius:3px;background:var(--blb)">Open LADBS ↗</a>
           <button onclick="syncLADBS()" id="sync-btn" style="background:var(--blu);color:#fff;border:none;padding:7px 16px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">🔄 Refresh</button>
-        </div>
-      </div>
+        </div></div>
       <div id="ladbs-content" style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Loading live LADBS inspection data...</div></div>`;
     }
     return h;
   }
   if(tab==='Construction'){
+    h+=`<div id="phase-timeline">${renderTimeline()}</div>`;
     let lastSec='';
     items.forEach((item,idx)=>{
       const sec=item.s||tab;
-      if(sec!==lastSec){h+=`<div class="shdr"><span class="stitle">${sec}</span><span class="sprog"></span></div>`;lastSec=sec;}
+      if(sec!==lastSec){
+        const _ps=getPhaseDate(sec,'start'),_pc=getPhaseDate(sec,'complete');
+        const _pt=PHASE_TARGETS[sec]||0;
+        const _pid='ph-'+sec.replace(/[^a-z0-9]/gi,'_');
+        h+=`<div class="shdr"><span class="stitle">${sec}</span><div id="${_pid}">${renderPhaseControls(sec,_ps,_pc,_pt)}</div></div>`;
+        lastSec=sec;
+      }
       const k=tab+'|'+idx;const t=cache[k]||{};
       const isGC=item.o==='g';
       const comp=isComplete(tab,idx);const hasN=t.note&&t.note.trim().length>0;const sv=t.status||'';
@@ -690,6 +708,7 @@ async function doSt(tab,idx,value){
   if(!blank){updates.date_completed=fd();if(!isGCrow){updates.updated_by=st.user.initials;updates.updated_by_name=st.user.name;}addLog('update',`"${item.t}" → ${value} in ${tab}`);}
   else{updates.date_completed=null;if(!isGCrow){updates.updated_by='';updates.updated_by_name='';}}
   await upsertTask(st.proj.id,k,updates);
+  if(tab==='Construction'&&!blank&&item.s){const pStart=getPhaseDate(item.s,'start');if(!pStart)setPhaseDate(item.s,'start',new Date().toISOString().split('T')[0]);}
   const sel=document.querySelector(`#r${idx} select`);if(sel)sel.className=`ss ${value}`;
   const row=$('r'+idx);
   if(row&&!isGCrow){row.className='tr';if(isComplete(tab,idx))row.classList.add('done');}
@@ -703,6 +722,8 @@ function updStamp(tab,idx){const sd=$('st'+idx);if(!sd)return;const k=tab+'|'+id
 function updProg(){if(!st.proj)return;let total=0,done=0;TABS.forEach(tab=>{const c=countTab(tab);total+=c.total;done+=c.done;});const pct=total>0?Math.round((done/total)*100):0;const pf=$('pf'),pp=$('pp'),pc=$('pc');if(pf)pf.style.width=pct+'%';if(pp)pp.textContent=pct+'%';if(pc)pc.textContent=done+' / '+total;const tab=st.tab;const{done:td,total:tt}=countTab(tab);const dc=$('dc'),rm=$('rm');if(dc)dc.textContent=td;if(rm)rm.textContent=tt-td;}
 function openEdit(){
   if(!st.proj)return;const pd=st.proj;
+  const existingPermits=pd.permit_number?pd.permit_number.split('||').map(p=>{const pp=p.split(':');return pp.length===2?{label:pp[0],num:pp[1]}:{label:'Main',num:p};}):[];
+  while(existingPermits.length<3)existingPermits.push({label:'',num:''});
   $('mbg').classList.add('open');
   $('mcc').innerHTML=`<div class="mt">Edit Project</div><div class="ms">Update project details — changes save immediately.</div>
   <div class="fg"><label class="fl">Project Name</label><input class="fi" type="text" id="epn" value="${pd.name||''}"/></div>
@@ -710,13 +731,17 @@ function openEdit(){
   <div class="fg"><label class="fl">Project Type</label><input class="fi" type="text" id="ept" value="${pd.project_type||''}"/></div>
   <div class="fg"><label class="fl">Contractor</label><input class="fi" type="text" id="epg" value="${pd.contractor||''}"/></div>
   <div class="fg"><label class="fl">Designer</label><input class="fi" type="text" id="epd" value="${pd.designer||''}"/></div>
-  <div class="fg"><label class="fl">Permit Number</label><input class="fi" type="text" id="epm" value="${pd.permit_number||''}"/></div>
+  <div style="font-size:8px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut);margin-bottom:8px;margin-top:4px">Permit Numbers (Label + Number)</div>
+  <div style="display:flex;gap:6px;margin-bottom:7px"><input class="fi" style="flex:0 0 90px" placeholder="Label e.g. Main" id="epl0" value="${existingPermits[0].label||''}"/><input class="fi" style="flex:1" placeholder="e.g. 24014-30000-04646" id="epm0" value="${existingPermits[0].num||''}"/></div>
+  <div style="display:flex;gap:6px;margin-bottom:7px"><input class="fi" style="flex:0 0 90px" placeholder="Label e.g. ADU" id="epl1" value="${existingPermits[1].label||''}"/><input class="fi" style="flex:1" placeholder="e.g. 24014-30000-04647" id="epm1" value="${existingPermits[1].num||''}"/></div>
+  <div style="display:flex;gap:6px;margin-bottom:7px"><input class="fi" style="flex:0 0 90px" placeholder="Label e.g. Grading" id="epl2" value="${existingPermits[2].label||''}"/><input class="fi" style="flex:1" placeholder="e.g. 24014-20000-01234" id="epm2" value="${existingPermits[2].num||''}"/></div>
   <div class="ma"><button class="bc" onclick="closeM()">Cancel</button><button class="bp" onclick="saveEdit()">Save Changes</button></div>`;
   setTimeout(()=>$('epn')?.focus(),80);
 }
 async function saveEdit(){
   if(!st.proj)return;
-  const updates={name:$('epn').value.trim(),address:$('epa').value.trim(),project_type:$('ept').value.trim(),contractor:$('epg').value.trim(),designer:$('epd').value.trim(),permit_number:$('epm').value.trim()};
+  const _permits=[];for(let i=0;i<3;i++){const l=$('epl'+i)?.value.trim();const n=$('epm'+i)?.value.trim();if(n)_permits.push(l?l+':'+n:n);}
+  const updates={name:$('epn').value.trim(),address:$('epa').value.trim(),project_type:$('ept').value.trim(),contractor:$('epg').value.trim(),designer:$('epd').value.trim(),permit_number:_permits.join('||')};
   if(!updates.name){toast('Project name required');return;}
   const{error}=await sb.from('bh_projects').update(updates).eq('id',st.proj.id);
   if(error){toast('Error saving');return;}
@@ -730,44 +755,198 @@ async function syncLADBS(){
   const btn=$('sync-btn'),content=$('ladbs-content');
   if(!btn||!content)return;
   btn.textContent='⏳ Syncing...';btn.disabled=true;
+  const permits=getPermits(st.proj);
+  if(!permits.length){content.innerHTML='<div style="color:var(--mut)">No permits configured.</div>';btn.textContent='🔄 Refresh';btn.disabled=false;return;}
   try{
-    const permit=st.proj.permit_number;
-    const parts=permit.split('-');
-    if(parts.length!==3){content.innerHTML='<div style="color:var(--rdt)">Invalid permit format. Expected XXXXX-XXXXXX-XXXXX</div>';return;}
-    const resp=await fetch(`/api/ladbs?permit=${encodeURIComponent(permit)}`);
-    const data=await resp.json();
-    if(data.error){content.innerHTML=`<div style="color:var(--rdt);padding:12px 0;">Error: ${data.error}. <a href="https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr" target="_blank" style="color:var(--blu)">Open LADBS directly ↗</a></div>`;return;}
+    const results=await Promise.all(permits.map(async p=>{
+      try{const resp=await fetch('/api/ladbs?permit='+encodeURIComponent(p.num));const data=await resp.json();return{label:p.label,num:p.num,...data};}
+      catch(e){return{label:p.label,num:p.num,error:e.message};}
+    }));
     let html='';
-    if(data.inspector){html+=`<div style="background:var(--glp);border:1px solid rgba(184,135,42,0.2);border-radius:4px;padding:8px 12px;margin-bottom:14px;font-size:12px;color:var(--mid)">👷 Inspector: <strong>${data.inspector}</strong></div>`;}
-    if(data.pending&&data.pending.length>0){
-      html+='<div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut);font-weight:600;margin-bottom:6px">Pending Inspections</div>';
-      html+='<div style="border:1px solid var(--brl);border-radius:4px;overflow:hidden;margin-bottom:16px">';
-      data.pending.forEach((ins,i)=>{html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:${i<data.pending.length-1?'1px solid var(--brl)':'none'};background:var(--abb)"><div style="flex:1;font-size:13px;color:var(--drk);font-weight:500">${ins.name}</div><div style="font-size:11px;color:var(--mut);white-space:nowrap">${ins.date||'TBD'}</div><div style="font-size:11px;background:var(--abb);color:var(--amb);padding:2px 8px;border-radius:10px;border:1px solid var(--amb);white-space:nowrap">Pending</div></div>`;});
-      html+='</div>';
-    }
-    if(data.history&&data.history.length>0){
-      html+='<div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut);font-weight:600;margin-bottom:6px">Inspection History</div>';
-      html+='<div style="border:1px solid var(--brl);border-radius:4px;overflow:hidden;margin-bottom:16px">';
-      data.history.forEach((ins,i)=>{
-        const sl=ins.status.toLowerCase();
-        const isPass=sl.includes('approv')&&!sl.includes('partial')&&!sl.includes('conditional');
-        const isPartial=sl.includes('partial')||sl.includes('conditional');
-        const isFail=sl.includes('fail')||sl.includes('correction');
-        const bg=isPass?'var(--grb)':isPartial?'var(--abb)':isFail?'var(--rdb)':'var(--wht)';
-        const clr=isPass?'var(--grt)':isPartial?'var(--amb)':isFail?'var(--rdt)':'var(--mut)';
-        const bdclr=isPass?'var(--grn)':isPartial?'var(--amb)':isFail?'var(--red)':'var(--brd)';
-        html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:${i<data.history.length-1?'1px solid var(--brl)':'none'}"><div style="flex:1;font-size:13px;color:var(--drk)">${ins.name}</div><div style="font-size:11px;color:var(--mut);white-space:nowrap">${ins.date}</div><div style="font-size:11px;background:${bg};color:${clr};padding:2px 8px;border-radius:10px;border:1px solid ${bdclr};white-space:nowrap">${ins.status}</div>${ins.inspector?`<div style="font-size:10px;color:var(--mut);white-space:nowrap">${ins.inspector}</div>`:''}</div>`;
-      });
-      html+='</div>';
-    }
-    if(!data.pending?.length&&!data.history?.length){html='<div style="color:var(--mut);padding:20px 0;">No inspection data found for this permit yet.</div>';}
-    html+=`<div style="font-size:10px;color:var(--mut);margin-top:8px">Last synced: ${new Date(data.fetchedAt).toLocaleString()}</div>`;
+    results.forEach(data=>{
+      const _pp=data.num.split('-');
+      const directUrl=_pp.length===3?'https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1='+_pp[0]+'&id2='+_pp[1]+'&id3='+_pp[2]:'';
+      html+=`<div style="border:1px solid var(--brd);border-radius:6px;overflow:hidden;margin-bottom:20px">`;
+      html+=`<div style="background:var(--chr);padding:10px 14px;display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:600;color:#FAFAF7">${data.label||'Permit'} — ${data.num}</div>${data.workDescription?`<div style="font-size:10px;color:rgba(250,250,247,0.45);margin-top:2px">${data.workDescription.substring(0,80)}</div>`:''}</div>${directUrl?`<a href="${directUrl}" target="_blank" style="font-size:10px;color:var(--gld);border:1px solid var(--gld);padding:3px 8px;border-radius:3px;text-decoration:none;white-space:nowrap">Open ↗</a>`:''}</div>`;
+      if(data.error){html+=`<div style="padding:12px 14px;color:var(--rdt);font-size:12px">Error: ${data.error}</div></div>`;return;}
+      if(data.currentStatus){
+        const s2=data.currentStatus.toLowerCase();
+        const bg=s2.includes('final')||s2.includes('issued')?'var(--grb)':s2.includes('pending')?'var(--abb)':'var(--blb)';
+        const clr=s2.includes('final')||s2.includes('issued')?'var(--grt)':s2.includes('pending')?'var(--amb)':'var(--blu)';
+        html+=`<div style="background:${bg};padding:8px 14px;font-size:11px;font-weight:600;color:${clr};border-bottom:1px solid var(--brl)">Status: ${data.currentStatus}${data.cofoStatus?' · C of O: '+data.cofoStatus:''}</div>`;
+      }
+      if(data.inspector){html+=`<div style="padding:8px 14px;border-bottom:1px solid var(--brl);font-size:11px;color:var(--mid)">👷 <strong>${data.inspector}</strong></div>`;}
+      if(data.pending&&data.pending.length>0){
+        html+=`<div style="padding:10px 14px 0"><div style="font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);margin-bottom:6px">Pending</div>`;
+        data.pending.forEach(ins=>{html+=`<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--brl)"><div style="flex:1;font-size:13px;color:var(--drk)">${ins.name}</div><div style="font-size:11px;color:var(--amb)">${ins.date||'TBD'}</div></div>`;});
+        html+=`</div>`;
+      }
+      if(data.history&&data.history.length>0){
+        html+=`<div style="padding:10px 14px 0"><div style="font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);margin-bottom:6px">Inspection History</div>`;
+        data.history.forEach((ins,i)=>{
+          const sl=ins.status.toLowerCase();
+          const isPass=sl.includes('approv')&&!sl.includes('partial')&&!sl.includes('conditional');
+          const isPartial=sl.includes('partial')||sl.includes('conditional');
+          const isFail=sl.includes('fail')||sl.includes('correction');
+          const bg=isPass?'var(--grb)':isPartial?'var(--abb)':isFail?'var(--rdb)':'var(--wht)';
+          const clr=isPass?'var(--grt)':isPartial?'var(--amb)':isFail?'var(--rdt)':'var(--mut)';
+          const bdclr=isPass?'var(--grn)':isPartial?'var(--amb)':isFail?'var(--red)':'var(--brd)';
+          html+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:${i<data.history.length-1?'1px solid var(--brl)':'none'}"><div style="flex:1;font-size:13px;color:var(--drk)">${ins.name}</div><div style="font-size:11px;color:var(--mut);white-space:nowrap">${ins.date}</div><div style="font-size:11px;background:${bg};color:${clr};padding:2px 8px;border-radius:10px;border:1px solid ${bdclr};white-space:nowrap">${ins.status}</div>${ins.inspector?`<div style="font-size:10px;color:var(--mut);white-space:nowrap">${ins.inspector}</div>`:''}</div>`;
+        });
+        html+=`</div>`;
+      }
+      html+=`<div style="padding:8px 14px"></div></div>`;
+    });
+    if(!html){html='<div style="color:var(--mut);padding:20px 0;">No data found yet.</div>';}
+    html+=`<div style="font-size:10px;color:var(--mut);margin-top:4px">Last synced: ${new Date().toLocaleString()}</div>`;
     content.innerHTML=html;
   }catch(err){
     content.innerHTML=`<div style="color:var(--rdt);padding:12px 0;">Could not reach LADBS. <a href="https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr" target="_blank" style="color:var(--blu)">Open LADBS directly ↗</a></div>`;
-  }finally{
-    if(btn){btn.textContent='🔄 Refresh';btn.disabled=false;}
+  }finally{if(btn){btn.textContent='🔄 Refresh';btn.disabled=false;}}
+}
+async function syncPlanCheck(){
+  const btn=$('pc-sync-btn'),content=$('plancheck-content');
+  if(!btn||!content)return;
+  btn.textContent='⏳...';btn.disabled=true;
+  const permits=getPermits(st.proj);
+  if(!permits.length){content.innerHTML='No permits configured.';btn.textContent='🔄 Sync';btn.disabled=false;return;}
+  try{
+    const results=await Promise.all(permits.map(async p=>{
+      try{const resp=await fetch('/api/ladbs?permit='+encodeURIComponent(p.num));const data=await resp.json();return{label:p.label,num:p.num,...data};}
+      catch(e){return{label:p.label,num:p.num,error:e.message};}
+    }));
+    let html='';
+    results.forEach(data=>{
+      const _pp=data.num.split('-');
+      const directUrl=_pp.length===3?'https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1='+_pp[0]+'&id2='+_pp[1]+'&id3='+_pp[2]:'';
+      html+=`<div style="border:1px solid var(--brd);border-radius:6px;overflow:hidden;margin-bottom:14px">`;
+      html+=`<div style="background:var(--chr);padding:9px 14px;display:flex;align-items:center;justify-content:space-between"><div style="font-size:12px;font-weight:600;color:#FAFAF7">${data.label} — ${data.num}${data.workDescription?`<span style="font-size:9px;color:rgba(250,250,247,0.4);margin-left:8px">${data.workDescription.substring(0,60)}</span>`:''}</div>${directUrl?`<a href="${directUrl}" target="_blank" style="font-size:9px;color:var(--gld);border:1px solid var(--gld);padding:2px 6px;border-radius:2px;text-decoration:none">View ↗</a>`:''}</div>`;
+      if(data.error){html+=`<div style="padding:10px 14px;color:var(--rdt);font-size:11px">${data.error}</div></div>`;return;}
+      if(data.currentStatus){
+        const s2=data.currentStatus.toLowerCase();
+        const bg=s2.includes('final')||s2.includes('issued')?'var(--grb)':s2.includes('pending')?'var(--abb)':'var(--blb)';
+        const clr=s2.includes('final')||s2.includes('issued')?'var(--grt)':s2.includes('pending')?'var(--amb)':'var(--blu)';
+        html+=`<div style="background:${bg};padding:7px 14px;font-size:11px;font-weight:600;color:${clr};border-bottom:1px solid var(--brl)">Status: ${data.currentStatus}${data.cofoStatus?' · C of O: '+data.cofoStatus:''}</div>`;
+      }
+      if(data.planCheck&&data.planCheck.length>0){
+        html+=`<div style="padding:10px 14px 0"><div style="font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);margin-bottom:8px">Plan Check History</div><div style="position:relative;padding-left:18px;margin-bottom:10px">`;
+        data.planCheck.forEach((row,i)=>{
+          const s=row.status.toLowerCase();
+          const dot=s.includes('approved')||s.includes('issued')?'var(--grn)':s.includes('correction')?'var(--amb)':'var(--blu)';
+          const isLast=i===data.planCheck.length-1;
+          html+=`<div style="position:relative;padding-bottom:${isLast?0:10}px"><div style="position:absolute;left:-18px;top:3px;width:9px;height:9px;border-radius:50%;background:${dot}"></div>${!isLast?'<div style="position:absolute;left:-14px;top:12px;bottom:0;width:1px;background:var(--brl)"></div>':''}<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap"><span style="font-size:12px;font-weight:500;color:var(--drk)">${row.status}</span><span style="font-size:10px;color:var(--mut)">${row.date}</span>${row.person?`<span style="font-size:10px;color:var(--mut)">${row.person}</span>`:''}</div></div>`;
+        });
+        html+=`</div></div>`;
+      }
+      if(data.clearances&&data.clearances.length>0){
+        const cleared=data.clearances.filter(c=>c.status.toLowerCase().includes('clear')).length;
+        html+=`<div style="padding:7px 14px;border-top:1px solid var(--brl);font-size:11px;color:var(--mut)">Clearances: <strong style="color:var(--grt)">${cleared}/${data.clearances.length} cleared</strong></div>`;
+      }
+      html+=`</div>`;
+    });
+    html+=`<div style="font-size:10px;color:var(--mut);margin-top:4px">Last synced: ${new Date().toLocaleString()}</div>`;
+    content.innerHTML=html;
+  }catch(e){content.innerHTML=`<div style="color:var(--rdt)">Error: ${e.message}</div>`;}
+  finally{btn.textContent='🔄 Sync';btn.disabled=false;}
+}
+function phaseKey(phase,type){return'phase_'+type+'|'+phase;}
+function getPhaseDate(phase,type){const k=phaseKey(phase,type);return st.taskCache[st.proj?.id]?.[k]?.date_completed||null;}
+async function setPhaseDate(phase,type,dateStr){
+  if(!st.proj)return;
+  const k=phaseKey(phase,type);
+  await upsertTask(st.proj.id,k,{date_completed:dateStr,status:type,note:phase});
+  toast(type==='start'?'Phase started':'Phase completed');
+  updPhaseHeader(phase);
+  updTimeline();
+}
+async function clearPhaseDate(phase,type){
+  if(!st.proj)return;
+  const k=phaseKey(phase,type);
+  if(st.taskCache[st.proj.id]?.[k]){
+    await sb.from('bh_tasks').delete().eq('project_id',st.proj.id).eq('task_key',k);
+    delete st.taskCache[st.proj.id][k];
   }
+  toast('Date cleared');
+  updPhaseHeader(phase);
+  updTimeline();
+}
+function daysBetween(d1,d2){return Math.round((new Date(d2)-new Date(d1))/(1000*60*60*24));}
+function daysFromToday(d1){return daysBetween(d1,new Date().toISOString().split('T')[0]);}
+function updPhaseHeader(phase){
+  const el=document.getElementById('ph-'+phase.replace(/[^a-z0-9]/gi,'_'));
+  if(!el)return;
+  const start=getPhaseDate(phase,'start');
+  const complete=getPhaseDate(phase,'complete');
+  const target=PHASE_TARGETS[phase]||0;
+  el.innerHTML=renderPhaseControls(phase,start,complete,target);
+}
+function updTimeline(){
+  const el=document.getElementById('phase-timeline');
+  if(!el)return;
+  el.innerHTML=renderTimeline();
+}
+function renderPhaseControls(phase,start,complete,target){
+  const elapsed=start?(complete?daysBetween(start,complete):daysFromToday(start)):null;
+  const pct=elapsed&&target?Math.min(100,Math.round((elapsed/target)*100)):0;
+  const over=elapsed&&target&&elapsed>target;
+  const clr=!elapsed?'var(--mut)':over?'var(--rdt)':pct>75?'var(--amb)':'var(--grt)';
+  let html=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">`;
+  if(target){html+=`<span style="font-size:9px;color:var(--mut);border:1px solid var(--brl);padding:2px 6px;border-radius:2px">Target: ${target}d</span>`;}
+  if(elapsed!==null){html+=`<span style="font-size:9px;font-weight:600;color:${clr}">${elapsed}d${over?' ⚠️':''} elapsed</span>`;}
+  if(!start){
+    html+=`<span style="font-size:9px;color:var(--mut)">Not started</span>`;
+    html+=`<button onclick="setPhaseDate('${phase.replace(/'/g,"\\'")}','start','${new Date().toISOString().split('T')[0]}')" style="font-size:9px;background:var(--blk);color:#fff;border:none;padding:2px 8px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif">▶ Start</button>`;
+    html+=`<input type="date" onchange="setPhaseDate('${phase.replace(/'/g,"\\'")}','start',this.value)" style="font-size:9px;border:1px solid var(--brd);padding:2px 4px;border-radius:2px;font-family:'DM Sans',sans-serif" title="Set start date">`;
+  } else {
+    html+=`<span style="font-size:9px;color:var(--mid)">Started ${start}</span>`;
+    html+=`<button onclick="clearPhaseDate('${phase.replace(/'/g,"\\'")}','start')" style="font-size:9px;background:none;color:var(--mut);border:1px solid var(--brl);padding:2px 6px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif">✕</button>`;
+    if(!complete){
+      html+=`<button onclick="setPhaseDate('${phase.replace(/'/g,"\\'")}','complete','${new Date().toISOString().split('T')[0]}')" style="font-size:9px;background:var(--grn);color:#fff;border:none;padding:2px 8px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif">✓ Complete</button>`;
+      html+=`<input type="date" onchange="setPhaseDate('${phase.replace(/'/g,"\\'")}','complete',this.value)" style="font-size:9px;border:1px solid var(--brd);padding:2px 4px;border-radius:2px;font-family:'DM Sans',sans-serif" title="Set complete date">`;
+    } else {
+      html+=`<span style="font-size:9px;color:var(--grt);font-weight:600">✓ Done ${complete}</span>`;
+      html+=`<button onclick="clearPhaseDate('${phase.replace(/'/g,"\\'")}','complete')" style="font-size:9px;background:none;color:var(--mut);border:1px solid var(--brl);padding:2px 6px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif">✕</button>`;
+    }
+  }
+  html+=`</div>`;
+  return html;
+}
+function renderTimeline(){
+  const shownPhases=['Pre-Construction / Admin','Site Prep','Demo','Sewer','Grading','Foundation','Pre Ordering','Framing','GC',"MEP's",'Waterproofing','Exterior','Insulation','Drywall','Tile','Paint','Finishes','Landscape/Hardscape','Final Trades','Final Admin'];
+  let projectStart=null;
+  shownPhases.forEach(p=>{const s=getPhaseDate(p,'start');if(s&&(!projectStart||s<projectStart))projectStart=s;});
+  const projectElapsed=projectStart?daysFromToday(projectStart):0;
+  const pct=Math.min(100,Math.round((projectElapsed/270)*100));
+  const overallClr=pct>100?'var(--rdt)':pct>80?'var(--amb)':'var(--grt)';
+  let html=`<div style="background:var(--wrm);border:1px solid var(--brd);border-radius:6px;padding:16px;margin-bottom:20px">`;
+  html+=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">`;
+  html+=`<div style="font-size:13px;font-weight:600;color:var(--blk)">Project Timeline</div>`;
+  html+=`<div style="font-size:11px;color:${overallClr};font-weight:600">${projectElapsed} days elapsed · Target: 270 days</div>`;
+  html+=`</div>`;
+  html+=`<div style="height:5px;background:var(--brl);border-radius:3px;margin-bottom:14px"><div style="height:100%;width:${pct}%;background:${overallClr};border-radius:3px;transition:width 0.4s"></div></div>`;
+  shownPhases.forEach(phase=>{
+    const s=getPhaseDate(phase,'start'),c=getPhaseDate(phase,'complete');
+    const target=PHASE_TARGETS[phase]||14;
+    const elapsed=s?(c?daysBetween(s,c):daysFromToday(s)):null;
+    const pct2=elapsed?Math.min(100,Math.round((elapsed/target)*100)):0;
+    const over=elapsed&&elapsed>target;
+    const clr=!elapsed?'var(--brl)':over?'var(--rdt)':pct2>75?'var(--amb)':'var(--grn)';
+    const dot=!s?'⬜':!c?'🔵':'✅';
+    html+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:5px">`;
+    html+=`<div style="font-size:10px;color:var(--mid);width:155px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${dot} ${phase}</div>`;
+    html+=`<div style="flex:1;height:4px;background:var(--brl);border-radius:2px">${elapsed?`<div style="height:100%;width:${pct2}%;background:${clr};border-radius:2px"></div>`:''}</div>`;
+    html+=`<div style="font-size:9px;color:${over?'var(--rdt)':'var(--mut)'};width:72px;text-align:right;flex-shrink:0;white-space:nowrap">${elapsed?elapsed+'d / '+target+'d':target+'d target'}</div>`;
+    html+=`</div>`;
+  });
+  html+=`</div>`;
+  return html;
+}
+function getPermits(proj){
+  if(!proj?.permit_number)return[];
+  return proj.permit_number.split('||').filter(Boolean).map(p=>{
+    const pp=p.split(':');
+    return pp.length===2?{label:pp[0],num:pp[1]}:{label:'Main',num:p};
+  }).filter(p=>p.num);
 }
 function closeM(){const b=$('mbg');if(b)b.classList.remove('open');}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});
