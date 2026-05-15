@@ -18,7 +18,7 @@ body{font-family:'DM Sans',sans-serif;background:#F6F2EB;color:#1A1A18;font-size
 .logo-text em{font-style:normal;color:var(--gld)}
 .logo-sub{font-size:7px;letter-spacing:0.18em;text-transform:uppercase;color:var(--mut)}
 .nav-center{display:flex;align-items:center;gap:7px;flex:1;justify-content:center;min-width:0}
-.proj-sel{background:rgba(255,255,255,0.08);border:1px solid rgba(184,135,42,0.4);color:#FAFAF7;padding:5px 22px 5px 8px;font-family:'DM Sans',sans-serif;font-size:11px;border-radius:2px;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%23B8872A' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;max-width:200px;min-width:120px}
+.proj-sel{background:rgba(255,255,255,0.08);border:1px solid rgba(184,135,42,0.4);color:#FAFAF7;padding:6px 24px 6px 10px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;border-radius:2px;cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%23B8872A' stroke-width='1.2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;max-width:240px;min-width:140px}
 .btn-np{background:var(--gld);color:var(--blk);border:none;padding:5px 11px;font-family:'DM Sans',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;border-radius:2px;white-space:nowrap}
 .btn-np:hover{background:var(--gll)}
 .nav-right{display:flex;align-items:center;gap:7px;flex-shrink:0}
@@ -29,9 +29,9 @@ body{font-family:'DM Sans',sans-serif;background:#F6F2EB;color:#1A1A18;font-size
 .btn-signout{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.4);color:#FAFAF7;font-size:10px;padding:4px 9px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}
 .btn-signout:hover{background:rgba(255,255,255,0.2)}
 .gold-rule{height:2px;background:linear-gradient(90deg,var(--gld) 0%,rgba(184,135,42,0.1) 100%)}
-.info-bar{background:var(--wrm);border-bottom:1px solid var(--brl);padding:8px 20px;font-size:12px;color:var(--mid);display:none;gap:12px;align-items:center;flex-wrap:wrap;position:sticky;top:54px;z-index:190}
+.info-bar{background:var(--wrm);border-bottom:1px solid var(--brl);padding:9px 20px;font-size:13px;color:var(--drk);font-weight:500;display:none;gap:14px;align-items:center;flex-wrap:wrap;position:sticky;top:54px;z-index:190}
 .info-bar.on{display:flex}
-.info-lbl{font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut);font-weight:600}
+.info-lbl{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--gld);font-weight:700}
 .info-link{font-size:10.5px;color:var(--blu);text-decoration:none;padding:2px 7px;border:1px solid var(--blu);border-radius:2px;background:var(--blb)}
 .prog-bar{background:var(--chr);padding:8px 16px;display:none;align-items:center;gap:12px;border-bottom:1px solid #222;position:sticky;top:54px;z-index:189}
 .prog-bar.on{display:flex}
@@ -85,7 +85,7 @@ body{font-family:'DM Sans',sans-serif;background:#F6F2EB;color:#1A1A18;font-size
 .stnm{font-size:11px;font-weight:500;color:var(--mid)}
 .stdt{font-size:11px;color:var(--mut)}
 .stpill{font-size:10px;padding:2px 7px;border-radius:10px}
-.stpill.complete,.stpill.completed,.stpill.passed,.stpill.reviewed,.stpill.approved{background:var(--grb);color:var(--grt)}
+.stpill.complete,.stpill.completed,.stpill.passed,.stpill.reviewed,.stpill.approved,.stpill.checked{background:var(--grb);color:var(--grt)}
 .stpill.in-progress{background:var(--abb);color:var(--amb)}
 .stpill.corrections{background:var(--rdb);color:var(--rdt)}
 .stpill.scheduled{background:var(--blb);color:var(--blu)}
@@ -199,9 +199,9 @@ body{font-family:'DM Sans',sans-serif;background:#F6F2EB;color:#1A1A18;font-size
 <div id="app"></div>
 <div class="toast" id="toast"></div>
 <script>
-const SUPABASE_URL = 'https://nyasyzchugvqumzjxopu.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55YXN5emNodWd2cXVtemp4b3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MDkyODcsImV4cCI6MjA5Mjk4NTI4N30.Pc9_jceweINaxDtdrMZVSD1D1bkra7-bOmVr7bRKl0s';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL='https://nyasyzchugvqumzjxopu.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55YXN5emNodWd2cXVtemp4b3B1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0MDkyODcsImV4cCI6MjA5Mjk4NTI4N30.Pc9_jceweINaxDtdrMZVSD1D1bkra7-bOmVr7bRKl0s';
+const sb=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 const S2=`<svg viewBox="0 0 200 100" xmlns="http://www.w3.org/2000/svg"><path d="M50,2 C50,2 46,46 0,50 C46,54 50,98 50,98 C50,98 54,54 100,50 C54,46 50,2 50,2 Z" fill="#B8872A"/><path d="M150,2 C150,2 146,46 100,50 C146,54 150,98 150,98 C150,98 154,54 200,50 C154,46 150,2 150,2 Z" fill="#B8872A"/></svg>`;
 const USERS=[
   {id:'MP',name:'Matthew Pichardo',initials:'MP',password:'BespokeMatthew',role:'admin'},
@@ -309,7 +309,7 @@ const DATA={
 {t:"Submit plans to Coastal once permit number is generated (if applicable)",company:"Coastal",who:"Expediter",h:"",mode:"permits"},
 {t:"Submit truss calcs if ready or submit truss calcs during final plan check",company:"LADBS",who:"Expediter",h:"",mode:"permits"},
 {t:"Submit fire sprinkler plans to Fire Department",company:"LAFD",who:"Expediter",h:"",mode:"permits"},
-{t:"Pickup plan check corrections",company:"LADBS",who:"Expediter",h:"Check online to see if approved - Matthew to pick up in downtown LA",mode:"permits"},
+{t:"Pickup plan check corrections",company:"LADBS",who:"Expediter",h:"Check online to see if approved - BH Coordinator to pick up in downtown LA",mode:"permits"},
 {t:"Obtain Clearances",company:"Expediter submits / BH follows up",who:"",h:"",mode:"permits"},
 {t:"Bureau of Engineering",company:"BOE",who:"Expediter",h:"",mode:"permits"},
 {t:"Planning (includes Coastal)",company:"DCP",who:"Expediter",h:"",mode:"permits"},
@@ -328,7 +328,7 @@ const DATA={
 {s:"Site Prep",t:"Call Dig Alert",h:"Confirm with GC this has been done",o:"g",mode:"construction"},
 {s:"Site Prep",t:"Install temp. power",h:"Floor Plans Pros. Confirm with GC application has been submitted",o:"g",mode:"construction"},
 {s:"Pre-Construction / Admin",t:"Sell appliances, if included in sale",h:"",o:"m",mode:"construction"},
-{s:"Pre-Construction / Admin",t:"Verify fire sprinkler plan approval",h:"Can also check LADBS for inspections. BH Coordinator to f/u w/GC to ensure it\'s been completed.",o:"g",mode:"construction"},
+{s:"Pre-Construction / Admin",t:"Verify fire sprinkler plan approval",h:"Can also check LADBS for inspections. BH Coordinator to f/u w/GC to ensure it's been completed.",o:"g",mode:"construction"},
 {s:"Pre-Construction / Admin",t:"Create listing Floorplan once we have Approved Plans",h:"Floor Plans Pros info@floorplanspros.com",o:"m",mode:"construction"},
 {s:"Pre-Construction / Admin",t:"Water line and meter upgrade",h:"Permit through LADWP",o:"m",mode:"construction"},
 {s:"Pre-Construction / Admin",t:"Gas meter upgrade",h:"Submit new service form on Website. Confirm with Cody on specs.",o:"m",mode:"construction"},
@@ -338,7 +338,7 @@ const DATA={
 {s:"Pre Ordering",t:"Order Appliances",h:"Justin Universal Appliances: Email appliance specs to GC, designer, and cabinet maker",o:"m",mode:"construction"},
 {s:"Demo",t:"Demo existing property",h:"",o:"g",mode:"construction"},
 {s:"Sewer",t:"Expose sewer and cap it",h:"(Inspection required) Expose sewer line during demo so nothing goes into the sewer. Install liner. Leave open until rough plumbing completed",o:"g",mode:"construction"},
-{s:"Admin",t:"School fee refund (only for new construction)",h:"LA City* Need to provide ASAP after demo permit is finaled.",o:"m",mode:"construction"},
+{s:"Demo Admin",t:"School fee refund (only for new construction)",h:"LA City* Need to provide ASAP after demo permit is finaled.",o:"m",mode:"construction"},
 {s:"Sewer",t:"Sewer repair and liner if needed",h:"John Just Right: Check reports provided during escrow",o:"m",mode:"construction"},
 {s:"Grading",t:"Start R&R left side",h:"(Removal and recompaction)",o:"g",mode:"construction"},
 {s:"Grading",t:"Start R&R right side",h:"(Removal and recompaction)",o:"g",mode:"construction"},
@@ -364,20 +364,20 @@ const DATA={
 {s:"Framing",t:"Install Trusses",h:"",o:"g",mode:"construction"},
 {s:"Framing",t:"Structural observation report for roof diaphragm, roof nailing, sheer walls",h:"",o:"g",mode:"construction"},
 {s:"Framing - Admin",t:"Schedule height survey",h:"Jerry Horizon",o:"m",mode:"construction"},
-{s:"Admin",t:"Get electric meter location approved by DWP",h:"Schedule after 2nd floor is framed. Verify roof is finished before DWP comes to field and location for drop",o:"m",mode:"construction"},
+{s:"Framing Admin",t:"Get electric meter location approved by DWP",h:"Schedule after 2nd floor is framed. Verify roof is finished before DWP comes to field and location for drop",o:"m",mode:"construction"},
 {s:"Framing - Admin",t:"Blocking for towel / toilet paper holders, door stops, soffits, beams, TVs etc.",h:"",o:"m",mode:"construction"},
 {s:"Framing - Admin",t:"Framing walkthrough",h:"Check size of fireplace, window & door size/placement, doors, niches, etc.",o:"m",mode:"construction"},
-{s:"Admin",t:"Schedule garage door company to field measure",h:"",o:"m",mode:"construction"},
+{s:"Framing Admin",t:"Schedule garage door company to field measure",h:"",o:"m",mode:"construction"},
 {s:"GC",t:"Install scaffolding",h:"",o:"g",mode:"construction"},
-{s:"MEP\'s",t:"Install fireplace",h:"",o:"g",mode:"construction"},
-{s:"MEP\'s",t:"Mechanical (HVAC)",h:"",o:"g",mode:"construction"},
-{s:"MEP\'s",t:"Electrical",h:"Confirm sleeve has been run at roof for future solar",o:"g",mode:"construction"},
-{s:"MEP\'s",t:"Plumbing",h:"",o:"g",mode:"construction"},
-{s:"MEP\'s",t:"Fire sprinklers",h:"Golden State: Ensure fire sprinkler vendor has submitted plan for supp",o:"g",mode:"construction"},
-{s:"MEP\'s",t:"Low voltage",h:"Set up dedicated home system email and confirm all smart home, AV, security, lighting control, and device locations.",o:"g",mode:"construction"},
+{s:"MEP's",t:"Install fireplace",h:"",o:"g",mode:"construction"},
+{s:"MEP's",t:"Mechanical (HVAC)",h:"",o:"g",mode:"construction"},
+{s:"MEP's",t:"Electrical",h:"Confirm sleeve has been run at roof for future solar",o:"g",mode:"construction"},
+{s:"MEP's",t:"Plumbing",h:"",o:"g",mode:"construction"},
+{s:"MEP's",t:"Fire sprinklers",h:"Golden State: Ensure fire sprinkler vendor has submitted plan for supp",o:"g",mode:"construction"},
+{s:"MEP's",t:"Low voltage",h:"Set up dedicated home system email and confirm all smart home, AV, security, lighting control, and device locations.",o:"g",mode:"construction"},
 {s:"MEP - Admin",t:"Verify Car Charger Location and Install",h:"",o:"g",mode:"construction"},
 {s:"Waterproofing",t:"Waterproof shower floors / balconies / laundry",h:"",o:"g",mode:"construction"},
-{s:"Mid Ordering",t:"Order Hood to site if it\'s being drywalled",h:"",o:"m",mode:"construction"},
+{s:"Mid Ordering",t:"Order Hood to site if it's being drywalled",h:"",o:"m",mode:"construction"},
 {s:"Mid Ordering",t:"Order Interior Doors",h:"If Bob, he can build. Other vendor - Shawn (Imperial). If no door casing, order early, once framing is completed.",o:"m",mode:"construction"},
 {s:"Pre ordering",t:"Order Door Hardware / Stops",h:"",o:"m",mode:"construction"},
 {s:"Pre ordering",t:"Order Light fixtures",h:"",o:"m",mode:"construction"},
@@ -386,11 +386,11 @@ const DATA={
 {s:"Pre ordering",t:"Order Mailbox",h:"https://www.rejuvenation.com/products/post-porch-city-mailbox/ Black - Locking",o:"m",mode:"construction"},
 {s:"GC",t:"Install windows",h:"",o:"g",mode:"construction"},
 {s:"GC",t:"Install exterior doors",h:"",o:"g",mode:"construction"},
-{s:"Admin",t:"Video all walls and ceilings prior to insulation",h:"",o:"m",mode:"construction"},
-{s:"Admin",t:"Confirm all electrical, lighting, AV, and low-voltage rough-in locations, heights, alignments, controls, and device placements.",h:"",o:"m",mode:"construction"},
-{s:"Admin",t:"Confirm all plumbing, HVAC, venting, and fireplace rough-in locations, terminations, and fixture heights prior to wall close-up and stucco.",h:"",o:"m",mode:"construction"},
-{s:"Admin",t:"Verify door swings, switch accessibility, niche locations, panel locations, and overall coordination between trades.",h:"",o:"m",mode:"construction"},
-{s:"Admin",t:"Confirm all required future infrastructure and exterior penetrations, including solar sleeves, venting, overflow locations, and equipment connections.",h:"",o:"m",mode:"construction"},
+{s:"Pre-Drywall Admin",t:"Video all walls and ceilings prior to insulation",h:"",o:"m",mode:"construction"},
+{s:"Pre-Drywall Admin",t:"Confirm all electrical, lighting, AV, and low-voltage rough-in locations, heights, alignments, controls, and device placements.",h:"",o:"m",mode:"construction"},
+{s:"Pre-Drywall Admin",t:"Confirm all plumbing, HVAC, venting, and fireplace rough-in locations, terminations, and fixture heights prior to wall close-up and stucco.",h:"",o:"m",mode:"construction"},
+{s:"Pre-Drywall Admin",t:"Verify door swings, switch accessibility, niche locations, panel locations, and overall coordination between trades.",h:"",o:"m",mode:"construction"},
+{s:"Pre-Drywall Admin",t:"Confirm all required future infrastructure and exterior penetrations, including solar sleeves, venting, overflow locations, and equipment connections.",h:"",o:"m",mode:"construction"},
 {s:"GC",t:"Straight edge for drywall",h:"",o:"g",mode:"construction"},
 {s:"GC",t:"Clean all interior framing prior to insulation.",h:"",o:"g",mode:"construction"},
 {s:"GC",t:"Spray the framing",h:"Bora-Care with Mold-Care treatment (add dye to see where spraying)",o:"g",mode:"construction"},
@@ -409,12 +409,12 @@ const DATA={
 {s:"Mid Ordering",t:"Order tile",h:"Include grout, etc. in tile budget",o:"g",mode:"construction"},
 {s:"Tile",t:"Install hardy board or float shower/tubs with concrete",h:"Verify drywall is installed behind showers",o:"g",mode:"construction"},
 {s:"Tile",t:"Install tile",h:"Once tile is delivered, let team and Designer know",o:"g",mode:"construction"},
-{s:"Admin",t:"Walkthrough after drywall to verify no outlets covered over",h:"",o:"m",mode:"construction"},
+{s:"Drywall Admin",t:"Walkthrough after drywall to verify no outlets covered over",h:"",o:"m",mode:"construction"},
 {s:"Mid Ordering",t:"Order flooring",h:"",o:"g",mode:"construction"},
 {s:"Drywall",t:"Skim coat drywall",h:"",o:"g",mode:"construction"},
 {s:"Paint",t:"Prime all interior walls / ceilings",h:"",o:"g",mode:"construction"},
-{s:"Admin",t:"Schedule vendor to measure/design closets",h:"If Bob, he can build",o:"m",mode:"construction"},
-{s:"Admin",t:"Schedule cabinet company to field measure",h:"",o:"m",mode:"construction"},
+{s:"Finishes Admin",t:"Schedule vendor to measure/design closets",h:"If Bob, he can build",o:"m",mode:"construction"},
+{s:"Finishes Admin",t:"Schedule cabinet company to field measure",h:"",o:"m",mode:"construction"},
 {s:"Mid Ordering",t:"Order cabinet hardware after cabinets are verified",h:"",o:"m",mode:"construction"},
 {s:"Mid Ordering",t:"Order HVAC Registers",h:"Request sizes from GC",o:"m",mode:"construction"},
 {s:"Mid Ordering",t:"Order smart light switches - Lutron",h:"For specified areas only - Claro Smart Switch for Caseta",o:"g",mode:"construction"},
@@ -427,12 +427,12 @@ const DATA={
 {s:"Finishes",t:"Install cabinets",h:"",o:"g",mode:"construction"},
 {s:"Finishes",t:"Install cabinet hardware",h:"",o:"g",mode:"construction"},
 {s:"Finishes",t:"Install countertops",h:"Confirm with GC for Sink Delivery",o:"g",mode:"construction"},
-{s:"Admin",t:"Schedule Appliance Inspection",h:"Need flooring and countertops in | 1-2 Week inspection lead time",o:"m",mode:"construction"},
+{s:"Finishes Admin",t:"Schedule Appliance Inspection",h:"Need flooring and countertops in | 1-2 Week inspection lead time",o:"m",mode:"construction"},
 {s:"Finishes",t:"Install fireplace slabs",h:"",o:"g",mode:"construction"},
 {s:"Finishes",t:"Install wood flooring",h:"",o:"g",mode:"construction"},
 {s:"Finishes",t:"Install baseboards",h:"",o:"g",mode:"construction"},
 {s:"Finishes",t:"Install closets",h:"Coordinate w/GC if site needs to be prepped if Closet World",o:"m",mode:"construction"},
-{s:"Admin",t:"Schedule Delivery of Standing Tubs and Toilets",h:"Winsupply Michael",o:"m",mode:"construction"},
+{s:"Finishes Admin",t:"Schedule Delivery of Standing Tubs and Toilets",h:"Winsupply Michael",o:"m",mode:"construction"},
 {s:"Landscape/Hardscape",t:"Public Work A-Permit",h:"BOE - Online permit",o:"g",mode:"construction"},
 {s:"Landscape/Hardscape",t:"Install area drains",h:"",o:"g",mode:"construction"},
 {s:"Landscape/Hardscape",t:"Have plumber run gas line / water line",h:"",o:"g",mode:"construction"},
@@ -455,17 +455,17 @@ const DATA={
 {s:"Finishes",t:"Install mirrors",h:"Admin to provide",o:"g",mode:"construction"},
 {s:"Finishes",t:"Install glass enclosures",h:"Admin to provide",o:"g",mode:"construction"},
 {s:"Finishes",t:"Install window hardware",h:"",o:"g",mode:"construction"},
-{s:"Admin",t:"Schedule delivery and install appliances",h:"",o:"m",mode:"construction"},
-{s:"Admin",t:"Get power released / meter install",h:"Track Electrical Service Installation Status",o:"m",mode:"construction"},
-{s:"Admin",t:"Install DWP meter",h:"Once utilities are released, call LADWP to setup service / install meter.",o:"g",mode:"construction"},
-{s:"Admin",t:"Set up gas account",h:"Fill out application on SoCalGas for meter install. (Search Builder Services - 2nd option - Scroll down to new res. construction - Fill out app. Can take 7-10 biz days for SoCalGas to call back and install meter).",o:"m",mode:"construction"},
-{s:"Admin",t:"Put together buyers packet w/all manuals",h:"",o:"g",mode:"construction"},
+{s:"Final Admin",t:"Schedule delivery and install appliances",h:"",o:"m",mode:"construction"},
+{s:"Final Admin",t:"Get power released / meter install",h:"Track Electrical Service Installation Status",o:"m",mode:"construction"},
+{s:"Final Admin",t:"Install DWP meter",h:"Once utilities are released, call LADWP to setup service / install meter.",o:"g",mode:"construction"},
+{s:"Final Admin",t:"Set up gas account",h:"Fill out application on SoCalGas for meter install. (Search Builder Services - 2nd option - Scroll down to new res. construction - Fill out app. Can take 7-10 biz days for SoCalGas to call back and install meter).",o:"m",mode:"construction"},
+{s:"Final Admin",t:"Put together buyers packet w/all manuals",h:"",o:"g",mode:"construction"},
 {s:"Final",t:"Print green forms",h:"",o:"g",mode:"construction"},
-{s:"Admin",t:"Check LADBS Activity report to confirm all units finaled",h:"LADBS Permit & Inspection Report",o:"m",mode:"construction"},
-{s:"Admin",t:"Call LADWP for new trash, recycle, yard bins",h:"Take photos of serial number of each can. Call 1-800-773-2489 (option 1). Give Ryan\'s name & Name on Utility Bill.",o:"m",mode:"construction"},
-{s:"Admin",t:"Post Construction Cleaner",h:"",o:"m",mode:"construction"},
-{s:"Admin",t:"Drop off Supply Box (Booties, TP, Cleaning Wipes, etc)",h:"",o:"m",mode:"construction"},
-{s:"Admin",t:"Refer to \'Disposition (Escrow)\' tab for next steps",h:"",o:"m",mode:"construction"}
+{s:"Final Admin",t:"Check LADBS Activity report to confirm all units finaled",h:"LADBS Permit & Inspection Report",o:"m",mode:"construction"},
+{s:"Final Admin",t:"Call LADWP for new trash, recycle, yard bins",h:"Take photos of serial number of each can. Call 1-800-773-2489 (option 1). Give Ryan's name & Name on Utility Bill.",o:"m",mode:"construction"},
+{s:"Final Admin",t:"Post Construction Cleaner",h:"",o:"m",mode:"construction"},
+{s:"Final Admin",t:"Drop off Supply Box (Booties, TP, Cleaning Wipes, etc)",h:"",o:"m",mode:"construction"},
+{s:"Final Admin",t:"Refer to 'Disposition (Escrow)' tab for next steps",h:"",o:"m",mode:"construction"}
 ],
 "Inspections":[],
 "Walkthrough Before Drywall":[
@@ -534,11 +534,7 @@ function addLog(action,detail,projId){sb.from('bh_activity').insert({project_id:
 function isComplete(tab,idx){
   const item=DATA[tab][idx];const k=tab+'|'+idx;const t=st.taskCache[st.proj?.id]?.[k];if(!t)return false;
   if(item.mode==='checkbox')return!!t.checked;
-  if(item.mode==='construction'){
-    if(item.o==='g')return false;
-    if(item.o==='i')return tab==='Inspections'?t.status==='passed':false;
-    return t.status==='complete';
-  }
+  if(item.mode==='construction'){if(item.o==='g')return false;return t.status==='complete';}
   if(item.mode==='permits')return t.status==='completed';
   return t.status==='complete'||t.status==='completed';
 }
@@ -578,13 +574,13 @@ async function rMain(){
   let total=0,done=0;if(pd){TABS.forEach(tab=>{const c=countTab(tab);total+=c.total;done+=c.done;});}
   const pct=total>0?Math.round((done/total)*100):0;
   const hasInfo=pd&&(pd.project_type||pd.contractor||pd.designer||pd.permit_number);
-const ladbs=pd?.permit_number?(()=>{const pp=pd.permit_number.split('-');return pp.length===3?`<a class="info-link" href="https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1=${pp[0]}&id2=${pp[1]}&id3=${pp[2]}" target="_blank">🔍 LADBS ↗</a>`:'';})():'';
   $('app').innerHTML=`${navH()}
   ${hasInfo?`<div class="info-bar on">
     ${pd.project_type?`<span class="info-lbl">Type</span><span>${pd.project_type}</span>`:''}
     ${pd.contractor?`<span class="info-lbl" style="margin-left:10px">Contractor</span><span>${pd.contractor}</span>`:''}
     ${pd.designer?`<span class="info-lbl" style="margin-left:10px">Designer</span><span>${pd.designer}</span>`:''}
     ${pd.permit_number?`<span class="info-lbl" style="margin-left:10px">Permit</span><span>${pd.permit_number}</span>`:''}
+    ${st.user.role==='admin'?`<button onclick="openEdit()" style="margin-left:auto;background:none;border:1px solid rgba(184,135,42,0.4);color:var(--gld);font-size:10px;padding:3px 10px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600;">✏️ Edit Project</button>`:''}
   </div>`:''}
   ${pd?`<div class="prog-bar on${hasInfo?' with-info':''}"><span class="prog-lbl">Progress</span><div class="prog-track"><div class="prog-fill" id="pf" style="width:${pct}%"></div></div><span class="prog-pct" id="pp">${pct}%</span><span class="prog-ct" id="pc">${done} / ${total}</span>
   <button class="btn-export" onclick="exportProject()">⬇ Export XLSX</button>
@@ -593,21 +589,23 @@ const ladbs=pd?.permit_number?(()=>{const pp=pd.permit_number.split('-');return 
   </div>`:''}
   <div class="layout${hasInfo?' has-info':''}${pd?' has-prog':''}">
     <div class="sidebar"><div class="sb-lbl">Checklist</div>
-    ${TABS.map(tab=>{const{done:td,total:tt}=pd?countTab(tab):{done:0,total:0};return`<button class="tb ${tab===st.tab?'on':''}" onclick="swTab('${tab.replace(/'/g,"\\'")}')"><span>${tab}</span><span class="pill${pd&&td===tt&&tt>0?' done':''}">${pd?td+'/'+tt:'—'}</span></button>`;}).join('')}
+    ${TABS.map(tab=>{const{done:td,total:tt}=pd?countTab(tab):{done:0,total:0};return`<button class="tb ${tab===st.tab?'on':''}" onclick="swTab('${tab.replace(/'/g,"\\'")}')"><span>${tab}</span><span class="pill${pd&&tab!=='Inspections'&&td===tt&&tt>0?' done':''}">${tab==='Inspections'?(pd?'Live':'—'):(pd?td+'/'+tt:'—')}</span></button>`;}).join('')}
     ${st.projects.filter(p=>p.sold).length?`<div class="sb-div"></div><div class="sb-lbl">Sold Projects</div>${st.projects.filter(p=>p.sold).map(p=>`<button class="tb ${st.proj?.id===p.id?'on':''}" onclick="switchProj('${p.id}')"><span>${p.name}<span class="sold-bdg">Sold</span></span></button>`).join('')}`:''}</div>
     <div class="main" id="mc">${pd?rTab():`<div class="empty"><div class="ed">✦ ✦ ✦</div><div class="et">No Project Selected</div><div class="eb">Create a new project or select one to begin.</div></div>`}</div>
   </div>
   <div class="mbg" id="mbg" onclick="if(event.target===this)closeM()"><div class="mc" id="mcc"></div></div>`;
+  if(st.tab==='Inspections'&&st.proj?.permit_number)setTimeout(()=>syncLADBS(),150);
 }
 function rTab(){
   const pd=st.proj,tab=st.tab,items=DATA[tab];const cache=st.taskCache[pd.id]||{};const{done:dc,total:tt}=countTab(tab);
   const secs={};items.forEach((item,idx)=>{const sec=item.s||tab;if(!secs[sec])secs[sec]=[];secs[sec].push({...item,idx});});
-  let h=`<div class="ph"><div><div class="pt">${tab}</div><div class="pm">${items.length} items · ${pd.name}${pd.address?' — '+pd.address:''}</div></div><div class="ps"><div><span class="sn" id="dc">${dc}</span><span class="sl">Done</span></div><div><span class="sn" id="rm">${tt-dc}</span><span class="sl">Remaining</span></div></div></div>`;
+  const isInspTab=tab==='Inspections';
+  let h=`<div class="ph"><div><div class="pt">${tab}</div><div class="pm">${isInspTab?'Live data from LADBS · '+pd.name+(pd.address?' — '+pd.address:''):items.length+' items · '+pd.name+(pd.address?' — '+pd.address:'')}</div></div>${isInspTab?'':`<div class="ps"><div><span class="sn" id="dc">${dc}</span><span class="sl">Done</span></div><div><span class="sn" id="rm">${tt-dc}</span><span class="sl">Remaining</span></div></div>`}</div>`;
   if(tab==='Plans & Permits'){h+=`<div style="display:flex;gap:8px;padding:7px 4px;border-bottom:1.5px solid var(--blk);margin-bottom:4px"><div style="flex:2;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Task</div><div style="flex:0 0 100px;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Who</div><div style="flex:0 0 130px;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Status</div></div>`;}
   if(tab==='Inspections'){
     if(!pd?.permit_number){
       h+='<div style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Add a permit number via ✏️ Edit Project to sync live LADBS inspection data here.</div>';
-} else {
+    } else {
       const _pp=pd.permit_number.split('-');
       const _ladbsUrl=_pp.length===3?'https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1='+_pp[0]+'&id2='+_pp[1]+'&id3='+_pp[2]:'https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr';
       h+=`<div id="ladbs-panel"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--brl)">
@@ -620,35 +618,20 @@ function rTab(){
           <button onclick="syncLADBS()" id="sync-btn" style="background:var(--blu);color:#fff;border:none;padding:7px 16px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">🔄 Refresh</button>
         </div>
       </div>
-      <div id="ladbs-content" style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Loading live LADBS inspection data...</div></div>`;      h+=`<div id="ladbs-panel"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--brl)">
-        <div>
-          <div style="font-size:15px;font-weight:600;color:var(--blk)">Live LADBS Inspections</div>
-          <div style="font-size:11px;color:var(--mut);margin-top:3px">Permit ${pd.permit_number} · Synced from LADBS in real time</div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <a href="https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr" target="_blank" style="font-size:11px;color:var(--blu);text-decoration:none;border:1px solid var(--blu);padding:5px 10px;border-radius:3px;background:var(--blb)">Open LADBS ↗</a>
-          <button onclick="syncLADBS()" id="sync-btn" style="background:var(--blu);color:#fff;border:none;padding:7px 16px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">🔄 Sync Now</button>
-        </div>
-      </div>
-      <div id="ladbs-content" style="color:var(--mut);font-size:13px;padding:20px 0;text-align:center;">Loading live LADBS inspection data...</div></div>`;
+      <div id="ladbs-content" style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Loading live LADBS inspection data...</div></div>`;
     }
-    setTimeout(()=>syncLADBS(),150);
     return h;
   }
-  // Construction renders linearly in exact order, section header only on phase change
   if(tab==='Construction'){
     let lastSec='';
     items.forEach((item,idx)=>{
       const sec=item.s||tab;
-      if(sec!==lastSec){
-        h+=`<div class="shdr"><span class="stitle">${sec}</span><span class="sprog"></span></div>`;
-        lastSec=sec;
-      }
+      if(sec!==lastSec){h+=`<div class="shdr"><span class="stitle">${sec}</span><span class="sprog"></span></div>`;lastSec=sec;}
       const k=tab+'|'+idx;const t=cache[k]||{};
       const isGC=item.o==='g';
       const comp=isComplete(tab,idx);const hasN=t.note&&t.note.trim().length>0;const sv=t.status||'';
       const blank=!sv||sv==='not-started'||sv==='default';
-      const showStamp=t.updated_by&&(!blank)&&!isGC;
+      const showStamp=t.updated_by&&!blank&&!isGC;
       let rc='tr';if(isGC)rc+=' readonly';else if(comp)rc+=' done';
       h+=`<div class="${rc}" id="r${idx}"><div class="tb2"><div class="tt">${item.t}</div>${item.h?`<div class="th">${item.h}</div>`:''}<div class="stamp" id="st${idx}" style="${showStamp?'display:flex':'display:none'}">${showStamp?`<span class="stav">${t.updated_by}</span><span class="stnm">${t.updated_by_name||t.updated_by}</span><span class="stdt">· ${t.date_completed||fd()}</span><span class="stpill ${sv}">${sv.replace(/-/g,' ')}</span>`:''}</div><div class="na${hasN?' open':''}" id="na${idx}"><textarea class="nta" placeholder="Add a note..." onchange="saveNote('${tab}',${idx},this.value)">${t.note||''}</textarea></div></div><div class="tc">`;
       if(isGC){h+=`<span class="gc-lbl">GC</span>`;}
@@ -658,7 +641,6 @@ function rTab(){
     });
     return h;
   }
-  // All other tabs group by section
   Object.entries(secs).forEach(([sec,si])=>{
     const hasSecs=['Initial Walkthrough','Disposition'].includes(tab);
     if(hasSecs&&sec!==tab){
@@ -694,8 +676,8 @@ function rAdmin(){
 }
 function showReset(uid){const u=st.users.find(x=>x.id===uid);if(!u)return;$('mbg').classList.add('open');$('mcc').innerHTML=`<div class="mt">Reset Password</div><div class="ms">New password for ${u.name}.</div><div class="fg"><label class="fl">New Password</label><input class="fi" type="password" id="np"/></div><div class="fg"><label class="fl">Confirm</label><input class="fi" type="password" id="cp"/></div><div style="color:var(--rdt);font-size:10.5px;min-height:13px;margin-bottom:3px" id="pe"></div><div class="ma"><button class="bc" onclick="closeM()">Cancel</button><button class="bp" onclick="doReset('${uid}')">Save</button></div>`;}
 function doReset(uid){const np=$('np').value,cp=$('cp').value;if(!np){$('pe').textContent='Enter a password.';return;}if(np!==cp){$('pe').textContent='Passwords do not match.';return;}const u=st.users.find(x=>x.id===uid);if(u){u.password=np;toast('Password updated');}closeM();}
-function openNew(){$('mbg').classList.add('open');$('mcc').innerHTML=`<div class="mt">New Project</div><div class="ms">Each project has its own independent checklist.</div><div class="fg"><label class="fl">Project Name</label><input class="fi" type="text" id="pn" placeholder="e.g. 123 Maple Street"/></div><div class="fg"><label class="fl">Address</label><input class="fi" type="text" id="pa" placeholder="Full address"/></div><div class="fg"><label class="fl">Project Type</label><input class="fi" type="text" id="pt" placeholder="e.g. New Construction, Remodel"/></div><div class="fg"><label class="fl">Contractor</label><input class="fi" type="text" id="pg" placeholder="GC / Builder name"/></div><div class="fg"><label class="fl">Designer</label><input class="fi" type="text" id="pd" placeholder="Designer name"/></div><div class="fg"><label class="fl">Permit Number (optional)</label><input class="fi" type="text" id="pm" placeholder="e.g. 23010-10000-12345"/></div><div class="ma"><button class="bc" onclick="closeM()">Cancel</button><button class="bp" onclick="createProj()">Create Project</button></div>`;setTimeout(()=>$('pn')?.focus(),80);}
-async function createProj(){const name=$('pn').value.trim();if(!name)return;const{data,error}=await sb.from('bh_projects').insert({name,address:$('pa').value.trim(),project_type:$('pt').value.trim(),contractor:$('pg').value.trim(),designer:$('pd').value.trim(),permit_number:$('pm').value.trim(),created_by:st.user.initials}).select().single();if(error){toast('Error creating project');return;}st.projects.unshift(data);st.proj=data;st.tab='Initial Walkthrough';await loadTasks(data.id);addLog('created',`Created project "${name}"`,data.id);closeM();rMain();}
+function openNew(){$('mbg').classList.add('open');$('mcc').innerHTML=`<div class="mt">New Project</div><div class="ms">Each project has its own independent checklist.</div><div class="fg"><label class="fl">Project Name</label><input class="fi" type="text" id="pn" placeholder="e.g. 123 Maple Street"/></div><div class="fg"><label class="fl">Address</label><input class="fi" type="text" id="pa" placeholder="Full address"/></div><div class="fg"><label class="fl">Project Type</label><input class="fi" type="text" id="pt" placeholder="e.g. New Construction, Remodel"/></div><div class="fg"><label class="fl">Contractor</label><input class="fi" type="text" id="pg" placeholder="GC / Builder name"/></div><div class="fg"><label class="fl">Designer</label><input class="fi" type="text" id="pd2" placeholder="Designer name"/></div><div class="fg"><label class="fl">Permit Number (optional)</label><input class="fi" type="text" id="pm2" placeholder="e.g. 24014-30000-04646"/></div><div class="ma"><button class="bc" onclick="closeM()">Cancel</button><button class="bp" onclick="createProj()">Create Project</button></div>`;setTimeout(()=>$('pn')?.focus(),80);}
+async function createProj(){const name=$('pn').value.trim();if(!name)return;const{data,error}=await sb.from('bh_projects').insert({name,address:$('pa').value.trim(),project_type:$('pt').value.trim(),contractor:$('pg').value.trim(),designer:$('pd2').value.trim(),permit_number:$('pm2').value.trim(),created_by:st.user.initials}).select().single();if(error){toast('Error creating project');return;}st.projects.unshift(data);st.proj=data;st.tab='Initial Walkthrough';await loadTasks(data.id);addLog('created',`Created project "${name}"`,data.id);closeM();rMain();}
 async function switchProj(pid){if(!pid){st.proj=null;rMain();return;}st.proj=st.projects.find(p=>p.id===pid)||null;st.tab='Initial Walkthrough';if(st.proj)await loadTasks(st.proj.id);rMain();}
 function swTab(tab){st.tab=tab;rMain();}
 async function markSold(){if(!st.proj)return;const sold=!st.proj.sold;await sb.from('bh_projects').update({sold,sold_date:sold?new Date().toISOString():null}).eq('id',st.proj.id);st.proj.sold=sold;const idx=st.projects.findIndex(p=>p.id===st.proj.id);if(idx>=0)st.projects[idx].sold=sold;addLog(sold?'sold':'reopened',`${sold?'Marked':'Reopened'} project "${st.proj.name}"`);if(sold){st.proj=null;}rMain();}
@@ -703,26 +685,24 @@ function doDel(){if(!st.proj)return;$('mbg').classList.add('open');$('mcc').inne
 async function confirmDel(){if(!st.proj)return;await sb.from('bh_projects').delete().eq('id',st.proj.id);st.projects=st.projects.filter(p=>p.id!==st.proj.id);delete st.taskCache[st.proj.id];st.proj=null;closeM();rMain();}
 async function doSt(tab,idx,value){
   if(!st.proj)return;const k=tab+'|'+idx;const item=DATA[tab][idx];
-  const isGCrow=item.o==='g';
-  const updates={status:value};
+  const isGCrow=item.o==='g';const updates={status:value};
   const blank=!value||value==='not-started'||value==='not-present'||value==='incomplete';
   if(!blank){updates.date_completed=fd();if(!isGCrow){updates.updated_by=st.user.initials;updates.updated_by_name=st.user.name;}addLog('update',`"${item.t}" → ${value} in ${tab}`);}
   else{updates.date_completed=null;if(!isGCrow){updates.updated_by='';updates.updated_by_name='';}}
   await upsertTask(st.proj.id,k,updates);
   const sel=document.querySelector(`#r${idx} select`);if(sel)sel.className=`ss ${value}`;
   const row=$('r'+idx);
-  if(row&&!isGCrow){row.className='tr';if(isComplete(tab,idx))row.classList.add(item.o==='i'?'appr':'done');}
+  if(row&&!isGCrow){row.className='tr';if(isComplete(tab,idx))row.classList.add('done');}
   updStamp(tab,idx);updProg();
 }
 async function doChk(tab,idx,checked){if(!st.proj)return;const k=tab+'|'+idx;const item=DATA[tab][idx];const updates={checked,status:checked?'checked':'default'};if(checked){updates.updated_by=st.user.initials;updates.updated_by_name=st.user.name;updates.date_completed=fd();addLog('checked',`Checked "${item.t}" in ${tab}`);}else{updates.updated_by='';updates.updated_by_name='';updates.date_completed=null;}await upsertTask(st.proj.id,k,updates);const row=$('r'+idx);if(row)row.classList.toggle('checked',checked);updStamp(tab,idx);updProg();}
 async function saveDate(tab,idx,val){if(!st.proj)return;const k=tab+'|'+idx;await upsertTask(st.proj.id,k,{date_completed:val||null});toast('Date saved');}
 async function saveNote(tab,idx,value){if(!st.proj)return;const k=tab+'|'+idx;await upsertTask(st.proj.id,k,{note:value});const btn=$('nb'+idx);if(btn){btn.textContent=value.trim()?'📝':'+ Note';btn.className='nb'+(value.trim()?' on':'');}}
 function togN(idx){const a=$('na'+idx);if(!a)return;a.classList.toggle('open');if(a.classList.contains('open'))a.querySelector('textarea').focus();}
-function updStamp(tab,idx){const sd=$('st'+idx);if(!sd)return;const k=tab+'|'+idx;const t=st.taskCache[st.proj?.id]?.[k]||{};const sv=t.status||'';const blank=!sv||sv==='not-started'||sv==='default';const item=DATA[tab][idx];const isGC=item.o==='g';if(t.updated_by&&!blank&&!isGC){sd.style.display='flex';sd.innerHTML=`<span class="stav">${t.updated_by}</span><span class="stnm">${t.updated_by_name||t.updated_by}</span><span class="stdt">· ${t.date_completed||''}</span><span class="stpill ${sv}">${sv.replace(/-/g,' ')}</span>`;}else{sd.style.display='none';sd.innerHTML='';}}
+function updStamp(tab,idx){const sd=$('st'+idx);if(!sd)return;const k=tab+'|'+idx;const t=st.taskCache[st.proj?.id]?.[k]||{};const sv=t.status||'';const blank=!sv||sv==='not-started'||sv==='default';const item=DATA[tab][idx];const isGC=item.o==='g';if(t.updated_by&&(!blank||t.checked)&&!isGC){sd.style.display='flex';sd.innerHTML=`<span class="stav">${t.updated_by}</span><span class="stnm">${t.updated_by_name||t.updated_by}</span><span class="stdt">· ${t.date_completed||''}</span><span class="stpill ${t.checked?'checked':sv}">${t.checked?'checked':sv.replace(/-/g,' ')}</span>`;}else{sd.style.display='none';sd.innerHTML='';}}
 function updProg(){if(!st.proj)return;let total=0,done=0;TABS.forEach(tab=>{const c=countTab(tab);total+=c.total;done+=c.done;});const pct=total>0?Math.round((done/total)*100):0;const pf=$('pf'),pp=$('pp'),pc=$('pc');if(pf)pf.style.width=pct+'%';if(pp)pp.textContent=pct+'%';if(pc)pc.textContent=done+' / '+total;const tab=st.tab;const{done:td,total:tt}=countTab(tab);const dc=$('dc'),rm=$('rm');if(dc)dc.textContent=td;if(rm)rm.textContent=tt-td;}
 function openEdit(){
-  if(!st.proj)return;
-  const pd=st.proj;
+  if(!st.proj)return;const pd=st.proj;
   $('mbg').classList.add('open');
   $('mcc').innerHTML=`<div class="mt">Edit Project</div><div class="ms">Update project details — changes save immediately.</div>
   <div class="fg"><label class="fl">Project Name</label><input class="fi" type="text" id="epn" value="${pd.name||''}"/></div>
@@ -736,90 +716,57 @@ function openEdit(){
 }
 async function saveEdit(){
   if(!st.proj)return;
-  const updates={
-    name:$('epn').value.trim(),
-    address:$('epa').value.trim(),
-    project_type:$('ept').value.trim(),
-    contractor:$('epg').value.trim(),
-    designer:$('epd').value.trim(),
-    permit_number:$('epm').value.trim()
-  };
+  const updates={name:$('epn').value.trim(),address:$('epa').value.trim(),project_type:$('ept').value.trim(),contractor:$('epg').value.trim(),designer:$('epd').value.trim(),permit_number:$('epm').value.trim()};
   if(!updates.name){toast('Project name required');return;}
   const{error}=await sb.from('bh_projects').update(updates).eq('id',st.proj.id);
   if(error){toast('Error saving');return;}
-  Object.assign(st.proj,updates);
-  const idx=st.projects.findIndex(p=>p.id===st.proj.id);
+  Object.assign(st.proj,updates);const idx=st.projects.findIndex(p=>p.id===st.proj.id);
   if(idx>=0)Object.assign(st.projects[idx],updates);
   addLog('edited',`Updated project details for "${updates.name}"`);
-  toast('Project updated!');
-  closeM();
-  rMain();
+  toast('Project updated!');closeM();rMain();
 }
 async function syncLADBS(){
   if(!st.proj?.permit_number)return;
-  const btn=$('sync-btn');
-  const content=$('ladbs-content');
+  const btn=$('sync-btn'),content=$('ladbs-content');
   if(!btn||!content)return;
-  btn.textContent='⏳ Syncing...';
-  btn.disabled=true;
+  btn.textContent='⏳ Syncing...';btn.disabled=true;
   try{
     const permit=st.proj.permit_number;
     const parts=permit.split('-');
     if(parts.length!==3){content.innerHTML='<div style="color:var(--rdt)">Invalid permit format. Expected XXXXX-XXXXXX-XXXXX</div>';return;}
     const resp=await fetch(`/api/ladbs?permit=${encodeURIComponent(permit)}`);
     const data=await resp.json();
-    if(data.error){
-      content.innerHTML=`<div style="color:var(--rdt);padding:12px 0;">Error: ${data.error}. <a href="https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr" target="_blank" style="color:var(--blu)">Open LADBS directly ↗</a></div>`;
-      return;
-    }
+    if(data.error){content.innerHTML=`<div style="color:var(--rdt);padding:12px 0;">Error: ${data.error}. <a href="https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr" target="_blank" style="color:var(--blu)">Open LADBS directly ↗</a></div>`;return;}
     let html='';
-    // Inspector info
-    if(data.inspector){
-      html+=`<div style="background:var(--glp);border:1px solid rgba(184,135,42,0.2);border-radius:4px;padding:8px 12px;margin-bottom:14px;font-size:12px;color:var(--mid)">👷 Inspector: <strong>${data.inspector}</strong></div>`;
-    }
-    // Pending inspections
+    if(data.inspector){html+=`<div style="background:var(--glp);border:1px solid rgba(184,135,42,0.2);border-radius:4px;padding:8px 12px;margin-bottom:14px;font-size:12px;color:var(--mid)">👷 Inspector: <strong>${data.inspector}</strong></div>`;}
     if(data.pending&&data.pending.length>0){
       html+='<div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut);font-weight:600;margin-bottom:6px">Pending Inspections</div>';
       html+='<div style="border:1px solid var(--brl);border-radius:4px;overflow:hidden;margin-bottom:16px">';
-      data.pending.forEach((ins,i)=>{
-        html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:${i<data.pending.length-1?'1px solid var(--brl)':'none'};background:var(--abb)">
-          <div style="flex:1;font-size:13px;color:var(--drk);font-weight:500">${ins.name}</div>
-          <div style="font-size:11px;color:var(--mut);white-space:nowrap">${ins.date||'TBD'}</div>
-          <div style="font-size:11px;background:var(--abb);color:var(--amb);padding:2px 8px;border-radius:10px;border:1px solid var(--amb);white-space:nowrap">Pending</div>
-        </div>`;
-      });
+      data.pending.forEach((ins,i)=>{html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:${i<data.pending.length-1?'1px solid var(--brl)':'none'};background:var(--abb)"><div style="flex:1;font-size:13px;color:var(--drk);font-weight:500">${ins.name}</div><div style="font-size:11px;color:var(--mut);white-space:nowrap">${ins.date||'TBD'}</div><div style="font-size:11px;background:var(--abb);color:var(--amb);padding:2px 8px;border-radius:10px;border:1px solid var(--amb);white-space:nowrap">Pending</div></div>`;});
       html+='</div>';
     }
-    // Inspection history
     if(data.history&&data.history.length>0){
       html+='<div style="font-size:9px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut);font-weight:600;margin-bottom:6px">Inspection History</div>';
       html+='<div style="border:1px solid var(--brl);border-radius:4px;overflow:hidden;margin-bottom:16px">';
       data.history.forEach((ins,i)=>{
-        const st2=ins.status.toLowerCase();
-        const isPass=st2.includes('approv')&&!st2.includes('partial')&&!st2.includes('conditional');
-        const isPartial=st2.includes('partial')||st2.includes('conditional');
-        const isFail=st2.includes('fail')||st2.includes('correction');
+        const sl=ins.status.toLowerCase();
+        const isPass=sl.includes('approv')&&!sl.includes('partial')&&!sl.includes('conditional');
+        const isPartial=sl.includes('partial')||sl.includes('conditional');
+        const isFail=sl.includes('fail')||sl.includes('correction');
         const bg=isPass?'var(--grb)':isPartial?'var(--abb)':isFail?'var(--rdb)':'var(--wht)';
         const clr=isPass?'var(--grt)':isPartial?'var(--amb)':isFail?'var(--rdt)':'var(--mut)';
         const bdclr=isPass?'var(--grn)':isPartial?'var(--amb)':isFail?'var(--red)':'var(--brd)';
-        html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:${i<data.history.length-1?'1px solid var(--brl)':'none'}">
-          <div style="flex:1;font-size:13px;color:var(--drk)">${ins.name}</div>
-          <div style="font-size:11px;color:var(--mut);white-space:nowrap">${ins.date}</div>
-          <div style="font-size:11px;background:${bg};color:${clr};padding:2px 8px;border-radius:10px;border:1px solid ${bdclr};white-space:nowrap">${ins.status}</div>
-          ${ins.inspector?`<div style="font-size:10px;color:var(--mut);white-space:nowrap">${ins.inspector}</div>`:''}
-        </div>`;
+        html+=`<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:${i<data.history.length-1?'1px solid var(--brl)':'none'}"><div style="flex:1;font-size:13px;color:var(--drk)">${ins.name}</div><div style="font-size:11px;color:var(--mut);white-space:nowrap">${ins.date}</div><div style="font-size:11px;background:${bg};color:${clr};padding:2px 8px;border-radius:10px;border:1px solid ${bdclr};white-space:nowrap">${ins.status}</div>${ins.inspector?`<div style="font-size:10px;color:var(--mut);white-space:nowrap">${ins.inspector}</div>`:''}</div>`;
       });
       html+='</div>';
     }
-    if(!data.pending?.length&&!data.history?.length){
-      html='<div style="color:var(--mut);padding:20px 0;">No inspection data found for this permit yet.</div>';
-    }
+    if(!data.pending?.length&&!data.history?.length){html='<div style="color:var(--mut);padding:20px 0;">No inspection data found for this permit yet.</div>';}
     html+=`<div style="font-size:10px;color:var(--mut);margin-top:8px">Last synced: ${new Date(data.fetchedAt).toLocaleString()}</div>`;
     content.innerHTML=html;
   }catch(err){
     content.innerHTML=`<div style="color:var(--rdt);padding:12px 0;">Could not reach LADBS. <a href="https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr" target="_blank" style="color:var(--blu)">Open LADBS directly ↗</a></div>`;
   }finally{
-    if(btn){btn.textContent='🔄 Sync Now';btn.disabled=false;}
+    if(btn){btn.textContent='🔄 Refresh';btn.disabled=false;}
   }
 }
 function closeM(){const b=$('mbg');if(b)b.classList.remove('open');}
