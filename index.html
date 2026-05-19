@@ -210,7 +210,8 @@ const USERS=[
   {id:'RJ',name:'Ryan Jancula',initials:'RJ',password:'BespokeRyan',role:'user'},
   {id:'BA',name:'Bespoke Admin',initials:'BA',password:'Bespoke@Info',role:'admin'},
 ];
-const PHASE_TARGETS={"Pre-Construction / Admin":28,"Site Prep":7,"Demo":7,"Demo Admin":3,"Sewer":7,"Grading":14,"Pool":21,"Foundation":28,"Foundation - Admin":5,"Pre Ordering":14,"Framing":42,"Framing - Admin":7,"Framing Admin":3,"GC":7,"MEP's":28,"MEP - Admin":3,"Waterproofing":7,"Mid Ordering":7,"Pre ordering":7,"Pre-Drywall Admin":3,"Exterior":28,"Insulation":7,"Drywall":14,"Drywall Admin":3,"Tile":14,"Paint":7,"Finishes Admin":5,"Finishes":42,"Landscape/Hardscape":21,"Final Trades":14,"Final Admin":14,"Final":7};
+const PHASE_TARGETS={"Pre-Construction / Admin":28,"Site Prep":7,"Demo":7,"Demo Admin":3,"Sewer":7,"Grading":14,"Pool":21,"Foundation":28,"Foundation - Admin":5,"Pre Ordering":14,"Framing":42,"Framing - Admin":7,"GC":7,"MEP's":28,"MEP - Admin":3,"Waterproofing":7,"Mid Ordering":7,"Pre ordering":7,"Pre-Drywall Admin":3,"Exterior":28,"Insulation":7,"Drywall":14,"Drywall Admin":3,"Tile":14,"Paint":7,"Finishes Admin":5,"Finishes":42,"Landscape/Hardscape":21,"Final Trades":14,"Final Admin":14,"Final":7};
+const WBD_ITEMS=["Confirm switch layout, heights, and lighting controls.","Confirm outlet placements for AV components, bidets, island plugs, and other required locations.","Height of light fixtures","Height of plumbing","Confirm door swings do not interfere with light switch locations","Confirm in-wall bathroom plumbing locations, fixture walls, and shower head heights.","Lighting is centered, aligned with each other, etc.","Confirm placement of speakers, control pads, security cameras, and other AV devices.","HVAC connections / placement","Confirm HVAC exterior overflow termination locations prior to stucco.","Laundry venting","Range venting","Fireplace venting","Niche locations in Kitchen and Bathrooms","Sub panel location","Confirm sleeve has been run at roof for future solar","Exterior Range venting","Exterior Fireplace venting"];
 const DATA={
 "Initial Walkthrough":[
 {s:"UTILITIES",t:"Water meter location",h:"Existing meter placement and accessibility",mode:"checkbox"},
@@ -364,10 +365,10 @@ const DATA={
 {s:"Framing",t:"Install Trusses",h:"",o:"g",mode:"construction"},
 {s:"Framing",t:"Structural observation report for roof diaphragm, roof nailing, sheer walls",h:"",o:"g",mode:"construction"},
 {s:"Framing - Admin",t:"Schedule height survey",h:"Jerry Horizon",o:"m",mode:"construction"},
-{s:"Framing Admin",t:"Get electric meter location approved by DWP",h:"Schedule after 2nd floor is framed. Verify roof is finished before DWP comes to field and location for drop",o:"m",mode:"construction"},
+{s:"Framing - Admin",t:"Get electric meter location approved by DWP",h:"Schedule after 2nd floor is framed. Verify roof is finished before DWP comes to field and location for drop",o:"m",mode:"construction"},
 {s:"Framing - Admin",t:"Blocking for towel / toilet paper holders, door stops, soffits, beams, TVs etc.",h:"",o:"m",mode:"construction"},
 {s:"Framing - Admin",t:"Framing walkthrough",h:"Check size of fireplace, window & door size/placement, doors, niches, etc.",o:"m",mode:"construction"},
-{s:"Framing Admin",t:"Schedule garage door company to field measure",h:"",o:"m",mode:"construction"},
+{s:"Framing - Admin",t:"Schedule garage door company to field measure",h:"",o:"m",mode:"construction"},
 {s:"GC",t:"Install scaffolding",h:"",o:"g",mode:"construction"},
 {s:"MEP's",t:"Install fireplace",h:"",o:"g",mode:"construction"},
 {s:"MEP's",t:"Mechanical (HVAC)",h:"",o:"g",mode:"construction"},
@@ -387,8 +388,7 @@ const DATA={
 {s:"GC",t:"Install windows",h:"",o:"g",mode:"construction"},
 {s:"GC",t:"Install exterior doors",h:"",o:"g",mode:"construction"},
 {s:"Pre-Drywall Admin",t:"Video all walls and ceilings prior to insulation",h:"",o:"m",mode:"construction"},
-{s:"Pre-Drywall Admin",t:"Confirm all electrical, lighting, AV, and low-voltage rough-in locations, heights, alignments, controls, and device placements.",h:"",o:"m",mode:"construction"},
-{s:"Pre-Drywall Admin",t:"Confirm all plumbing, HVAC, venting, and fireplace rough-in locations, terminations, and fixture heights prior to wall close-up and stucco.",h:"",o:"m",mode:"construction"},
+{s:"Pre-Drywall Admin",t:"Pre-Drywall Inspection",h:"Tap to expand full pre-drywall walkthrough checklist",o:"m",mode:"construction",expand:"predrywall"},
 {s:"Pre-Drywall Admin",t:"Verify door swings, switch accessibility, niche locations, panel locations, and overall coordination between trades.",h:"",o:"m",mode:"construction"},
 {s:"Pre-Drywall Admin",t:"Confirm all required future infrastructure and exterior penetrations, including solar sleeves, venting, overflow locations, and equipment connections.",h:"",o:"m",mode:"construction"},
 {s:"GC",t:"Straight edge for drywall",h:"",o:"g",mode:"construction"},
@@ -468,26 +468,6 @@ const DATA={
 {s:"Final Admin",t:"Refer to 'Disposition (Escrow)' tab for next steps",h:"",o:"m",mode:"construction"}
 ],
 "Inspections":[],
-"Walkthrough Before Drywall":[
-{t:"Confirm switch layout, heights, and lighting controls.",h:"",mode:"checkbox"},
-{t:"Confirm outlet placements for AV components, bidets, island plugs, and other required locations.",h:"",mode:"checkbox"},
-{t:"Height of light fixtures",h:"",mode:"checkbox"},
-{t:"Height of plumbing",h:"",mode:"checkbox"},
-{t:"Confirm door swings do not interfere with light switch locations",h:"",mode:"checkbox"},
-{t:"Confirm in-wall bathroom plumbing locations, fixture walls, and shower head heights.",h:"",mode:"checkbox"},
-{t:"Lighting is centered, aligned with each other, etc.",h:"",mode:"checkbox"},
-{t:"Confirm placement of speakers, control pads, security cameras, and other AV devices.",h:"",mode:"checkbox"},
-{t:"HVAC connections / placement",h:"",mode:"checkbox"},
-{t:"Confirm HVAC exterior overflow termination locations prior to stucco.",h:"",mode:"checkbox"},
-{t:"Laundry venting",h:"",mode:"checkbox"},
-{t:"Range venting",h:"",mode:"checkbox"},
-{t:"Fireplace venting",h:"",mode:"checkbox"},
-{t:"Niche locations in Kitchen and Bathrooms",h:"",mode:"checkbox"},
-{t:"Sub panel location",h:"",mode:"checkbox"},
-{t:"Confirm sleeve has been run at roof for future solar",h:"",mode:"checkbox"},
-{t:"Exterior Range venting",h:"",mode:"checkbox"},
-{t:"Exterior Fireplace venting",h:"",mode:"checkbox"}
-],
 "Disposition":[
 {s:"Disposing",t:"Prop walkthrough 6 wks. prior to est. completion date",h:"",mode:"checkbox"},
 {s:"Disposing",t:"Deep clean",h:"",mode:"checkbox"},
@@ -543,6 +523,7 @@ function countTab(tab){
   if(tab==='Inspections')return{done:0,total:0};
   items.forEach((item,idx)=>{
     if(item.mode==='construction'&&item.o==='g')return;
+    if(item.expand)return;
     total++;if(isComplete(tab,idx))done++;
   });
   return{done,total};
@@ -606,35 +587,18 @@ function rTab(){
     const _permits=getPermits(pd);
     if(_permits.length>0){
       h+=`<div id="plancheck-panel" style="margin-bottom:20px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px"><div style="font-size:13px;font-weight:600;color:var(--blk)">Live Plan Check Status</div><div style="display:flex;gap:8px">`;
-      _permits.forEach(p=>{
-        const _pp2=p.num.split('-');
-        const _dUrl=_pp2.length===3?'https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1='+_pp2[0]+'&id2='+_pp2[1]+'&id3='+_pp2[2]:'';
-        if(_dUrl)h+=`<a href="${_dUrl}" target="_blank" style="font-size:10px;color:var(--blu);text-decoration:none;border:1px solid var(--blu);padding:3px 8px;border-radius:3px;background:var(--blb)">${p.label} ↗</a>`;
-      });
+      _permits.forEach(p=>{const _pp2=p.num.split('-');const _dUrl=_pp2.length===3?'https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1='+_pp2[0]+'&id2='+_pp2[1]+'&id3='+_pp2[2]:'';if(_dUrl)h+=`<a href="${_dUrl}" target="_blank" style="font-size:10px;color:var(--blu);text-decoration:none;border:1px solid var(--blu);padding:3px 8px;border-radius:3px;background:var(--blb)">${p.label} ↗</a>`;});
       h+=`<button onclick="syncPlanCheck()" id="pc-sync-btn" style="background:var(--blk);color:#fff;border:none;padding:4px 12px;border-radius:3px;font-size:11px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">🔄 Sync</button></div></div>`;
-      h+=`<div id="plancheck-content" style="color:var(--mut);font-size:12px;padding:12px 0;">Click Sync to load live plan check status from LADBS.</div></div>`;
+      h+=`<div id="plancheck-content" style="color:var(--mut);font-size:12px;padding:12px 0;text-align:center;">Click Sync to load live plan check status from LADBS.</div></div>`;
     }
     h+=`<div style="display:flex;gap:8px;padding:7px 4px;border-bottom:1.5px solid var(--blk);margin-bottom:4px"><div style="flex:2;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Task</div><div style="flex:0 0 100px;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Who</div><div style="flex:0 0 130px;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut)">Status</div></div>`;
   }
   if(tab==='Inspections'){
-    if(!pd?.permit_number){
-      h+='<div style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Add a permit number via ✏️ Edit Project to sync live LADBS inspection data here.</div>';
-    } else {
-      const _pp=pd.permit_number.split('-');
-      const _ladbsUrl=_pp.length===3?'https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1='+_pp[0]+'&id2='+_pp[1]+'&id3='+_pp[2]:'https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr';
-      h+=`<div id="ladbs-panel"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--brl)">
-        <div><div style="font-size:15px;font-weight:600;color:var(--blk)">Live LADBS Inspections</div>
-        <div style="font-size:11px;color:var(--mut);margin-top:3px">Permit ${pd.permit_number} · Synced from LADBS in real time</div></div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <a href="${_ladbsUrl}" target="_blank" style="font-size:11px;color:var(--blu);text-decoration:none;border:1px solid var(--blu);padding:5px 10px;border-radius:3px;background:var(--blb)">Open LADBS ↗</a>
-          <button onclick="syncLADBS()" id="sync-btn" style="background:var(--blu);color:#fff;border:none;padding:7px 16px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">🔄 Refresh</button>
-        </div></div>
-      <div id="ladbs-content" style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Loading live LADBS inspection data...</div></div>`;
-    }
+    if(!pd?.permit_number){h+='<div style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Add a permit number via ✏️ Edit Project to sync live LADBS inspection data here.</div>';}
+    else{const _pp=pd.permit_number.split('-');const _ladbsUrl=_pp.length===3?'https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1='+_pp[0]+'&id2='+_pp[1]+'&id3='+_pp[2]:'https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr';h+=`<div id="ladbs-panel"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--brl)"><div><div style="font-size:15px;font-weight:600;color:var(--blk)">Live LADBS Inspections</div><div style="font-size:11px;color:var(--mut);margin-top:3px">Permit ${pd.permit_number} · Synced from LADBS in real time</div></div><div style="display:flex;gap:8px;align-items:center"><a href="${_ladbsUrl}" target="_blank" style="font-size:11px;color:var(--blu);text-decoration:none;border:1px solid var(--blu);padding:5px 10px;border-radius:3px;background:var(--blb)">Open LADBS ↗</a><button onclick="syncLADBS()" id="sync-btn" style="background:var(--blu);color:#fff;border:none;padding:7px 16px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">🔄 Refresh</button></div></div><div id="ladbs-content" style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Loading live LADBS inspection data...</div></div>`;}
     return h;
   }
   if(tab==='Construction'){
-    h+=`<div id="phase-timeline">${renderTimeline()}</div>`;
     let lastSec='';
     items.forEach((item,idx)=>{
       const sec=item.s||tab;
@@ -650,22 +614,32 @@ function rTab(){
       const comp=isComplete(tab,idx);const hasN=t.note&&t.note.trim().length>0;const sv=t.status||'';
       const blank=!sv||sv==='not-started'||sv==='default';
       const showStamp=t.updated_by&&!blank&&!isGC;
-      let rc='tr';if(isGC)rc+=' readonly';else if(comp)rc+=' done';
-      h+=`<div class="${rc}" id="r${idx}"><div class="tb2"><div class="tt">${item.t}</div>${item.h?`<div class="th">${item.h}</div>`:''}<div class="stamp" id="st${idx}" style="${showStamp?'display:flex':'display:none'}">${showStamp?`<span class="stav">${t.updated_by}</span><span class="stnm">${t.updated_by_name||t.updated_by}</span><span class="stdt">· ${t.date_completed||fd()}</span><span class="stpill ${sv}">${sv.replace(/-/g,' ')}</span>`:''}</div><div class="na${hasN?' open':''}" id="na${idx}"><textarea class="nta" placeholder="Add a note..." onchange="saveNote('${tab}',${idx},this.value)">${t.note||''}</textarea></div></div><div class="tc">`;
-      if(isGC){h+=`<span class="gc-lbl">GC</span>`;}
-      else{h+=`<select class="ss ${sv||'not-started'}" onchange="doSt('${tab}',${idx},this.value)"><option value="not-started" ${!sv||sv==='not-started'?'selected':''}>Not Started</option><option value="in-progress" ${sv==='in-progress'?'selected':''}>In Progress</option><option value="complete" ${sv==='complete'?'selected':''}>Complete</option><option value="n-a" ${sv==='n-a'?'selected':''}>N/A</option></select>`;}
-      h+=`<button class="nb${hasN?' on':''}" onclick="togN(${idx})" id="nb${idx}">${hasN?'📝':'+ Note'}</button>`;
-      h+=`</div></div>`;
+      if(item.expand==='predrywall'){
+        const wbdDone=WBD_ITEMS.filter((_,wi)=>{const wk='wbd|'+wi;return st.taskCache[st.proj.id]?.[wk]?.checked;}).length;
+        const wbdTotal=WBD_ITEMS.length;
+        const wbdComp=wbdDone===wbdTotal;
+        h+=`<div class="tr${wbdComp?' done':''}" id="r${idx}" style="flex-direction:column;align-items:stretch;gap:0">`;
+        h+=`<div style="display:flex;align-items:center;gap:12px;cursor:pointer;padding:4px 0" onclick="togWBD()">`;
+        h+=`<div style="flex:1"><div class="tt" style="${wbdComp?'text-decoration:line-through;color:var(--mut)':''}">Pre-Drywall Inspection</div><div class="th">Tap to expand · ${wbdDone}/${wbdTotal} complete</div></div>`;
+        h+=`<span style="font-size:11px;background:${wbdComp?'var(--grb)':'var(--blb)'};color:${wbdComp?'var(--grt)':'var(--blu)'};padding:3px 10px;border-radius:10px;border:1px solid ${wbdComp?'var(--grn)':'var(--blu)'};white-space:nowrap;font-weight:500">${wbdComp?'✓ Complete':wbdDone+'/'+wbdTotal}</span>`;
+        h+=`<span id="wbd-arrow" style="font-size:10px;color:var(--mut)">▼</span></div>`;
+        h+=`<div id="wbd-panel" style="display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--brl)">`;
+        WBD_ITEMS.forEach((wt,wi)=>{const wk='wbd|'+wi;const wt2=st.taskCache[st.proj.id]?.[wk];const wchk=wt2?.checked||false;h+=`<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--brl)"><input type="checkbox" class="chk" ${wchk?'checked':''} onchange="doWBD(${wi},this.checked)" style="flex-shrink:0"><span style="font-size:13px;color:${wchk?'var(--mut)':'var(--drk)'};${wchk?'text-decoration:line-through':''}">${wt}</span>${wchk&&wt2?.updated_by?`<span style="font-size:10px;color:var(--mut);margin-left:auto">${wt2.updated_by} · ${wt2.date_completed||''}</span>`:''}</div>`;});
+        h+=`</div></div>`;
+      } else {
+        let rc='tr';if(isGC)rc+=' readonly';else if(comp)rc+=' done';
+        h+=`<div class="${rc}" id="r${idx}"><div class="tb2"><div class="tt">${item.t}</div>${item.h?`<div class="th">${item.h}</div>`:''}<div class="stamp" id="st${idx}" style="${showStamp?'display:flex':'display:none'}">${showStamp?`<span class="stav">${t.updated_by}</span><span class="stnm">${t.updated_by_name||t.updated_by}</span><span class="stdt">· ${t.date_completed||fd()}</span><span class="stpill ${sv}">${sv.replace(/-/g,' ')}</span>`:''}</div><div class="na${hasN?' open':''}" id="na${idx}"><textarea class="nta" placeholder="Add a note..." onchange="saveNote('${tab}',${idx},this.value)">${t.note||''}</textarea></div></div><div class="tc">`;
+        if(isGC){h+=`<span class="gc-lbl">GC</span>`;}
+        else{h+=`<select class="ss ${sv||'not-started'}" onchange="doSt('${tab}',${idx},this.value)"><option value="not-started" ${!sv||sv==='not-started'?'selected':''}>Not Started</option><option value="in-progress" ${sv==='in-progress'?'selected':''}>In Progress</option><option value="complete" ${sv==='complete'?'selected':''}>Complete</option><option value="n-a" ${sv==='n-a'?'selected':''}>N/A</option></select>`;}
+        h+=`<button class="nb${hasN?' on':''}" onclick="togN(${idx})" id="nb${idx}">${hasN?'📝':'+ Note'}</button>`;
+        h+=`</div></div>`;
+      }
     });
     return h;
   }
   Object.entries(secs).forEach(([sec,si])=>{
     const hasSecs=['Initial Walkthrough','Disposition'].includes(tab);
-    if(hasSecs&&sec!==tab){
-      const trackable=si.filter(item=>!(item.mode==='construction'&&item.o==='g'));
-      const sd=trackable.filter(item=>isComplete(tab,item.idx)).length;
-      h+=`<div class="shdr"><span class="stitle">${sec}</span><span class="sprog">${trackable.length>0?sd+' / '+trackable.length:''}</span></div>`;
-    }
+    if(hasSecs&&sec!==tab){const trackable=si.filter(item=>!(item.mode==='construction'&&item.o==='g'));const sd=trackable.filter(item=>isComplete(tab,item.idx)).length;h+=`<div class="shdr"><span class="stitle">${sec}</span><span class="sprog">${trackable.length>0?sd+' / '+trackable.length:''}</span></div>`;}
     si.forEach(item=>{
       const k=tab+'|'+item.idx;const t=cache[k]||{};const mode=item.mode;
       const isGC=mode==='construction'&&item.o==='g';
@@ -712,12 +686,26 @@ async function doSt(tab,idx,value){
   const sel=document.querySelector(`#r${idx} select`);if(sel)sel.className=`ss ${value}`;
   const row=$('r'+idx);
   if(row&&!isGCrow){row.className='tr';if(isComplete(tab,idx))row.classList.add('done');}
-  updStamp(tab,idx);updProg();
+  updStamp(tab,idx);updProg();if(!blank)checkTabComplete(tab);
 }
-async function doChk(tab,idx,checked){if(!st.proj)return;const k=tab+'|'+idx;const item=DATA[tab][idx];const updates={checked,status:checked?'checked':'default'};if(checked){updates.updated_by=st.user.initials;updates.updated_by_name=st.user.name;updates.date_completed=fd();addLog('checked',`Checked "${item.t}" in ${tab}`);}else{updates.updated_by='';updates.updated_by_name='';updates.date_completed=null;}await upsertTask(st.proj.id,k,updates);const row=$('r'+idx);if(row)row.classList.toggle('checked',checked);updStamp(tab,idx);updProg();}
+async function doChk(tab,idx,checked){if(!st.proj)return;const k=tab+'|'+idx;const item=DATA[tab][idx];const updates={checked,status:checked?'checked':'default'};if(checked){updates.updated_by=st.user.initials;updates.updated_by_name=st.user.name;updates.date_completed=fd();addLog('checked',`Checked "${item.t}" in ${tab}`);}else{updates.updated_by='';updates.updated_by_name='';updates.date_completed=null;}await upsertTask(st.proj.id,k,updates);const row=$('r'+idx);if(row)row.classList.toggle('checked',checked);updStamp(tab,idx);updProg();checkTabComplete(tab);}
 async function saveDate(tab,idx,val){if(!st.proj)return;const k=tab+'|'+idx;await upsertTask(st.proj.id,k,{date_completed:val||null});toast('Date saved');}
 async function saveNote(tab,idx,value){if(!st.proj)return;const k=tab+'|'+idx;await upsertTask(st.proj.id,k,{note:value});const btn=$('nb'+idx);if(btn){btn.textContent=value.trim()?'📝':'+ Note';btn.className='nb'+(value.trim()?' on':'');}}
 function togN(idx){const a=$('na'+idx);if(!a)return;a.classList.toggle('open');if(a.classList.contains('open'))a.querySelector('textarea').focus();}
+function togWBD(){const panel=$('wbd-panel'),arrow=$('wbd-arrow');if(!panel)return;const open=panel.style.display==='none';panel.style.display=open?'block':'none';if(arrow)arrow.style.transform=open?'rotate(180deg)':'';}
+async function doWBD(wi,checked){
+  if(!st.proj)return;
+  const wk='wbd|'+wi;
+  const updates={checked,status:checked?'checked':'default'};
+  if(checked){updates.updated_by=st.user.initials;updates.updated_by_name=st.user.name;updates.date_completed=fd();}
+  else{updates.updated_by='';updates.updated_by_name='';updates.date_completed=null;}
+  await upsertTask(st.proj.id,wk,updates);
+  const wbdDone=WBD_ITEMS.filter((_,i)=>{const k='wbd|'+i;return st.taskCache[st.proj.id]?.[k]?.checked;}).length;
+  const wbdComp=wbdDone===WBD_ITEMS.length;
+  const panel=$('wbd-panel');
+  if(panel){const prev=panel.previousElementSibling;if(prev){const th=prev.querySelector('.th');if(th)th.textContent='Tap to expand · '+wbdDone+'/'+WBD_ITEMS.length+' complete';const badge=prev.querySelector('span[style*="border-radius:10px"]');if(badge){badge.style.background=wbdComp?'var(--grb)':'var(--blb)';badge.style.color=wbdComp?'var(--grt)':'var(--blu)';badge.textContent=wbdComp?'✓ Complete':wbdDone+'/'+WBD_ITEMS.length;}}}
+  if(wbdComp)sendAlert('Pre-Drywall Inspection','Construction',true);
+}
 function updStamp(tab,idx){const sd=$('st'+idx);if(!sd)return;const k=tab+'|'+idx;const t=st.taskCache[st.proj?.id]?.[k]||{};const sv=t.status||'';const blank=!sv||sv==='not-started'||sv==='default';const item=DATA[tab][idx];const isGC=item.o==='g';if(t.updated_by&&(!blank||t.checked)&&!isGC){sd.style.display='flex';sd.innerHTML=`<span class="stav">${t.updated_by}</span><span class="stnm">${t.updated_by_name||t.updated_by}</span><span class="stdt">· ${t.date_completed||''}</span><span class="stpill ${t.checked?'checked':sv}">${t.checked?'checked':sv.replace(/-/g,' ')}</span>`;}else{sd.style.display='none';sd.innerHTML='';}}
 function updProg(){if(!st.proj)return;let total=0,done=0;TABS.forEach(tab=>{const c=countTab(tab);total+=c.total;done+=c.done;});const pct=total>0?Math.round((done/total)*100):0;const pf=$('pf'),pp=$('pp'),pc=$('pc');if(pf)pf.style.width=pct+'%';if(pp)pp.textContent=pct+'%';if(pc)pc.textContent=done+' / '+total;const tab=st.tab;const{done:td,total:tt}=countTab(tab);const dc=$('dc'),rm=$('rm');if(dc)dc.textContent=td;if(rm)rm.textContent=tt-td;}
 function openEdit(){
@@ -758,10 +746,7 @@ async function syncLADBS(){
   const permits=getPermits(st.proj);
   if(!permits.length){content.innerHTML='<div style="color:var(--mut)">No permits configured.</div>';btn.textContent='🔄 Refresh';btn.disabled=false;return;}
   try{
-    const results=await Promise.all(permits.map(async p=>{
-      try{const resp=await fetch('/api/ladbs?permit='+encodeURIComponent(p.num));const data=await resp.json();return{label:p.label,num:p.num,...data};}
-      catch(e){return{label:p.label,num:p.num,error:e.message};}
-    }));
+    const results=await Promise.all(permits.map(async p=>{try{const resp=await fetch('/api/ladbs?permit='+encodeURIComponent(p.num));const data=await resp.json();return{label:p.label,num:p.num,...data};}catch(e){return{label:p.label,num:p.num,error:e.message};}}));
     let html='';
     results.forEach(data=>{
       const _pp=data.num.split('-');
@@ -769,84 +754,50 @@ async function syncLADBS(){
       html+=`<div style="border:1px solid var(--brd);border-radius:6px;overflow:hidden;margin-bottom:20px">`;
       html+=`<div style="background:var(--chr);padding:10px 14px;display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:600;color:#FAFAF7">${data.label||'Permit'} — ${data.num}</div>${data.workDescription?`<div style="font-size:10px;color:rgba(250,250,247,0.45);margin-top:2px">${data.workDescription.substring(0,80)}</div>`:''}</div>${directUrl?`<a href="${directUrl}" target="_blank" style="font-size:10px;color:var(--gld);border:1px solid var(--gld);padding:3px 8px;border-radius:3px;text-decoration:none;white-space:nowrap">Open ↗</a>`:''}</div>`;
       if(data.error){html+=`<div style="padding:12px 14px;color:var(--rdt);font-size:12px">Error: ${data.error}</div></div>`;return;}
-      if(data.currentStatus){
-        const s2=data.currentStatus.toLowerCase();
-        const bg=s2.includes('final')||s2.includes('issued')?'var(--grb)':s2.includes('pending')?'var(--abb)':'var(--blb)';
-        const clr=s2.includes('final')||s2.includes('issued')?'var(--grt)':s2.includes('pending')?'var(--amb)':'var(--blu)';
-        html+=`<div style="background:${bg};padding:8px 14px;font-size:11px;font-weight:600;color:${clr};border-bottom:1px solid var(--brl)">Status: ${data.currentStatus}${data.cofoStatus?' · C of O: '+data.cofoStatus:''}</div>`;
-      }
+      if(data.currentStatus){const s2=data.currentStatus.toLowerCase();const bg=s2.includes('final')||s2.includes('issued')?'var(--grb)':s2.includes('pending')?'var(--abb)':'var(--blb)';const clr=s2.includes('final')||s2.includes('issued')?'var(--grt)':s2.includes('pending')?'var(--amb)':'var(--blu)';html+=`<div style="background:${bg};padding:8px 14px;font-size:11px;font-weight:600;color:${clr};border-bottom:1px solid var(--brl)">Status: ${data.currentStatus}${data.cofoStatus?' · C of O: '+data.cofoStatus:''}</div>`;}
       if(data.inspector){html+=`<div style="padding:8px 14px;border-bottom:1px solid var(--brl);font-size:11px;color:var(--mid)">👷 <strong>${data.inspector}</strong></div>`;}
-      if(data.pending&&data.pending.length>0){
-        html+=`<div style="padding:10px 14px 0"><div style="font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);margin-bottom:6px">Pending</div>`;
-        data.pending.forEach(ins=>{html+=`<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--brl)"><div style="flex:1;font-size:13px;color:var(--drk)">${ins.name}</div><div style="font-size:11px;color:var(--amb)">${ins.date||'TBD'}</div></div>`;});
-        html+=`</div>`;
-      }
-      if(data.history&&data.history.length>0){
-        html+=`<div style="padding:10px 14px 0"><div style="font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);margin-bottom:6px">Inspection History</div>`;
-        data.history.forEach((ins,i)=>{
-          const sl=ins.status.toLowerCase();
-          const isPass=sl.includes('approv')&&!sl.includes('partial')&&!sl.includes('conditional');
-          const isPartial=sl.includes('partial')||sl.includes('conditional');
-          const isFail=sl.includes('fail')||sl.includes('correction');
-          const bg=isPass?'var(--grb)':isPartial?'var(--abb)':isFail?'var(--rdb)':'var(--wht)';
-          const clr=isPass?'var(--grt)':isPartial?'var(--amb)':isFail?'var(--rdt)':'var(--mut)';
-          const bdclr=isPass?'var(--grn)':isPartial?'var(--amb)':isFail?'var(--red)':'var(--brd)';
-          html+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:${i<data.history.length-1?'1px solid var(--brl)':'none'}"><div style="flex:1;font-size:13px;color:var(--drk)">${ins.name}</div><div style="font-size:11px;color:var(--mut);white-space:nowrap">${ins.date}</div><div style="font-size:11px;background:${bg};color:${clr};padding:2px 8px;border-radius:10px;border:1px solid ${bdclr};white-space:nowrap">${ins.status}</div>${ins.inspector?`<div style="font-size:10px;color:var(--mut);white-space:nowrap">${ins.inspector}</div>`:''}</div>`;
-        });
-        html+=`</div>`;
-      }
+      if(data.pending&&data.pending.length>0){html+=`<div style="padding:10px 14px 0"><div style="font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);margin-bottom:6px">Pending</div>`;data.pending.forEach(ins=>{html+=`<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--brl)"><div style="flex:1;font-size:13px;color:var(--drk)">${ins.name}</div><div style="font-size:11px;color:var(--amb)">${ins.date||'TBD'}</div></div>`;});html+=`</div>`;}
+      if(data.history&&data.history.length>0){html+=`<div style="padding:10px 14px 0"><div style="font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);margin-bottom:6px">Inspection History</div>`;data.history.forEach((ins,i)=>{const sl=ins.status.toLowerCase();const isPass=sl.includes('approv')&&!sl.includes('partial')&&!sl.includes('conditional');const isPartial=sl.includes('partial')||sl.includes('conditional');const isFail=sl.includes('fail')||sl.includes('correction');const bg=isPass?'var(--grb)':isPartial?'var(--abb)':isFail?'var(--rdb)':'var(--wht)';const clr=isPass?'var(--grt)':isPartial?'var(--amb)':isFail?'var(--rdt)':'var(--mut)';const bdclr=isPass?'var(--grn)':isPartial?'var(--amb)':isFail?'var(--red)':'var(--brd)';html+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:${i<data.history.length-1?'1px solid var(--brl)':'none'}"><div style="flex:1;font-size:13px;color:var(--drk)">${ins.name}</div><div style="font-size:11px;color:var(--mut);white-space:nowrap">${ins.date}</div><div style="font-size:11px;background:${bg};color:${clr};padding:2px 8px;border-radius:10px;border:1px solid ${bdclr};white-space:nowrap">${ins.status}</div>${ins.inspector?`<div style="font-size:10px;color:var(--mut);white-space:nowrap">${ins.inspector}</div>`:''}</div>`;});html+=`</div>`;}
       html+=`<div style="padding:8px 14px"></div></div>`;
     });
     if(!html){html='<div style="color:var(--mut);padding:20px 0;">No data found yet.</div>';}
     html+=`<div style="font-size:10px;color:var(--mut);margin-top:4px">Last synced: ${new Date().toLocaleString()}</div>`;
     content.innerHTML=html;
-  }catch(err){
-    content.innerHTML=`<div style="color:var(--rdt);padding:12px 0;">Could not reach LADBS. <a href="https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr" target="_blank" style="color:var(--blu)">Open LADBS directly ↗</a></div>`;
-  }finally{if(btn){btn.textContent='🔄 Refresh';btn.disabled=false;}}
+  }catch(err){content.innerHTML=`<div style="color:var(--rdt);padding:12px 0;">Could not reach LADBS. <a href="https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr" target="_blank" style="color:var(--blu)">Open LADBS directly ↗</a></div>`;}
+  finally{if(btn){btn.textContent='🔄 Refresh';btn.disabled=false;}}
 }
 async function syncPlanCheck(){
   const btn=$('pc-sync-btn'),content=$('plancheck-content');
   if(!btn||!content)return;
-  btn.textContent='⏳...';btn.disabled=true;
+  btn.textContent='⏳';btn.disabled=true;
   const permits=getPermits(st.proj);
-  if(!permits.length){content.innerHTML='No permits configured.';btn.textContent='🔄 Sync';btn.disabled=false;return;}
+  if(!permits.length){content.innerHTML='<div style="color:var(--mut);text-align:center;padding:12px">No permits configured. Add via ✏️ Edit Project.</div>';btn.textContent='🔄 Sync';btn.disabled=false;return;}
   try{
-    const results=await Promise.all(permits.map(async p=>{
-      try{const resp=await fetch('/api/ladbs?permit='+encodeURIComponent(p.num));const data=await resp.json();return{label:p.label,num:p.num,...data};}
-      catch(e){return{label:p.label,num:p.num,error:e.message};}
-    }));
+    const results=await Promise.all(permits.map(async p=>{try{const resp=await fetch('/api/ladbs?permit='+encodeURIComponent(p.num));const data=await resp.json();return{label:p.label,num:p.num,...data};}catch(e){return{label:p.label,num:p.num,error:e.message};}}));
     let html='';
     results.forEach(data=>{
       const _pp=data.num.split('-');
-      const directUrl=_pp.length===3?'https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1='+_pp[0]+'&id2='+_pp[1]+'&id3='+_pp[2]:'';
-      html+=`<div style="border:1px solid var(--brd);border-radius:6px;overflow:hidden;margin-bottom:14px">`;
-      html+=`<div style="background:var(--chr);padding:9px 14px;display:flex;align-items:center;justify-content:space-between"><div style="font-size:12px;font-weight:600;color:#FAFAF7">${data.label} — ${data.num}${data.workDescription?`<span style="font-size:9px;color:rgba(250,250,247,0.4);margin-left:8px">${data.workDescription.substring(0,60)}</span>`:''}</div>${directUrl?`<a href="${directUrl}" target="_blank" style="font-size:9px;color:var(--gld);border:1px solid var(--gld);padding:2px 6px;border-radius:2px;text-decoration:none">View ↗</a>`:''}</div>`;
-      if(data.error){html+=`<div style="padding:10px 14px;color:var(--rdt);font-size:11px">${data.error}</div></div>`;return;}
-      if(data.currentStatus){
-        const s2=data.currentStatus.toLowerCase();
-        const bg=s2.includes('final')||s2.includes('issued')?'var(--grb)':s2.includes('pending')?'var(--abb)':'var(--blb)';
-        const clr=s2.includes('final')||s2.includes('issued')?'var(--grt)':s2.includes('pending')?'var(--amb)':'var(--blu)';
-        html+=`<div style="background:${bg};padding:7px 14px;font-size:11px;font-weight:600;color:${clr};border-bottom:1px solid var(--brl)">Status: ${data.currentStatus}${data.cofoStatus?' · C of O: '+data.cofoStatus:''}</div>`;
-      }
+      const dUrl=_pp.length===3?'https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1='+_pp[0]+'&id2='+_pp[1]+'&id3='+_pp[2]:'';
+      const s2=(data.currentStatus||'').toLowerCase();
+      const isFinal=s2.includes('final')||s2.includes('issued');
+      const isPending=s2.includes('pending')||s2.includes('correction');
+      const statusBg=isFinal?'#EAF2ED':isPending?'#FBF0E0':'#EAF0F8';
+      const statusClr=isFinal?'#2D5238':isPending?'#A06820':'#2A507A';
+      html+=`<div style="border:1px solid var(--brd);border-radius:8px;overflow:hidden;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,0.04)">`;
+      html+=`<div style="background:var(--chr);padding:12px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px"><div><div style="font-size:12px;font-weight:600;color:#FAFAF7;letter-spacing:0.04em">${data.label||'Permit'}</div><div style="font-size:11px;color:rgba(250,250,247,0.5);margin-top:2px">${data.num}${data.workDescription?` · ${data.workDescription.substring(0,50)}…`:''}</div></div>${dUrl?`<a href="${dUrl}" target="_blank" style="font-size:10px;color:var(--gld);border:1px solid rgba(184,135,42,0.5);padding:3px 9px;border-radius:2px;text-decoration:none;white-space:nowrap;flex-shrink:0">View ↗</a>`:''}</div>`;
+      if(data.error){html+=`<div style="padding:12px 16px;color:var(--rdt);font-size:12px">Could not load: ${data.error}</div></div>`;return;}
+      if(data.currentStatus){html+=`<div style="padding:10px 16px;background:${statusBg};border-bottom:1px solid var(--brl);display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;font-weight:600;color:${statusClr}">${data.currentStatus}</span>${data.cofoStatus?`<span style="font-size:10px;color:var(--mut)">C of O: <strong>${data.cofoStatus}</strong></span>`:''}</div>`;}
       if(data.planCheck&&data.planCheck.length>0){
-        html+=`<div style="padding:10px 14px 0"><div style="font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);margin-bottom:8px">Plan Check History</div><div style="position:relative;padding-left:18px;margin-bottom:10px">`;
-        data.planCheck.forEach((row,i)=>{
-          const s=row.status.toLowerCase();
-          const dot=s.includes('approved')||s.includes('issued')?'var(--grn)':s.includes('correction')?'var(--amb)':'var(--blu)';
-          const isLast=i===data.planCheck.length-1;
-          html+=`<div style="position:relative;padding-bottom:${isLast?0:10}px"><div style="position:absolute;left:-18px;top:3px;width:9px;height:9px;border-radius:50%;background:${dot}"></div>${!isLast?'<div style="position:absolute;left:-14px;top:12px;bottom:0;width:1px;background:var(--brl)"></div>':''}<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap"><span style="font-size:12px;font-weight:500;color:var(--drk)">${row.status}</span><span style="font-size:10px;color:var(--mut)">${row.date}</span>${row.person?`<span style="font-size:10px;color:var(--mut)">${row.person}</span>`:''}</div></div>`;
-        });
+        html+=`<div style="padding:14px 16px"><div style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);font-weight:600;margin-bottom:12px">Plan Check History</div><div style="position:relative;padding-left:22px">`;
+        data.planCheck.forEach((row,i)=>{const s=row.status.toLowerCase();const dot=s.includes('approved')||s.includes('issued')?'#3D6B4A':s.includes('correction')?'#A06820':'#2A507A';const isLast=i===data.planCheck.length-1;html+=`<div style="position:relative;padding-bottom:${isLast?0:14}px"><div style="position:absolute;left:-22px;top:2px;width:10px;height:10px;border-radius:50%;background:${dot};border:2px solid #fff;box-shadow:0 0 0 1px ${dot}"></div>${!isLast?'<div style="position:absolute;left:-17px;top:12px;bottom:0;width:1px;background:var(--brl)"></div>':''}<div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><span style="font-size:13px;font-weight:500;color:var(--drk)">${row.status}</span>${row.date?`<span style="font-size:10px;color:var(--mut)">${row.date}</span>`:''} ${row.person?`<span style="font-size:10px;color:var(--mut)">${row.person}</span>`:''}</div></div>`;});
         html+=`</div></div>`;
       }
-      if(data.clearances&&data.clearances.length>0){
-        const cleared=data.clearances.filter(c=>c.status.toLowerCase().includes('clear')).length;
-        html+=`<div style="padding:7px 14px;border-top:1px solid var(--brl);font-size:11px;color:var(--mut)">Clearances: <strong style="color:var(--grt)">${cleared}/${data.clearances.length} cleared</strong></div>`;
-      }
+      if(data.clearances&&data.clearances.length>0){const cleared=data.clearances.filter(c=>c.status.toLowerCase().includes('clear')).length;const pct=Math.round(cleared/data.clearances.length*100);html+=`<div style="padding:10px 16px;border-top:1px solid var(--brl);display:flex;align-items:center;gap:10px"><span style="font-size:11px;color:var(--mid)">Clearances</span><div style="flex:1;height:4px;background:var(--brl);border-radius:2px"><div style="height:100%;width:${pct}%;background:var(--grn);border-radius:2px"></div></div><span style="font-size:11px;font-weight:600;color:var(--grt)">${cleared}/${data.clearances.length}</span></div>`;}
       html+=`</div>`;
     });
-    html+=`<div style="font-size:10px;color:var(--mut);margin-top:4px">Last synced: ${new Date().toLocaleString()}</div>`;
+    html+=`<div style="font-size:10px;color:var(--mut);margin-top:6px;text-align:right">Synced ${new Date().toLocaleTimeString()}</div>`;
     content.innerHTML=html;
-  }catch(e){content.innerHTML=`<div style="color:var(--rdt)">Error: ${e.message}</div>`;}
+  }catch(e){content.innerHTML=`<div style="color:var(--rdt);text-align:center;padding:12px">Error: ${e.message}</div>`;}
   finally{btn.textContent='🔄 Sync';btn.disabled=false;}
 }
 function phaseKey(phase,type){return'phase_'+type+'|'+phase;}
@@ -857,96 +808,45 @@ async function setPhaseDate(phase,type,dateStr){
   await upsertTask(st.proj.id,k,{date_completed:dateStr,status:type,note:phase});
   toast(type==='start'?'Phase started':'Phase completed');
   updPhaseHeader(phase);
-  updTimeline();
+  if(type==='complete')sendAlert(phase+' phase','Construction',true);
 }
 async function clearPhaseDate(phase,type){
   if(!st.proj)return;
   const k=phaseKey(phase,type);
-  if(st.taskCache[st.proj.id]?.[k]){
-    await sb.from('bh_tasks').delete().eq('project_id',st.proj.id).eq('task_key',k);
-    delete st.taskCache[st.proj.id][k];
-  }
-  toast('Date cleared');
-  updPhaseHeader(phase);
-  updTimeline();
+  if(st.taskCache[st.proj.id]?.[k]){await sb.from('bh_tasks').delete().eq('project_id',st.proj.id).eq('task_key',k);delete st.taskCache[st.proj.id][k];}
+  toast('Date cleared');updPhaseHeader(phase);
 }
 function daysBetween(d1,d2){return Math.round((new Date(d2)-new Date(d1))/(1000*60*60*24));}
 function daysFromToday(d1){return daysBetween(d1,new Date().toISOString().split('T')[0]);}
 function updPhaseHeader(phase){
   const el=document.getElementById('ph-'+phase.replace(/[^a-z0-9]/gi,'_'));
   if(!el)return;
-  const start=getPhaseDate(phase,'start');
-  const complete=getPhaseDate(phase,'complete');
+  const start=getPhaseDate(phase,'start'),complete=getPhaseDate(phase,'complete');
   const target=PHASE_TARGETS[phase]||0;
   el.innerHTML=renderPhaseControls(phase,start,complete,target);
 }
-function updTimeline(){
-  const el=document.getElementById('phase-timeline');
-  if(!el)return;
-  el.innerHTML=renderTimeline();
-}
 function renderPhaseControls(phase,start,complete,target){
   const elapsed=start?(complete?daysBetween(start,complete):daysFromToday(start)):null;
-  const pct=elapsed&&target?Math.min(100,Math.round((elapsed/target)*100)):0;
   const over=elapsed&&target&&elapsed>target;
-  const clr=!elapsed?'var(--mut)':over?'var(--rdt)':pct>75?'var(--amb)':'var(--grt)';
-  let html=`<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">`;
-  if(target){html+=`<span style="font-size:9px;color:var(--mut);border:1px solid var(--brl);padding:2px 6px;border-radius:2px">Target: ${target}d</span>`;}
-  if(elapsed!==null){html+=`<span style="font-size:9px;font-weight:600;color:${clr}">${elapsed}d${over?' ⚠️':''} elapsed</span>`;}
-  if(!start){
-    html+=`<span style="font-size:9px;color:var(--mut)">Not started</span>`;
-    html+=`<button onclick="setPhaseDate('${phase.replace(/'/g,"\\'")}','start','${new Date().toISOString().split('T')[0]}')" style="font-size:9px;background:var(--blk);color:#fff;border:none;padding:2px 8px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif">▶ Start</button>`;
-    html+=`<input type="date" onchange="setPhaseDate('${phase.replace(/'/g,"\\'")}','start',this.value)" style="font-size:9px;border:1px solid var(--brd);padding:2px 4px;border-radius:2px;font-family:'DM Sans',sans-serif" title="Set start date">`;
-  } else {
-    html+=`<span style="font-size:9px;color:var(--mid)">Started ${start}</span>`;
-    html+=`<button onclick="clearPhaseDate('${phase.replace(/'/g,"\\'")}','start')" style="font-size:9px;background:none;color:var(--mut);border:1px solid var(--brl);padding:2px 6px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif">✕</button>`;
-    if(!complete){
-      html+=`<button onclick="setPhaseDate('${phase.replace(/'/g,"\\'")}','complete','${new Date().toISOString().split('T')[0]}')" style="font-size:9px;background:var(--grn);color:#fff;border:none;padding:2px 8px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif">✓ Complete</button>`;
-      html+=`<input type="date" onchange="setPhaseDate('${phase.replace(/'/g,"\\'")}','complete',this.value)" style="font-size:9px;border:1px solid var(--brd);padding:2px 4px;border-radius:2px;font-family:'DM Sans',sans-serif" title="Set complete date">`;
-    } else {
-      html+=`<span style="font-size:9px;color:var(--grt);font-weight:600">✓ Done ${complete}</span>`;
-      html+=`<button onclick="clearPhaseDate('${phase.replace(/'/g,"\\'")}','complete')" style="font-size:9px;background:none;color:var(--mut);border:1px solid var(--brl);padding:2px 6px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif">✕</button>`;
-    }
-  }
-  html+=`</div>`;
-  return html;
+  const clr=!elapsed?'var(--mut)':over?'var(--rdt)':elapsed>target*0.75?'var(--amb)':'var(--grt)';
+  const ph=phase.replace(/'/g,"\\'");
+  const today=new Date().toISOString().split('T')[0];
+  if(!start){return`<div style="display:flex;align-items:center;gap:6px"><span style="font-size:9px;color:var(--mut)">${target?target+'d target':''}</span><button onclick="setPhaseDate('${ph}','start','${today}')" style="font-size:9px;background:var(--blk);color:#fff;border:none;padding:2px 8px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif">▶ Start</button><input type="date" onchange="setPhaseDate('${ph}','start',this.value)" style="font-size:9px;border:1px solid var(--brd);padding:2px 4px;border-radius:2px;font-family:'DM Sans',sans-serif;color:var(--mut)" title="Set start date"></div>`;}
+  if(!complete){return`<div style="display:flex;align-items:center;gap:6px"><span style="font-size:9px;font-weight:600;color:${clr}">Day ${elapsed}${over?' ⚠️':''} of ${target}</span><div style="width:60px;height:3px;background:var(--brl);border-radius:2px;display:inline-block;vertical-align:middle"><div style="height:100%;width:${Math.min(100,Math.round(elapsed/target*100))}%;background:${clr};border-radius:2px"></div></div><button onclick="setPhaseDate('${ph}','complete','${today}')" style="font-size:9px;background:var(--grn);color:#fff;border:none;padding:2px 8px;border-radius:2px;cursor:pointer;font-family:'DM Sans',sans-serif">✓ Done</button><input type="date" onchange="setPhaseDate('${ph}','complete',this.value)" style="font-size:9px;border:1px solid var(--brd);padding:2px 4px;border-radius:2px;font-family:'DM Sans',sans-serif;color:var(--mut)" title="Set complete date"><button onclick="clearPhaseDate('${ph}','start')" style="font-size:9px;background:none;color:var(--mut);border:none;padding:2px 4px;cursor:pointer;font-family:'DM Sans',sans-serif" title="Clear start">✕</button></div>`;}
+  return`<div style="display:flex;align-items:center;gap:6px"><span style="font-size:9px;color:var(--grt);font-weight:600">✓ ${elapsed}d${target?' / '+target+'d target':''}</span><button onclick="clearPhaseDate('${ph}','complete')" style="font-size:9px;background:none;color:var(--mut);border:none;padding:2px 4px;cursor:pointer;font-family:'DM Sans',sans-serif" title="Reopen">↩</button></div>`;
 }
-function renderTimeline(){
-  const shownPhases=['Pre-Construction / Admin','Site Prep','Demo','Sewer','Grading','Foundation','Pre Ordering','Framing','GC',"MEP's",'Waterproofing','Exterior','Insulation','Drywall','Tile','Paint','Finishes','Landscape/Hardscape','Final Trades','Final Admin'];
-  let projectStart=null;
-  shownPhases.forEach(p=>{const s=getPhaseDate(p,'start');if(s&&(!projectStart||s<projectStart))projectStart=s;});
-  const projectElapsed=projectStart?daysFromToday(projectStart):0;
-  const pct=Math.min(100,Math.round((projectElapsed/270)*100));
-  const overallClr=pct>100?'var(--rdt)':pct>80?'var(--amb)':'var(--grt)';
-  let html=`<div style="background:var(--wrm);border:1px solid var(--brd);border-radius:6px;padding:16px;margin-bottom:20px">`;
-  html+=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">`;
-  html+=`<div style="font-size:13px;font-weight:600;color:var(--blk)">Project Timeline</div>`;
-  html+=`<div style="font-size:11px;color:${overallClr};font-weight:600">${projectElapsed} days elapsed · Target: 270 days</div>`;
-  html+=`</div>`;
-  html+=`<div style="height:5px;background:var(--brl);border-radius:3px;margin-bottom:14px"><div style="height:100%;width:${pct}%;background:${overallClr};border-radius:3px;transition:width 0.4s"></div></div>`;
-  shownPhases.forEach(phase=>{
-    const s=getPhaseDate(phase,'start'),c=getPhaseDate(phase,'complete');
-    const target=PHASE_TARGETS[phase]||14;
-    const elapsed=s?(c?daysBetween(s,c):daysFromToday(s)):null;
-    const pct2=elapsed?Math.min(100,Math.round((elapsed/target)*100)):0;
-    const over=elapsed&&elapsed>target;
-    const clr=!elapsed?'var(--brl)':over?'var(--rdt)':pct2>75?'var(--amb)':'var(--grn)';
-    const dot=!s?'⬜':!c?'🔵':'✅';
-    html+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:5px">`;
-    html+=`<div style="font-size:10px;color:var(--mid);width:155px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${dot} ${phase}</div>`;
-    html+=`<div style="flex:1;height:4px;background:var(--brl);border-radius:2px">${elapsed?`<div style="height:100%;width:${pct2}%;background:${clr};border-radius:2px"></div>`:''}</div>`;
-    html+=`<div style="font-size:9px;color:${over?'var(--rdt)':'var(--mut)'};width:72px;text-align:right;flex-shrink:0;white-space:nowrap">${elapsed?elapsed+'d / '+target+'d':target+'d target'}</div>`;
-    html+=`</div>`;
-  });
-  html+=`</div>`;
-  return html;
+async function sendAlert(item,tab,isPhase=false){
+  if(!st.proj)return;
+  try{await fetch('/api/send-alert',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({project:st.proj.name,address:st.proj.address||'',tab,item,isPhase,completedBy:st.user.name,timestamp:new Date().toLocaleString()})});}
+  catch(e){console.log('Alert send failed:',e.message);}
+}
+async function checkTabComplete(tab){
+  const{done,total}=countTab(tab);
+  if(total>0&&done===total){await sendAlert(tab+' checklist',tab,false);toast('✉️ Alert sent — '+tab+' complete!',3000);}
 }
 function getPermits(proj){
   if(!proj?.permit_number)return[];
-  return proj.permit_number.split('||').filter(Boolean).map(p=>{
-    const pp=p.split(':');
-    return pp.length===2?{label:pp[0],num:pp[1]}:{label:'Main',num:p};
-  }).filter(p=>p.num);
+  return proj.permit_number.split('||').filter(Boolean).map(p=>{const pp=p.split(':');return pp.length===2?{label:pp[0],num:pp[1]}:{label:'Main',num:p};}).filter(p=>p.num);
 }
 function closeM(){const b=$('mbg');if(b)b.classList.remove('open');}
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeM();});
