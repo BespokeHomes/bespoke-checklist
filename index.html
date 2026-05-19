@@ -530,7 +530,7 @@ function countTab(tab){
 }
 async function loadProjects(){const{data,error}=await sb.from('bh_projects').select('*').order('created_at',{ascending:false});if(error)return[];st.projects=data||[];}
 async function loadTasks(projId){if(!projId)return;if(st.taskCache[projId])return;const{data}=await sb.from('bh_tasks').select('*').eq('project_id',projId);const map={};(data||[]).forEach(t=>map[t.task_key]=t);st.taskCache[projId]=map;}
-async function upsertTask(projId,taskKey,updates){const existing=st.taskCache[projId]?.[taskKey];const row={project_id:projId,task_key:taskKey,updated_by:st.user.initials,updated_by_name:st.user.name,updated_at:new Date().toISOString(),...updates};if(existing){await sb.from('bh_tasks').update(row).eq('project_id',projId).eq('task_key',taskKey);}else{await sb.from('bh_tasks').insert(row);}if(!st.taskCache[projId])st.taskCache[projId]={};st.taskCache[projId][taskKey]={...existing,...row};}
+async function upsertTask(projId,taskKey,updates){const existing=st.taskCache[projId]?.[taskKey];const row={project_id:projId,task_key:taskKey,updated_by:st.user?.initials||'LADBS',updated_by_name:st.user?.name||'LADBS Auto-sync',updated_at:new Date().toISOString(),...updates};if(existing){await sb.from('bh_tasks').update(row).eq('project_id',projId).eq('task_key',taskKey);}else{await sb.from('bh_tasks').insert(row);}if(!st.taskCache[projId])st.taskCache[projId]={};st.taskCache[projId][taskKey]={...existing,...row};}
 function exportProject(){
   if(!st.proj)return;
   const wb=XLSX.utils.book_new();
@@ -767,22 +767,74 @@ async function syncLADBS(){
   if(!permits.length){content.innerHTML='<div style="color:var(--mut)">No permits configured.</div>';btn.textContent='🔄 Refresh';btn.disabled=false;return;}
   try{
     const results=await Promise.all(permits.map(async p=>{try{const resp=await fetch('/api/ladbs?permit='+encodeURIComponent(p.num));const data=await resp.json();return{label:p.label,num:p.num,...data};}catch(e){return{label:p.label,num:p.num,error:e.message};}}));
+    const INSP_MAP=[
+      {kw:'sewer',task:'Expose sewer and cap it'},
+      {kw:'grading',task:'Submit compaction report to grading'},
+      {kw:'footing',task:'Pour footings'},
+      {kw:'foundation/slab',task:'Pour slab'},
+      {kw:'slab',task:'Pour slab'},
+      {kw:'framing',task:'Start framing'},
+      {kw:'rough electric',task:'Electrical'},
+      {kw:'rough plumbing',task:'Plumbing'},
+      {kw:'rough mechanical',task:'Mechanical (HVAC)'},
+      {kw:'fire sprinkler',task:'Fire sprinklers'},
+      {kw:'insulation',task:'Insulate entire house'},
+      {kw:'drywall',task:'Start drywall'},
+      {kw:'roof',task:'Install upper roof'},
+      {kw:'final electric',task:'Electrical',phase:'Final Trades'},
+      {kw:'final plumbing',task:'Plumbing',phase:'Final Trades'},
+      {kw:'final mechanical',task:'HVAC'},
+    ];
+    for(const data of results){
+      if(data.error)continue;
+      const allInsp=[...(data.history||[])];
+      for(const ins of allInsp){
+        const iname=ins.name.toLowerCase();
+        const istat=ins.status.toLowerCase();
+        const isApproved=istat.includes('approv')||istat.includes('pass');
+        if(!isApproved)continue;
+        for(const map of INSP_MAP){
+          if(iname.includes(map.kw)){
+            const conItems=DATA['Construction'];
+            const matchIdx=conItems.findIndex(item=>{
+              const tMatch=item.t.toLowerCase().includes(map.task.toLowerCase())||map.task.toLowerCase().includes(item.t.toLowerCase().substring(0,15));
+              const phaseMatch=!map.phase||item.s===map.phase;
+              return tMatch&&phaseMatch&&item.o==='g';
+            });
+            if(matchIdx>=0){
+              const k='Construction|'+matchIdx;
+              const existing=st.taskCache[st.proj.id]?.[k];
+              if(!existing||existing.status!=='complete'){
+                await upsertTask(st.proj.id,k,{status:'complete',date_completed:ins.date||fd(),updated_by:'LADBS',updated_by_name:'LADBS Auto-sync'});
+              }
+            }
+          }
+        }
+      }
+    }
     let html='';
-    results.forEach(data=>{
+    results.forEach((data,ri)=>{
       const _pp=data.num.split('-');
       const directUrl=_pp.length===3?'https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1='+_pp[0]+'&id2='+_pp[1]+'&id3='+_pp[2]:'';
-      html+=`<div style="border:1px solid var(--brd);border-radius:6px;overflow:hidden;margin-bottom:20px">`;
-      html+=`<div style="background:var(--chr);padding:10px 14px;display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:600;color:#FAFAF7">${data.label||'Permit'} — ${data.num}</div>${data.workDescription?`<div style="font-size:10px;color:rgba(250,250,247,0.45);margin-top:2px">${data.workDescription.substring(0,80)}</div>`:''}</div>${directUrl?`<a href="${directUrl}" target="_blank" style="font-size:10px;color:var(--gld);border:1px solid var(--gld);padding:3px 8px;border-radius:3px;text-decoration:none;white-space:nowrap">Open ↗</a>`:''}</div>`;
-      if(data.error){html+=`<div style="padding:12px 14px;color:var(--rdt);font-size:12px">Error: ${data.error}</div></div>`;return;}
-      if(data.currentStatus){const s2=data.currentStatus.toLowerCase();const bg=s2.includes('final')||s2.includes('issued')?'var(--grb)':s2.includes('pending')?'var(--abb)':'var(--blb)';const clr=s2.includes('final')||s2.includes('issued')?'var(--grt)':s2.includes('pending')?'var(--amb)':'var(--blu)';html+=`<div style="background:${bg};padding:8px 14px;font-size:11px;font-weight:600;color:${clr};border-bottom:1px solid var(--brl)">Status: ${data.currentStatus}${data.cofoStatus?' · C of O: '+data.cofoStatus:''}</div>`;}
+      const cid='la-card-'+ri;
+      html+=`<div style="border:1px solid var(--brd);border-radius:6px;overflow:hidden;margin-bottom:16px">`;
+      html+=`<div style="background:var(--chr);padding:10px 14px;display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="togPCCard('${cid}')"><div><div style="font-size:13px;font-weight:600;color:#FAFAF7">${data.label||'Permit'} — ${data.num}</div>${data.workDescription?`<div style="font-size:10px;color:rgba(250,250,247,0.45);margin-top:2px">${data.workDescription.substring(0,80)}</div>`:''}</div><div style="display:flex;align-items:center;gap:8px">${directUrl?`<a href="${directUrl}" target="_blank" onclick="event.stopPropagation()" style="font-size:10px;color:var(--gld);border:1px solid var(--gld);padding:3px 8px;border-radius:3px;text-decoration:none;white-space:nowrap">Open ↗</a>`:''}<span id="${cid}-arrow" style="font-size:11px;color:rgba(250,250,247,0.4)">▼</span></div></div>`;
+      if(data.error){html+=`<div id="${cid}" style="padding:12px 14px;color:var(--rdt);font-size:12px">Error: ${data.error}</div></div>`;return;}
+      html+=`<div id="${cid}">`;
+      if(data.currentStatus){const s2=data.currentStatus.toLowerCase();const bg=s2.includes('final')||s2.includes('issued')?'var(--grb)':s2.includes('pending')?'var(--abb)':'var(--blb)';const clr=s2.includes('final')||s2.includes('issued')?'var(--grt)':s2.includes('pending')?'var(--amb)':'var(--blu)';const bdr=s2.includes('final')||s2.includes('issued')?'var(--grn)':s2.includes('pending')?'var(--amb)':'var(--blu)';html+=`<div style="padding:8px 14px;border-bottom:1px solid var(--brl);display:flex;align-items:center;gap:10px"><span style="font-size:11px;font-weight:700;color:${clr};border:1px solid ${bdr};padding:2px 10px;border-radius:10px;background:${bg}">Status: ${data.currentStatus}</span>${data.cofoStatus?`<span style="font-size:11px;color:var(--mut)">C of O: ${data.cofoStatus}</span>`:''}</div>`;}
       if(data.inspector){html+=`<div style="padding:8px 14px;border-bottom:1px solid var(--brl);font-size:11px;color:var(--mid)">👷 <strong>${data.inspector}</strong></div>`;}
-      if(data.pending&&data.pending.length>0){html+=`<div style="padding:10px 14px 0"><div style="font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);margin-bottom:6px">Pending</div>`;data.pending.forEach(ins=>{html+=`<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--brl)"><div style="flex:1;font-size:13px;color:var(--drk)">${ins.name}</div><div style="font-size:11px;color:var(--amb)">${ins.date||'TBD'}</div></div>`;});html+=`</div>`;}
-      if(data.history&&data.history.length>0){html+=`<div style="padding:10px 14px 0"><div style="font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);margin-bottom:6px">Inspection History</div>`;data.history.forEach((ins,i)=>{const sl=ins.status.toLowerCase();const isPass=sl.includes('approv')&&!sl.includes('partial')&&!sl.includes('conditional');const isPartial=sl.includes('partial')||sl.includes('conditional');const isFail=sl.includes('fail')||sl.includes('correction');const bg=isPass?'var(--grb)':isPartial?'var(--abb)':isFail?'var(--rdb)':'var(--wht)';const clr=isPass?'var(--grt)':isPartial?'var(--amb)':isFail?'var(--rdt)':'var(--mut)';const bdclr=isPass?'var(--grn)':isPartial?'var(--amb)':isFail?'var(--red)':'var(--brd)';html+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:${i<data.history.length-1?'1px solid var(--brl)':'none'}"><div style="flex:1;font-size:13px;color:var(--drk)">${ins.name}</div><div style="font-size:11px;color:var(--mut);white-space:nowrap">${ins.date}</div><div style="font-size:11px;background:${bg};color:${clr};padding:2px 8px;border-radius:10px;border:1px solid ${bdclr};white-space:nowrap">${ins.status}</div>${ins.inspector?`<div style="font-size:10px;color:var(--mut);white-space:nowrap">${ins.inspector}</div>`:''}</div>`;});html+=`</div>`;}
-      html+=`<div style="padding:8px 14px"></div></div>`;
+      if(data.pending&&data.pending.length>0){html+=`<div style="padding:10px 14px 4px"><div style="font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);margin-bottom:6px">Pending</div>`;data.pending.forEach(ins=>{html+=`<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--brl)"><div style="flex:1;font-size:13px;color:var(--drk)">${ins.name}</div><div style="font-size:11px;color:var(--amb)">${ins.date||'TBD'}</div></div>`;});html+=`</div>`;}
+      if(data.history&&data.history.length>0){
+        html+=`<div style="padding:10px 14px 4px"><div style="font-size:8.5px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);margin-bottom:6px">Inspection History</div>`;
+        data.history.forEach((ins,i)=>{const sl=ins.status.toLowerCase();const isPass=sl.includes('approv')&&!sl.includes('partial')&&!sl.includes('conditional');const isPartial=sl.includes('partial')||sl.includes('conditional');const isFail=sl.includes('fail')||sl.includes('correction');const bg=isPass?'var(--grb)':isPartial?'var(--abb)':isFail?'var(--rdb)':'var(--wht)';const clr=isPass?'var(--grt)':isPartial?'var(--amb)':isFail?'var(--rdt)':'var(--mut)';const bdclr=isPass?'var(--grn)':isPartial?'var(--amb)':isFail?'var(--red)':'var(--brd)';html+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:${i<data.history.length-1?'1px solid var(--brl)':'none'}"><div style="flex:1;font-size:13px;color:var(--drk)">${ins.name}</div><div style="font-size:11px;color:var(--mut);white-space:nowrap">${ins.date}</div><div style="font-size:11px;background:${bg};color:${clr};padding:2px 8px;border-radius:10px;border:1px solid ${bdclr};white-space:nowrap">${ins.status}</div>${ins.inspector?`<div style="font-size:10px;color:var(--mut);white-space:nowrap">${ins.inspector}</div>`:''}</div>`;});
+        html+=`</div>`;
+      }
+      html+=`<div style="padding:4px 14px"></div></div></div>`;
     });
-    if(!html){html='<div style="color:var(--mut);padding:20px 0;">No data found yet.</div>';}
-    html+=`<div style="font-size:10px;color:var(--mut);margin-top:4px">Last synced: ${new Date().toLocaleString()}</div>`;
+    if(!html){html='<div style="color:var(--mut);padding:20px 0;text-align:center;">No data found yet.</div>';}
+    html+=`<div style="font-size:10px;color:var(--mut);margin-top:4px">Last synced: ${new Date().toLocaleString()} · Construction checklist auto-updated</div>`;
     content.innerHTML=html;
+    updProg();
   }catch(err){content.innerHTML=`<div style="color:var(--rdt);padding:12px 0;">Could not reach LADBS. <a href="https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr" target="_blank" style="color:var(--blu)">Open LADBS directly ↗</a></div>`;}
   finally{if(btn){btn.textContent='🔄 Refresh';btn.disabled=false;}}
 }
@@ -794,8 +846,44 @@ async function syncPlanCheck(){
   if(!permits.length){content.innerHTML='<div style="color:var(--mut);text-align:center;padding:12px">No permits configured. Add via ✏️ Edit Project.</div>';btn.textContent='🔄 Refresh';btn.disabled=false;return;}
   try{
     const results=await Promise.all(permits.map(async p=>{try{const resp=await fetch('/api/ladbs?permit='+encodeURIComponent(p.num));const data=await resp.json();return{label:p.label,num:p.num,...data};}catch(e){return{label:p.label,num:p.num,error:e.message};}}));
+    const PP_MAP=[
+      {keywords:['submitted','assigned to plan check'],idx:13,status:'in-progress'},
+      {keywords:['corrections issued','corrections'],idx:17,status:'completed'},
+      {keywords:['resubmit','applicant returned'],idx:24,status:'in-progress'},
+      {keywords:['plan check approved','approved'],idx:13,status:'completed'},
+      {keywords:['issued'],idx:25,status:'completed'},
+    ];
+    const CLR_MAP={'bureau of engineering':19,'boe':19,'planning':20,'coastal':20,'fire department':21,'lafd':21,'transportation':22,'dot':22,'bureau of street services':23,'bss':23,'urban forestry':23};
+    for(const data of results){
+      if(data.error)continue;
+      if(data.planCheck){
+        for(const row of data.planCheck){
+          const s=row.status.toLowerCase();
+          for(const map of PP_MAP){
+            if(map.keywords.some(k=>s.includes(k))){
+              const k='Plans & Permits|'+map.idx;
+              const existing=st.taskCache[st.proj.id]?.[k];
+              if(!existing||existing.status!=='completed'){await upsertTask(st.proj.id,k,{status:map.status,date_completed:row.date||fd(),updated_by:'LADBS',updated_by_name:'LADBS Auto-sync'});}
+            }
+          }
+        }
+      }
+      if(data.clearances){
+        for(const clr of data.clearances){
+          const name=clr.name.toLowerCase();
+          for(const[key,idx] of Object.entries(CLR_MAP)){
+            if(name.includes(key)){
+              const k='Plans & Permits|'+idx;
+              const isCleared=clr.status.toLowerCase().includes('clear');
+              const existing=st.taskCache[st.proj.id]?.[k];
+              if(isCleared&&(!existing||existing.status!=='completed')){await upsertTask(st.proj.id,k,{status:'completed',date_completed:clr.date||fd(),updated_by:'LADBS',updated_by_name:'LADBS Auto-sync'});}
+            }
+          }
+        }
+      }
+    }
     let html='';
-    results.forEach(data=>{
+    results.forEach((data,ri)=>{
       const _pp=data.num.split('-');
       const dUrl=_pp.length===3?'https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1='+_pp[0]+'&id2='+_pp[1]+'&id3='+_pp[2]:'';
       const s2=(data.currentStatus||'').toLowerCase();
@@ -804,40 +892,23 @@ async function syncPlanCheck(){
       const statusBg=isFinal?'var(--grb)':isPending?'var(--abb)':'var(--blb)';
       const statusClr=isFinal?'var(--grt)':isPending?'var(--amb)':'var(--blu)';
       const statusBdr=isFinal?'var(--grn)':isPending?'var(--amb)':'var(--blu)';
-      html+=`<div style="border:1px solid var(--brd);border-radius:6px;overflow:hidden;margin-bottom:16px">`;
-      html+=`<div style="background:var(--chr);padding:10px 16px;display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:600;color:#FAFAF7">${data.label||'Permit'} — ${data.num}</div>${data.workDescription?`<div style="font-size:10px;color:rgba(250,250,247,0.45);margin-top:2px">${data.workDescription.substring(0,70)}</div>`:''}</div>${dUrl?`<a href="${dUrl}" target="_blank" style="font-size:10px;color:var(--gld);border:1px solid var(--gld);padding:3px 8px;border-radius:3px;text-decoration:none;white-space:nowrap">View ↗</a>`:''}</div>`;
-      if(data.error){html+=`<div style="padding:12px 16px;color:var(--rdt);font-size:12px">Could not load: ${data.error}</div></div>`;return;}
-      if(data.currentStatus){
-        html+=`<div style="padding:9px 16px;background:${statusBg};border-bottom:1px solid var(--brl);display:flex;align-items:center;gap:10px">`;
-        html+=`<span style="font-size:11px;font-weight:700;color:${statusClr};border:1px solid ${statusBdr};padding:2px 10px;border-radius:10px;background:${statusBg}">${data.currentStatus}</span>`;
-        if(data.cofoStatus)html+=`<span style="font-size:10px;color:var(--mut)">C of O: <strong>${data.cofoStatus}</strong></span>`;
-        html+=`</div>`;
-      }
+      const cid='pc-card-'+ri;
+      html+=`<div style="border:1px solid var(--brd);border-radius:6px;overflow:hidden;margin-bottom:14px">`;
+      html+=`<div style="background:var(--chr);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="togPCCard('${cid}')"><div><div style="font-size:13px;font-weight:600;color:#FAFAF7">${data.label||'Permit'} — ${data.num}</div>${data.workDescription?`<div style="font-size:10px;color:rgba(250,250,247,0.45);margin-top:2px">${data.workDescription.substring(0,70)}</div>`:''}</div><div style="display:flex;align-items:center;gap:8px">${dUrl?`<a href="${dUrl}" target="_blank" onclick="event.stopPropagation()" style="font-size:10px;color:var(--gld);border:1px solid var(--gld);padding:3px 8px;border-radius:3px;text-decoration:none;white-space:nowrap">View ↗</a>`:''}<span id="${cid}-arrow" style="font-size:11px;color:rgba(250,250,247,0.4)">▼</span></div></div>`;
+      if(data.error){html+=`<div id="${cid}" style="padding:12px 16px;color:var(--rdt);font-size:12px">Could not load: ${data.error}</div></div>`;return;}
+      html+=`<div id="${cid}">`;
+      if(data.currentStatus){html+=`<div style="padding:9px 16px;border-bottom:1px solid var(--brl);display:flex;align-items:center;gap:10px"><span style="font-size:11px;font-weight:700;color:${statusClr};border:1px solid ${statusBdr};padding:2px 10px;border-radius:10px;background:${statusBg}">${data.currentStatus}</span>${data.cofoStatus?`<span style="font-size:10px;color:var(--mut)">C of O: <strong>${data.cofoStatus}</strong></span>`:''}</div>`;}
       if(data.planCheck&&data.planCheck.length>0){
         html+=`<div style="padding:14px 16px"><div style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);font-weight:600;margin-bottom:12px">Plan Check History</div><div style="position:relative;padding-left:22px">`;
-        data.planCheck.forEach((row,i)=>{
-          const s=row.status.toLowerCase();
-          const dot=s.includes('approved')||s.includes('issued')?'var(--grn)':s.includes('correction')?'var(--amb)':'var(--blu)';
-          const isLast=i===data.planCheck.length-1;
-          html+=`<div style="position:relative;padding-bottom:${isLast?0:14}px">`;
-          html+=`<div style="position:absolute;left:-22px;top:3px;width:10px;height:10px;border-radius:50%;background:${dot}"></div>`;
-          if(!isLast)html+=`<div style="position:absolute;left:-17px;top:13px;bottom:0;width:1px;background:var(--brl)"></div>`;
-          html+=`<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap"><span style="font-size:13px;font-weight:500;color:var(--drk)">${row.status}</span>`;
-          if(row.date)html+=`<span style="font-size:10px;color:var(--mut)">${row.date}</span>`;
-          if(row.person)html+=`<span style="font-size:10px;color:var(--mut)">${row.person}</span>`;
-          html+=`</div></div>`;
-        });
+        data.planCheck.forEach((row,i)=>{const s=row.status.toLowerCase();const dot=s.includes('approved')||s.includes('issued')?'var(--grn)':s.includes('correction')?'var(--amb)':'var(--blu)';const isLast=i===data.planCheck.length-1;html+=`<div style="position:relative;padding-bottom:${isLast?0:12}px"><div style="position:absolute;left:-22px;top:3px;width:10px;height:10px;border-radius:50%;background:${dot}"></div>${!isLast?'<div style="position:absolute;left:-17px;top:13px;bottom:0;width:1px;background:var(--brl)"></div>':''}<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap"><span style="font-size:13px;font-weight:500;color:var(--drk)">${row.status}</span>${row.date?`<span style="font-size:10px;color:var(--mut)">${row.date}</span>`:''} ${row.person?`<span style="font-size:10px;color:var(--mut)">${row.person}</span>`:''}</div></div>`;});
         html+=`</div></div>`;
       }
-      if(data.clearances&&data.clearances.length>0){
-        const cleared=data.clearances.filter(c=>c.status.toLowerCase().includes('clear')).length;
-        const pct=Math.round(cleared/data.clearances.length*100);
-        html+=`<div style="padding:9px 16px;border-top:1px solid var(--brl);display:flex;align-items:center;gap:10px"><span style="font-size:11px;color:var(--mid);white-space:nowrap">Clearances</span><div style="flex:1;height:4px;background:var(--brl);border-radius:2px"><div style="height:100%;width:${pct}%;background:var(--grn);border-radius:2px"></div></div><span style="font-size:11px;font-weight:600;color:var(--grt);white-space:nowrap">${cleared}/${data.clearances.length}</span></div>`;
-      }
-      html+=`</div>`;
+      if(data.clearances&&data.clearances.length>0){const cleared=data.clearances.filter(c=>c.status.toLowerCase().includes('clear')).length;const pct=Math.round(cleared/data.clearances.length*100);html+=`<div style="padding:9px 16px;border-top:1px solid var(--brl);display:flex;align-items:center;gap:10px"><span style="font-size:11px;color:var(--mid);white-space:nowrap">Clearances</span><div style="flex:1;height:4px;background:var(--brl);border-radius:2px"><div style="height:100%;width:${pct}%;background:var(--grn);border-radius:2px"></div></div><span style="font-size:11px;font-weight:600;color:var(--grt);white-space:nowrap">${cleared}/${data.clearances.length}</span></div>`;}
+      html+=`</div></div>`;
     });
-    html+=`<div style="font-size:10px;color:var(--mut);margin-top:6px;text-align:right">Synced ${new Date().toLocaleTimeString()}</div>`;
+    html+=`<div style="font-size:10px;color:var(--mut);margin-top:6px;text-align:right">Synced ${new Date().toLocaleTimeString()} · Checklist auto-updated</div>`;
     content.innerHTML=html;
+    updProg();
   }catch(e){content.innerHTML=`<div style="color:var(--rdt);text-align:center;padding:12px">Error: ${e.message}</div>`;}
   finally{btn.textContent='🔄 Refresh';btn.disabled=false;}
 }
@@ -884,6 +955,14 @@ async function sendAlert(item,tab,isPhase=false){
 async function checkTabComplete(tab){
   const{done,total}=countTab(tab);
   if(total>0&&done===total){await sendAlert(tab+' checklist',tab,false);toast('✉️ Alert sent — '+tab+' complete!',3000);}
+}
+function togPCCard(id){
+  const el=document.getElementById(id);
+  const arrow=document.getElementById(id+'-arrow');
+  if(!el)return;
+  const open=el.style.display!=='none';
+  el.style.display=open?'none':'block';
+  if(arrow)arrow.textContent=open?'▶':'▼';
 }
 function getPermits(proj){
   if(!proj?.permit_number)return[];
