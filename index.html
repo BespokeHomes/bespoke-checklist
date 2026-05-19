@@ -801,18 +801,39 @@ async function syncPlanCheck(){
       const s2=(data.currentStatus||'').toLowerCase();
       const isFinal=s2.includes('final')||s2.includes('issued');
       const isPending=s2.includes('pending')||s2.includes('correction');
-      const statusBg=isFinal?'#EAF2ED':isPending?'#FBF0E0':'#EAF0F8';
-      const statusClr=isFinal?'#2D5238':isPending?'#A06820':'#2A507A';
-      html+=`<div style="border:1px solid var(--brd);border-radius:8px;overflow:hidden;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,0.04)">`;
-      html+=`<div style="background:var(--chr);padding:12px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px"><div><div style="font-size:12px;font-weight:600;color:#FAFAF7;letter-spacing:0.04em">${data.label||'Permit'}</div><div style="font-size:11px;color:rgba(250,250,247,0.5);margin-top:2px">${data.num}${data.workDescription?` · ${data.workDescription.substring(0,50)}…`:''}</div></div>${dUrl?`<a href="${dUrl}" target="_blank" style="font-size:10px;color:var(--gld);border:1px solid rgba(184,135,42,0.5);padding:3px 9px;border-radius:2px;text-decoration:none;white-space:nowrap;flex-shrink:0">View ↗</a>`:''}</div>`;
+      const statusBg=isFinal?'var(--grb)':isPending?'var(--abb)':'var(--blb)';
+      const statusClr=isFinal?'var(--grt)':isPending?'var(--amb)':'var(--blu)';
+      const statusBdr=isFinal?'var(--grn)':isPending?'var(--amb)':'var(--blu)';
+      html+=`<div style="border:1px solid var(--brd);border-radius:6px;overflow:hidden;margin-bottom:16px">`;
+      html+=`<div style="background:var(--chr);padding:10px 16px;display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:600;color:#FAFAF7">${data.label||'Permit'} — ${data.num}</div>${data.workDescription?`<div style="font-size:10px;color:rgba(250,250,247,0.45);margin-top:2px">${data.workDescription.substring(0,70)}</div>`:''}</div>${dUrl?`<a href="${dUrl}" target="_blank" style="font-size:10px;color:var(--gld);border:1px solid var(--gld);padding:3px 8px;border-radius:3px;text-decoration:none;white-space:nowrap">View ↗</a>`:''}</div>`;
       if(data.error){html+=`<div style="padding:12px 16px;color:var(--rdt);font-size:12px">Could not load: ${data.error}</div></div>`;return;}
-      if(data.currentStatus){html+=`<div style="padding:10px 16px;background:${statusBg};border-bottom:1px solid var(--brl);display:flex;align-items:center;justify-content:space-between"><span style="font-size:12px;font-weight:600;color:${statusClr}">${data.currentStatus}</span>${data.cofoStatus?`<span style="font-size:10px;color:var(--mut)">C of O: <strong>${data.cofoStatus}</strong></span>`:''}</div>`;}
+      if(data.currentStatus){
+        html+=`<div style="padding:9px 16px;background:${statusBg};border-bottom:1px solid var(--brl);display:flex;align-items:center;gap:10px">`;
+        html+=`<span style="font-size:11px;font-weight:700;color:${statusClr};border:1px solid ${statusBdr};padding:2px 10px;border-radius:10px;background:${statusBg}">${data.currentStatus}</span>`;
+        if(data.cofoStatus)html+=`<span style="font-size:10px;color:var(--mut)">C of O: <strong>${data.cofoStatus}</strong></span>`;
+        html+=`</div>`;
+      }
       if(data.planCheck&&data.planCheck.length>0){
         html+=`<div style="padding:14px 16px"><div style="font-size:9px;letter-spacing:0.12em;text-transform:uppercase;color:var(--mut);font-weight:600;margin-bottom:12px">Plan Check History</div><div style="position:relative;padding-left:22px">`;
-        data.planCheck.forEach((row,i)=>{const s=row.status.toLowerCase();const dot=s.includes('approved')||s.includes('issued')?'#3D6B4A':s.includes('correction')?'#A06820':'#2A507A';const isLast=i===data.planCheck.length-1;html+=`<div style="position:relative;padding-bottom:${isLast?0:14}px"><div style="position:absolute;left:-22px;top:2px;width:10px;height:10px;border-radius:50%;background:${dot};border:2px solid #fff;box-shadow:0 0 0 1px ${dot}"></div>${!isLast?'<div style="position:absolute;left:-17px;top:12px;bottom:0;width:1px;background:var(--brl)"></div>':''}<div style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap"><span style="font-size:13px;font-weight:500;color:var(--drk)">${row.status}</span>${row.date?`<span style="font-size:10px;color:var(--mut)">${row.date}</span>`:''} ${row.person?`<span style="font-size:10px;color:var(--mut)">${row.person}</span>`:''}</div></div>`;});
+        data.planCheck.forEach((row,i)=>{
+          const s=row.status.toLowerCase();
+          const dot=s.includes('approved')||s.includes('issued')?'var(--grn)':s.includes('correction')?'var(--amb)':'var(--blu)';
+          const isLast=i===data.planCheck.length-1;
+          html+=`<div style="position:relative;padding-bottom:${isLast?0:14}px">`;
+          html+=`<div style="position:absolute;left:-22px;top:3px;width:10px;height:10px;border-radius:50%;background:${dot}"></div>`;
+          if(!isLast)html+=`<div style="position:absolute;left:-17px;top:13px;bottom:0;width:1px;background:var(--brl)"></div>`;
+          html+=`<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap"><span style="font-size:13px;font-weight:500;color:var(--drk)">${row.status}</span>`;
+          if(row.date)html+=`<span style="font-size:10px;color:var(--mut)">${row.date}</span>`;
+          if(row.person)html+=`<span style="font-size:10px;color:var(--mut)">${row.person}</span>`;
+          html+=`</div></div>`;
+        });
         html+=`</div></div>`;
       }
-      if(data.clearances&&data.clearances.length>0){const cleared=data.clearances.filter(c=>c.status.toLowerCase().includes('clear')).length;const pct=Math.round(cleared/data.clearances.length*100);html+=`<div style="padding:10px 16px;border-top:1px solid var(--brl);display:flex;align-items:center;gap:10px"><span style="font-size:11px;color:var(--mid)">Clearances</span><div style="flex:1;height:4px;background:var(--brl);border-radius:2px"><div style="height:100%;width:${pct}%;background:var(--grn);border-radius:2px"></div></div><span style="font-size:11px;font-weight:600;color:var(--grt)">${cleared}/${data.clearances.length}</span></div>`;}
+      if(data.clearances&&data.clearances.length>0){
+        const cleared=data.clearances.filter(c=>c.status.toLowerCase().includes('clear')).length;
+        const pct=Math.round(cleared/data.clearances.length*100);
+        html+=`<div style="padding:9px 16px;border-top:1px solid var(--brl);display:flex;align-items:center;gap:10px"><span style="font-size:11px;color:var(--mid);white-space:nowrap">Clearances</span><div style="flex:1;height:4px;background:var(--brl);border-radius:2px"><div style="height:100%;width:${pct}%;background:var(--grn);border-radius:2px"></div></div><span style="font-size:11px;font-weight:600;color:var(--grt);white-space:nowrap">${cleared}/${data.clearances.length}</span></div>`;
+      }
       html+=`</div>`;
     });
     html+=`<div style="font-size:10px;color:var(--mut);margin-top:6px;text-align:right">Synced ${new Date().toLocaleTimeString()}</div>`;
