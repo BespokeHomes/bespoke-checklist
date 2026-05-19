@@ -595,9 +595,8 @@ const isPPTab=tab==='Plans & Permits';
         <button onclick="syncPlanCheck()" id="pc-sync-btn" style="background:var(--blu);color:#fff;border:none;padding:7px 16px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">🔄 Refresh</button>
       </div>
     </div>
-    <div id="plancheck-content" style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Loading live plan check status from LADBS...</div></div>`;
+   <div id="plancheck-content" style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Loading live plan check status from LADBS...</div></div>`;
     h+=`<div style="margin-top:24px;margin-bottom:8px;padding-bottom:8px;border-bottom:2px solid var(--blk);display:flex;gap:8px"><div style="flex:2;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut);font-weight:600">Task</div><div style="flex:0 0 110px;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut);font-weight:600">Who</div><div style="flex:0 0 130px;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut);font-weight:600">Status</div></div>`;
-  }iv></div>`;
   }
   if(tab==='Inspections'){
     if(!pd?.permit_number){h+='<div style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Add a permit number via ✏️ Edit Project to sync live LADBS inspection data here.</div>';}
