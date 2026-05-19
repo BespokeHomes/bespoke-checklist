@@ -582,8 +582,9 @@ function rTab(){
   const pd=st.proj,tab=st.tab,items=DATA[tab];const cache=st.taskCache[pd.id]||{};const{done:dc,total:tt}=countTab(tab);
   const secs={};items.forEach((item,idx)=>{const sec=item.s||tab;if(!secs[sec])secs[sec]=[];secs[sec].push({...item,idx});});
   const isInspTab=tab==='Inspections';
-const isPPTab=tab==='Plans & Permits';
-  let h=`<div class="ph"><div><div class="pt">${tab}</div><div class="pm">${isInspTab||isPPTab?'Live data from LADBS · '+pd.name+(pd.address?' — '+pd.address:''):items.length+' items · '+pd.name+(pd.address?' — '+pd.address:'')}</div></div>${isInspTab||isPPTab?'':`<div class="ps"><div><span class="sn" id="dc">${dc}</span><span class="sl">Done</span></div><div><span class="sn" id="rm">${tt-dc}</span><span class="sl">Remaining</span></div></div>`}</div>`;  if(tab==='Plans & Permits'){
+  const isPPTab=tab==='Plans & Permits';
+  let h=`<div class="ph"><div><div class="pt">${tab}</div><div class="pm">${isInspTab||isPPTab?'Live data from LADBS · '+pd.name+(pd.address?' — '+pd.address:''):items.length+' items · '+pd.name+(pd.address?' — '+pd.address:'')}</div></div>${isInspTab||isPPTab?'':`<div class="ps"><div><span class="sn" id="dc">${dc}</span><span class="sl">Done</span></div><div><span class="sn" id="rm">${tt-dc}</span><span class="sl">Remaining</span></div></div>`}</div>`;
+  if(tab==='Plans & Permits'){
     const _permits=getPermits(pd);
     h+=`<div id="plancheck-panel"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--brl)">
       <div>
@@ -595,12 +596,26 @@ const isPPTab=tab==='Plans & Permits';
         <button onclick="syncPlanCheck()" id="pc-sync-btn" style="background:var(--blu);color:#fff;border:none;padding:7px 16px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">🔄 Refresh</button>
       </div>
     </div>
-   <div id="plancheck-content" style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Loading live plan check status from LADBS...</div></div>`;
+    <div id="plancheck-content" style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Loading live plan check status from LADBS...</div></div>`;
     h+=`<div style="margin-top:24px;margin-bottom:8px;padding-bottom:8px;border-bottom:2px solid var(--blk);display:flex;gap:8px"><div style="flex:2;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut);font-weight:600">Task</div><div style="flex:0 0 110px;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut);font-weight:600">Who</div><div style="flex:0 0 130px;font-size:8.5px;letter-spacing:0.14em;text-transform:uppercase;color:var(--mut);font-weight:600">Status</div></div>`;
   }
   if(tab==='Inspections'){
     if(!pd?.permit_number){h+='<div style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Add a permit number via ✏️ Edit Project to sync live LADBS inspection data here.</div>';}
-    else{const _pp=pd.permit_number.split('-');const _ladbsUrl=_pp.length===3?'https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1='+_pp[0]+'&id2='+_pp[1]+'&id3='+_pp[2]:'https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr';h+=`<div id="ladbs-panel"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--brl)"><div><div style="font-size:15px;font-weight:600;color:var(--blk)">Live LADBS Inspections</div><div style="font-size:11px;color:var(--mut);margin-top:3px">Permit ${pd.permit_number} · Synced from LADBS in real time</div></div><div style="display:flex;gap:8px;align-items:center"><a href="${_ladbsUrl}" target="_blank" style="font-size:11px;color:var(--blu);text-decoration:none;border:1px solid var(--blu);padding:5px 10px;border-radius:3px;background:var(--blb)">Open LADBS ↗</a><button onclick="syncLADBS()" id="sync-btn" style="background:var(--blu);color:#fff;border:none;padding:7px 16px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">🔄 Refresh</button></div></div><div id="ladbs-content" style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Loading live LADBS inspection data...</div></div>`;}
+    else{
+      const _pp=pd.permit_number.split('-');
+      const _ladbsUrl=_pp.length===3?'https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1='+_pp[0]+'&id2='+_pp[1]+'&id3='+_pp[2]:'https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr';
+      h+=`<div id="ladbs-panel"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--brl)">
+        <div>
+          <div style="font-size:15px;font-weight:600;color:var(--blk)">Live LADBS Inspections</div>
+          <div style="font-size:11px;color:var(--mut);margin-top:3px">Permit ${pd.permit_number} · Synced from LADBS in real time</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <a href="${_ladbsUrl}" target="_blank" style="font-size:11px;color:var(--blu);text-decoration:none;border:1px solid var(--blu);padding:5px 10px;border-radius:3px;background:var(--blb)">Open LADBS ↗</a>
+          <button onclick="syncLADBS()" id="sync-btn" style="background:var(--blu);color:#fff;border:none;padding:7px 16px;border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;">🔄 Refresh</button>
+        </div>
+      </div>
+      <div id="ladbs-content" style="color:var(--mut);font-size:13px;padding:30px 0;text-align:center;">Loading live LADBS inspection data...</div></div>`;
+    }
     return h;
   }
   if(tab==='Construction'){
@@ -776,7 +791,7 @@ async function syncPlanCheck(){
   if(!btn||!content)return;
   btn.textContent='⏳';btn.disabled=true;
   const permits=getPermits(st.proj);
-  if(!permits.length){content.innerHTML='<div style="color:var(--mut);text-align:center;padding:12px">No permits configured. Add via ✏️ Edit Project.</div>';btn.textContent='🔄 Sync';btn.disabled=false;return;}
+  if(!permits.length){content.innerHTML='<div style="color:var(--mut);text-align:center;padding:12px">No permits configured. Add via ✏️ Edit Project.</div>';btn.textContent='🔄 Refresh';btn.disabled=false;return;}
   try{
     const results=await Promise.all(permits.map(async p=>{try{const resp=await fetch('/api/ladbs?permit='+encodeURIComponent(p.num));const data=await resp.json();return{label:p.label,num:p.num,...data};}catch(e){return{label:p.label,num:p.num,error:e.message};}}));
     let html='';
@@ -803,7 +818,7 @@ async function syncPlanCheck(){
     html+=`<div style="font-size:10px;color:var(--mut);margin-top:6px;text-align:right">Synced ${new Date().toLocaleTimeString()}</div>`;
     content.innerHTML=html;
   }catch(e){content.innerHTML=`<div style="color:var(--rdt);text-align:center;padding:12px">Error: ${e.message}</div>`;}
-  finally{btn.textContent='🔄 Sync';btn.disabled=false;}
+  finally{btn.textContent='🔄 Refresh';btn.disabled=false;}
 }
 function phaseKey(phase,type){return'phase_'+type+'|'+phase;}
 function getPhaseDate(phase,type){const k=phaseKey(phase,type);return st.taskCache[st.proj?.id]?.[k]?.date_completed||null;}
