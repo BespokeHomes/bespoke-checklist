@@ -3,17 +3,16 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'GET');
 
   const { permit } = req.query;
-
   if (!permit) return res.status(400).json({ error: 'permit parameter required' });
 
   try {
     const parts = permit.split('-');
-    if (parts.length !== 3) return res.status(400).json({ error: 'Invalid permit format. Expected: XXXXX-XXXXX-XXXXX' });
+    if (parts.length !== 3) return res.status(400).json({ error: 'Invalid permit format' });
 
     const [id1, id2, id3] = parts;
-    const detailUrl = `https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1=${id1}&id2=${id2}&id3=${id3}`;
+    const url = `https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1=${id1}&id2=${id2}&id3=${id3}`;
 
-    const response = await fetch(detailUrl, {
+    const response = await fetch(url, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
         'Accept': 'text/html,application/xhtml+xml',
@@ -22,41 +21,32 @@ export default async function handler(req, res) {
 
     const html = await response.text();
 
-    // Return _empty if permit doesn't exist
-    if (
-      html.length < 500 ||
-      html.includes('No record found') ||
-      html.includes('Record Not Found') ||
-      html.includes('no permits found') ||
-      !html.includes('Work Description') ||
-      !html.includes('Permit Type')
-    ) {
+    // Real permit pages contain "Permit Application Status History"
+    if (html.length < 500 || !html.includes('Permit Application Status History')) {
       return res.status(200).json({ permit, _empty: true });
     }
 
+    // Work description — appears as plain text after the label
+    let workDescription = '';
+    const wdMatch = html.match(/Work\s*Description\s*<\/\w+>\s*([^<]{3,200})/i);
+    if (wdMatch) workDescription = wdMatch[1].trim();
+
     // Current status
     let currentStatus = '';
-    for (const pat of [/Status[:\s]*<[^>]*>([^<]+)</i, /<td[^>]*>\s*Status\s*<\/td>\s*<td[^>]*>([^<]+)</i]) {
-      const m = html.match(pat);
-      if (m && m[1].trim()) { currentStatus = m[1].trim(); break; }
-    }
+    const csMatch = html.match(/Current\s*Status\s*<\/\w+>\s*([^<]{3,100})/i);
+    if (csMatch) currentStatus = csMatch[1].trim();
 
     // C of O
     let cofoStatus = '';
-    const cofoMatch = html.match(/C\s*of\s*O[:\s]*([^<\n,;]+)/i);
+    const cofoMatch = html.match(/Certificate\s*of\s*Occupancy\s*<\/\w+>\s*([^<]{3,100})/i);
     if (cofoMatch) cofoStatus = cofoMatch[1].trim();
 
-    // Work description
-    let workDescription = '';
-    const wdMatch = html.match(/Work\s*Description[:\s]*<[^>]*>([^<]+)</i) ||
-                    html.match(/<td[^>]*>\s*Work\s*Description\s*<\/td>\s*<td[^>]*>([^<]+)</i);
-    if (wdMatch) workDescription = wdMatch[1].trim();
-
-    // Plan check history
+    // Plan check history — "Permit Application Status History" table
     const planCheck = [];
-    const pcSection = html.match(/Plan\s*Check[\s\S]{0,200}?(<table[\s\S]*?<\/table>)/i);
+    const pcSection = html.match(/Permit\s*Application\s*Status\s*History[\s\S]*?(<table[\s\S]*?<\/table>)/i);
     if (pcSection) {
-      for (const row of (pcSection[1].match(/<tr[^>]*>[\s\S]*?<\/tr>/gi) || [])) {
+      const rows = pcSection[1].match(/<tr[^>]*>[\s\S]*?<\/tr>/gi) || [];
+      for (const row of rows) {
         if (row.includes('<th')) continue;
         const cells = [];
         const cellRx = /<td[^>]*>([\s\S]*?)<\/td>/gi;
@@ -66,12 +56,12 @@ export default async function handler(req, res) {
       }
     }
 
-    // Inspection history
+    // Inspection history — "Inspection Request History" table
     const history = [];
-    const inspSection = html.match(/Inspection\s*History[\s\S]{0,200}?(<table[\s\S]*?<\/table>)/i) ||
-                        html.match(/INSPECTION[\s\S]{0,100}?(<table[\s\S]*?<\/table>)/i);
+    const inspSection = html.match(/Inspection\s*Request\s*History[\s\S]*?(<table[\s\S]*?<\/table>)/i);
     if (inspSection) {
-      for (const row of (inspSection[1].match(/<tr[^>]*>[\s\S]*?<\/tr>/gi) || [])) {
+      const rows = inspSection[1].match(/<tr[^>]*>[\s\S]*?<\/tr>/gi) || [];
+      for (const row of rows) {
         if (row.includes('<th')) continue;
         const cells = [];
         const cellRx = /<td[^>]*>([\s\S]*?)<\/td>/gi;
@@ -81,11 +71,12 @@ export default async function handler(req, res) {
       }
     }
 
-    // Clearances
+    // Clearances — "Permit Application Clearance Information" table
     const clearances = [];
-    const clrSection = html.match(/Clearance[\s\S]{0,200}?(<table[\s\S]*?<\/table>)/i);
+    const clrSection = html.match(/Permit\s*Application\s*Clearance\s*Information[\s\S]*?(<table[\s\S]*?<\/table>)/i);
     if (clrSection) {
-      for (const row of (clrSection[1].match(/<tr[^>]*>[\s\S]*?<\/tr>/gi) || [])) {
+      const rows = clrSection[1].match(/<tr[^>]*>[\s\S]*?<\/tr>/gi) || [];
+      for (const row of rows) {
         if (row.includes('<th')) continue;
         const cells = [];
         const cellRx = /<td[^>]*>([\s\S]*?)<\/td>/gi;
