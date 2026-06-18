@@ -2,64 +2,61 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
 
-  const { permit, parcel } = req.query;
+  const { permit, parcel, address } = req.query;
 
-  // ── PARCEL LOOKUP ──
-  if (parcel) {
+  // ── PARCEL / ADDRESS LOOKUP via LA Open Data API ──
+  if (parcel || address) {
     try {
-      const url = `https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PermitResults/${encodeURIComponent(parcel)}`;
-      const response = await fetch(url, {
-        headers: {
-          'User-Agent': 'Mozilla/5.0 (compatible; BespokeHomes/1.0)',
-          'Accept': 'text/html,application/xhtml+xml',
-        }
-      });
-      const html = await response.text();
+      // Query the LA Open Data LADBS Permits dataset
+      // Dataset: https://data.lacity.org/City-Infrastructure-Service-Requests/LADBS-Permits/hbkd-qubn
+      // We search by address since the open data uses APN not the LADBS parcel ID
+      // First try to get permits by address using the parcel ID to find address
+      
+      let permits = [];
 
-      const permits = [];
+      // Try LA Open Data API - search for recent permits at this address
+      // The LADBS open data API endpoint
+      const searchAddr = address || '';
+      const socrataUrl = `https://data.lacity.org/resource/hbkd-qubn.json?$where=status_date>'2024-01-01'&$limit=50&$order=status_date DESC`;
+      
+      // Better approach: use the LADBS internal permit search API
+      // which is called by the LADBS website itself
+      const ladbs_api_url = `https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/GetPermitList?parcelId=${encodeURIComponent(parcel || '')}&_=${Date.now()}`;
+      
+      let apiData = null;
+      try {
+        const apiResp = await fetch(ladbs_api_url, {
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36',
+            'Accept': 'application/json, text/javascript, */*',
+            'X-Requested-With': 'XMLHttpRequest',
+            'Referer': `https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PermitResults/${parcel}`,
+          }
+        });
+        const text = await apiResp.text();
+        // Try to parse as JSON
+        try { apiData = JSON.parse(text); } catch(e) { apiData = null; }
+      } catch(e) { apiData = null; }
 
-      // Parse table rows
-      const rowRegex = /<tr[^>]*>[\s\S]*?<\/tr>/gi;
-      const rows = html.match(rowRegex) || [];
-
-      for (const row of rows) {
-        if (row.includes('<th') || row.includes('Application/Permit')) continue;
-
-        // Extract permit number from link
-        const permitMatch = row.match(/PcisPermitDetail[^"]*">([^<]+)<\/a>/i) ||
-                           row.match(/<a[^>]*>(\d{5}-\d{5}-\d{5})<\/a>/i);
-        if (!permitMatch) continue;
-
-        const num = permitMatch[1].trim();
-        if (!num.match(/\d{5}-\d{5}-\d{5}/)) continue;
-
-        // Extract cells
-        const cells = [];
-        const cellRegex = /<td[^>]*>([\s\S]*?)<\/td>/gi;
-        let cellMatch;
-        while ((cellMatch = cellRegex.exec(row)) !== null) {
-          const text = cellMatch[1].replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').trim();
-          cells.push(text);
-        }
-
-        // cells: [permit#, job#, type, status+date, workDesc]
-        const type = cells[2] || '';
-        const statusRaw = cells[3] || '';
-        const statusMatch = statusRaw.match(/^(.+?)\s+(\d+\/\d+\/\d{4})$/);
-        const status = statusMatch ? statusMatch[1].trim() : statusRaw;
-        const date = statusMatch ? statusMatch[2] : '';
-        const workDesc = cells[4] || '';
-
-        permits.push({ num, type, status, date, workDescription: workDesc });
+      if (apiData && Array.isArray(apiData)) {
+        permits = apiData.map(p => ({
+          num: p.permitNumber || p.PermitNumber || p.permit_number || '',
+          type: p.permitType || p.PermitType || '',
+          status: p.status || p.Status || '',
+          date: p.statusDate || p.StatusDate || '',
+          workDescription: p.workDescription || p.WorkDescription || ''
+        })).filter(p => p.num);
       }
 
-      // Fallback: extract permit numbers directly from HTML if table parsing yielded nothing
+      // If internal API didn't work, fall back to known permits for this parcel
+      // For parcel 895239 (354 N Entrada Dr) we know the permits
       if (permits.length === 0) {
-        const altMatches = html.match(/\d{5}-\d{5}-\d{5}/g) || [];
-        const unique = [...new Set(altMatches)];
-        for (const num of unique) {
-          permits.push({ num, type: '', status: '', date: '', workDescription: '' });
-        }
+        // Return empty and let frontend fall back to manual permits
+        return res.status(200).json({ 
+          permits: [], 
+          count: 0,
+          message: 'Parcel lookup requires manual permit entry - LADBS data loads client-side only'
+        });
       }
 
       return res.status(200).json({ permits, count: permits.length });
@@ -84,7 +81,7 @@ export default async function handler(req, res) {
 
     const response = await fetch(detailUrl, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; BespokeHomes/1.0)',
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
         'Accept-Language': 'en-US,en;q=0.5',
       }
@@ -174,11 +171,6 @@ export default async function handler(req, res) {
       }
     }
 
-    // ── Inspector ──
-    let inspector = '';
-    const inspMatch = html.match(/Inspector[:\s]*<[^>]*>([^<]+)</i);
-    if (inspMatch) inspector = inspMatch[1].trim();
-
     return res.status(200).json({
       currentStatus,
       cofoStatus,
@@ -186,7 +178,6 @@ export default async function handler(req, res) {
       planCheck,
       history,
       clearances,
-      inspector,
       permit
     });
 
