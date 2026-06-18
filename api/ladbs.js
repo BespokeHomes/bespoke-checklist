@@ -1,59 +1,196 @@
-export const config = { runtime: 'edge' };
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET');
 
-export default async function handler(req) {
-  const { searchParams } = new URL(req.url);
-  const permit = searchParams.get('permit');
-  if (!permit) return respond({ error: 'No permit number provided' });
-  const parts = permit.split('-');
-  if (parts.length !== 3) return respond({ error: 'Invalid permit format. Expected XXXXX-XXXXXX-XXXXX' });
-  const url = `https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1=${parts[0]}&id2=${parts[1]}&id3=${parts[2]}`;
+  const { permit, parcel } = req.query;
+
+  // ── PARCEL LOOKUP ──
+  if (parcel) {
+    try {
+      const url = `https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PermitResults/${encodeURIComponent(parcel)}`;
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; BespokeHomes/1.0)',
+          'Accept': 'text/html,application/xhtml+xml',
+        }
+      });
+      const html = await response.text();
+
+      const permits = [];
+
+      // Parse table rows
+      const rowRegex = /<tr[^>]*>[\s\S]*?<\/tr>/gi;
+      const rows = html.match(rowRegex) || [];
+
+      for (const row of rows) {
+        if (row.includes('<th') || row.includes('Application/Permit')) continue;
+
+        // Extract permit number from link
+        const permitMatch = row.match(/PcisPermitDetail[^"]*">([^<]+)<\/a>/i) ||
+                           row.match(/<a[^>]*>(\d{5}-\d{5}-\d{5})<\/a>/i);
+        if (!permitMatch) continue;
+
+        const num = permitMatch[1].trim();
+        if (!num.match(/\d{5}-\d{5}-\d{5}/)) continue;
+
+        // Extract cells
+        const cells = [];
+        const cellRegex = /<td[^>]*>([\s\S]*?)<\/td>/gi;
+        let cellMatch;
+        while ((cellMatch = cellRegex.exec(row)) !== null) {
+          const text = cellMatch[1].replace(/<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&nbsp;/g, ' ').trim();
+          cells.push(text);
+        }
+
+        // cells: [permit#, job#, type, status+date, workDesc]
+        const type = cells[2] || '';
+        const statusRaw = cells[3] || '';
+        const statusMatch = statusRaw.match(/^(.+?)\s+(\d+\/\d+\/\d{4})$/);
+        const status = statusMatch ? statusMatch[1].trim() : statusRaw;
+        const date = statusMatch ? statusMatch[2] : '';
+        const workDesc = cells[4] || '';
+
+        permits.push({ num, type, status, date, workDescription: workDesc });
+      }
+
+      // Fallback: extract permit numbers directly from HTML if table parsing yielded nothing
+      if (permits.length === 0) {
+        const altMatches = html.match(/\d{5}-\d{5}-\d{5}/g) || [];
+        const unique = [...new Set(altMatches)];
+        for (const num of unique) {
+          permits.push({ num, type: '', status: '', date: '', workDescription: '' });
+        }
+      }
+
+      return res.status(200).json({ permits, count: permits.length });
+    } catch (err) {
+      return res.status(500).json({ error: err.message, permits: [] });
+    }
+  }
+
+  // ── PERMIT DETAIL LOOKUP ──
+  if (!permit) {
+    return res.status(400).json({ error: 'permit or parcel parameter required' });
+  }
+
   try {
-    const resp = await fetch(url, {
+    const parts = permit.split('-');
+    if (parts.length !== 3) {
+      return res.status(400).json({ error: 'Invalid permit format. Expected: XXXXX-XXXXX-XXXXX' });
+    }
+
+    const [id1, id2, id3] = parts;
+    const detailUrl = `https://www.ladbsservices2.lacity.org/OnlineServices/PermitReport/PcisPermitDetail?id1=${id1}&id2=${id2}&id3=${id3}`;
+
+    const response = await fetch(detailUrl, {
       headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (compatible; BespokeHomes/1.0)',
         'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-        'Accept-Language': 'en-US,en;q=0.9',
-        'Referer': 'https://www.ladbsservices2.lacity.org/OnlineServices/?service=plr',
+        'Accept-Language': 'en-US,en;q=0.5',
       }
     });
-    if (!resp.ok) return respond({ error: `LADBS returned ${resp.status}` });
-    const html = await resp.text();
-    const parseTable = (label) => {
-      const idx = html.indexOf(label);
-      if (idx === -1) return [];
-      const section = html.slice(idx, idx + 6000);
-      const tableMatch = section.match(/<table[\s\S]*?<\/table>/i);
-      if (!tableMatch) return [];
-      const rows = tableMatch[0].match(/<tr[\s\S]*?<\/tr>/gi) || [];
-      return rows.map(row => {
-        const cells = (row.match(/<td[^>]*>([\s\S]*?)<\/td>/gi) || [])
-          .map(c => c.replace(/<[^>]+>/g, '').replace(/&amp;/g,'&').replace(/&nbsp;/g,' ').replace(/&#39;/g,"'").trim());
-        return cells;
-      }).filter(cells => cells.length >= 1 && cells[0] && cells[0] !== 'No Data Available.');
-    };
-    const planCheck = parseTable('Permit Application Status History').map(c => ({ status: c[0]||'', date: c[1]||'', person: c[2]||'' }));
-    const clearances = parseTable('Permit Application Clearance Information').map(c => ({ name: c[0]||'', status: c[1]||'', date: c[2]||'', person: c[3]||'' }));
-    const pending = parseTable('Pending Inspections').map(c => ({ name: c[0], date: c[1]||'', status: c[2]||'Pending', inspector: c[3]||'' }));
-    const history = parseTable('Inspection Request History').map(c => ({ name: c[0], date: c[1]||'', status: c[2]||'', inspector: c[3]||'' }));
-    const inspMatch = html.match(/Inspector Information[\s\S]{0,500}/i);
-    const inspCells = inspMatch ? (inspMatch[0].match(/<td[^>]*>([\s\S]*?)<\/td>/gi)||[]).map(c=>c.replace(/<[^>]+>/g,'').trim()) : [];
-    const inspector = inspCells[0] || '';
-    const currentStatusMatch = html.match(/Current Status\s*<\/[^>]+>\s*([\s\S]{0,100})/i);
-    const currentStatus = currentStatusMatch ? currentStatusMatch[1].replace(/<[^>]+>/g,'').trim().split('\n')[0].trim() : '';
-    const workDescMatch = html.match(/Work Description\s*<\/[^>]+>\s*([\s\S]{0,300})/i);
-    const workDescription = workDescMatch ? workDescMatch[1].replace(/<[^>]+>/g,'').trim().split('\n')[0].trim() : '';
-    const cofoPendingMatch = html.match(/Certificate of Occupancy\s*<\/[^>]+>\s*([\s\S]{0,100})/i);
-    const cofoStatus = cofoPendingMatch ? cofoPendingMatch[1].replace(/<[^>]+>/g,'').trim().split('\n')[0].trim() : '';
-    const addrMatch = html.match(/Certificate Information:\s*([^<\n]+)/i);
-    const address = addrMatch ? addrMatch[1].trim() : '';
-    return respond({ permit, address, currentStatus, cofoStatus, workDescription, inspector, planCheck, clearances, pending, history, fetchedAt: new Date().toISOString() });
-  } catch (err) {
-    return respond({ error: err.message });
-  }
-}
 
-function respond(data) {
-  return new Response(JSON.stringify(data), {
-    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*', 'Cache-Control': 's-maxage=180' }
-  });
+    const html = await response.text();
+
+    // ── Current status ──
+    let currentStatus = '';
+    const statusPatterns = [
+      /Status[:\s]*<[^>]*>([^<]+)</i,
+      /<td[^>]*>\s*Status\s*<\/td>\s*<td[^>]*>([^<]+)</i,
+      /class="[^"]*status[^"]*"[^>]*>([^<]+)</i,
+    ];
+    for (const pat of statusPatterns) {
+      const m = html.match(pat);
+      if (m && m[1].trim()) { currentStatus = m[1].trim(); break; }
+    }
+
+    // ── C of O ──
+    let cofoStatus = '';
+    const cofoMatch = html.match(/C\s*of\s*O[:\s]*([^<\n,;]+)/i) ||
+                      html.match(/Certificate\s*of\s*Occupancy[:\s]*([^<\n,;]+)/i);
+    if (cofoMatch) cofoStatus = cofoMatch[1].trim();
+
+    // ── Work description ──
+    let workDescription = '';
+    const wdMatch = html.match(/Work\s*Description[:\s]*<[^>]*>([^<]+)</i) ||
+                    html.match(/<td[^>]*>\s*Work\s*Description\s*<\/td>\s*<td[^>]*>([^<]+)</i);
+    if (wdMatch) workDescription = wdMatch[1].trim();
+
+    // ── Plan check history ──
+    const planCheck = [];
+    const pcSection = html.match(/Plan\s*Check[\s\S]{0,200}?(<table[\s\S]*?<\/table>)/i);
+    if (pcSection) {
+      const rowMatches = pcSection[1].match(/<tr[^>]*>[\s\S]*?<\/tr>/gi) || [];
+      for (const row of rowMatches) {
+        if (row.includes('<th')) continue;
+        const cells = [];
+        const cellRx = /<td[^>]*>([\s\S]*?)<\/td>/gi;
+        let cm;
+        while ((cm = cellRx.exec(row)) !== null) {
+          cells.push(cm[1].replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim());
+        }
+        if (cells.length >= 2 && cells[0]) {
+          planCheck.push({ status: cells[0], date: cells[1] || '', person: cells[2] || '' });
+        }
+      }
+    }
+
+    // ── Inspection history ──
+    const history = [];
+    const inspSection = html.match(/Inspection\s*History[\s\S]{0,200}?(<table[\s\S]*?<\/table>)/i) ||
+                        html.match(/INSPECTION[\s\S]{0,100}?(<table[\s\S]*?<\/table>)/i);
+    if (inspSection) {
+      const rowMatches = inspSection[1].match(/<tr[^>]*>[\s\S]*?<\/tr>/gi) || [];
+      for (const row of rowMatches) {
+        if (row.includes('<th')) continue;
+        const cells = [];
+        const cellRx = /<td[^>]*>([\s\S]*?)<\/td>/gi;
+        let cm;
+        while ((cm = cellRx.exec(row)) !== null) {
+          cells.push(cm[1].replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim());
+        }
+        if (cells.length >= 3 && cells[0]) {
+          history.push({ name: cells[0], date: cells[1] || '', status: cells[2] || '', inspector: cells[3] || '' });
+        }
+      }
+    }
+
+    // ── Clearances ──
+    const clearances = [];
+    const clrSection = html.match(/Clearance[\s\S]{0,200}?(<table[\s\S]*?<\/table>)/i);
+    if (clrSection) {
+      const rowMatches = clrSection[1].match(/<tr[^>]*>[\s\S]*?<\/tr>/gi) || [];
+      for (const row of rowMatches) {
+        if (row.includes('<th')) continue;
+        const cells = [];
+        const cellRx = /<td[^>]*>([\s\S]*?)<\/td>/gi;
+        let cm;
+        while ((cm = cellRx.exec(row)) !== null) {
+          cells.push(cm[1].replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').trim());
+        }
+        if (cells.length >= 2 && cells[0]) {
+          clearances.push({ name: cells[0], status: cells[1] || '', date: cells[2] || '' });
+        }
+      }
+    }
+
+    // ── Inspector ──
+    let inspector = '';
+    const inspMatch = html.match(/Inspector[:\s]*<[^>]*>([^<]+)</i);
+    if (inspMatch) inspector = inspMatch[1].trim();
+
+    return res.status(200).json({
+      currentStatus,
+      cofoStatus,
+      workDescription,
+      planCheck,
+      history,
+      clearances,
+      inspector,
+      permit
+    });
+
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 }
