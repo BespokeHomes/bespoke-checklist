@@ -21,27 +21,22 @@ export default async function handler(req, res) {
 
     const html = await response.text();
 
-    // Real permit pages contain "Permit Application Status History"
     if (html.length < 500 || !html.includes('Permit Application Status History')) {
       return res.status(200).json({ permit, _empty: true });
     }
 
-    // Work description — appears as plain text after the label
     let workDescription = '';
     const wdMatch = html.match(/Work\s*Description\s*<\/\w+>\s*([^<]{3,200})/i);
     if (wdMatch) workDescription = wdMatch[1].trim();
 
-    // Current status
     let currentStatus = '';
     const csMatch = html.match(/Current\s*Status\s*<\/\w+>\s*([^<]{3,100})/i);
     if (csMatch) currentStatus = csMatch[1].trim();
 
-    // C of O
     let cofoStatus = '';
     const cofoMatch = html.match(/Certificate\s*of\s*Occupancy\s*<\/\w+>\s*([^<]{3,100})/i);
     if (cofoMatch) cofoStatus = cofoMatch[1].trim();
 
-    // Plan check history — "Permit Application Status History" table
     const planCheck = [];
     const pcSection = html.match(/Permit\s*Application\s*Status\s*History[\s\S]*?(<table[\s\S]*?<\/table>)/i);
     if (pcSection) {
@@ -56,7 +51,11 @@ export default async function handler(req, res) {
       }
     }
 
-    // Inspection history — "Inspection Request History" table
+    // Derive current status from last plan check entry if not found
+    if (!currentStatus && planCheck.length > 0) {
+      currentStatus = planCheck[planCheck.length - 1].status;
+    }
+
     const history = [];
     const inspSection = html.match(/Inspection\s*Request\s*History[\s\S]*?(<table[\s\S]*?<\/table>)/i);
     if (inspSection) {
@@ -71,7 +70,6 @@ export default async function handler(req, res) {
       }
     }
 
-    // Clearances — "Permit Application Clearance Information" table
     const clearances = [];
     const clrSection = html.match(/Permit\s*Application\s*Clearance\s*Information[\s\S]*?(<table[\s\S]*?<\/table>)/i);
     if (clrSection) {
